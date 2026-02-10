@@ -4,89 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Parkir Jogja</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #1e40af; margin-bottom: 20px; border-bottom: 3px solid #1e40af; padding-bottom: 10px; }
-        .login-form { max-width: 400px; margin: 50px auto; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
-        button:hover { background: #1e3a8a; }
-        .parkir-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .header { background: #1e40af; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        
+        .login-form, .admin-panel { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .hidden { display: none; }
+        
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #1e3a8a; }
+        
+        .parkir-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .kapasitas-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0; }
+        
+        .success { background: #10b981; }
+        .danger { background: #ef4444; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- LOGIN FORM (SEMENTARA) -->
+        <!-- LOGIN FORM -->
         <div class="login-form" id="loginForm">
-            <h1>Login Admin</h1>
+            <div class="header">
+                <h1>Admin Login</h1>
+                <p>Sistem Informasi Parkir Yogyakarta</p>
+            </div>
+            <input type="email" id="email" placeholder="Email" value="admin@parkirjogja.com">
             <input type="password" id="password" placeholder="Password">
-            <button onclick="login()">Login</button>
+            <button onclick="login()" class="success">Login</button>
             <p style="color: #666; font-size: 12px; margin-top: 20px;">
-                Password default: admin123 (nanti ganti di production)
+                Untuk testing: email admin@parkirjogja.com, password sesuai yang dibuat di Supabase
             </p>
         </div>
         
-        <!-- ADMIN PANEL (DISEMBUNYIKAN) -->
-        <div class="hidden" id="adminPanel">
-            <h1>Admin Panel - Update Kapasitas Parkir</h1>
-            <div id="parkirList">
-                <!-- Data parkir akan dimuat di sini -->
+        <!-- ADMIN PANEL -->
+        <div class="admin-panel hidden" id="adminPanel">
+            <div class="header">
+                <h1>Admin Panel</h1>
+                <p>Update Kapasitas Parkir Real-time</p>
             </div>
-            <button onclick="logout()" style="background: #dc2626; margin-top: 20px;">Logout</button>
+            
+            <div id="parkirList">
+                <!-- Data akan dimuat di sini -->
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="logout()" class="danger">Logout</button>
+                <button onclick="refreshData()">Refresh Data</button>
+            </div>
         </div>
     </div>
     
     <script>
-        // SIMULASI DATA (nanti ganti dengan database)
-        let parkirData = [
-            {id:1, nama:"SENOPATI", bus:62, mobil:200, motor:0},
-            {id:2, nama:"NGABEAN", bus:60, mobil:80, motor:100},
-            // ... tambahkan lainnya
-        ];
+        // Konfigurasi Supabase
+        const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
         
-        function login() {
-            const password = document.getElementById('password').value;
-            // Password sementara (GANTI DI PRODUCTION!)
-            if (password === 'admin123') {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
+        let supabase;
+        let currentUser = null;
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', () => {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            
+            // Cek session
+            checkSession();
+        });
+        
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                showAdminPanel();
                 loadParkirData();
-            } else {
-                alert('Password salah!');
             }
         }
         
-        function logout() {
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+            
+            if (error) {
+                alert('Login gagal: ' + error.message);
+                return;
+            }
+            
+            currentUser = data.user;
+            showAdminPanel();
+            loadParkirData();
+        }
+        
+        async function logout() {
+            await supabase.auth.signOut();
+            currentUser = null;
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('adminPanel').classList.add('hidden');
         }
         
-        function loadParkirData() {
+        function showAdminPanel() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+        }
+        
+        async function loadParkirData() {
+            const { data, error } = await supabase
+                .from('parkir_lokasi')
+                .select('*')
+                .order('id');
+            
+            if (error) {
+                alert('Error loading data: ' + error.message);
+                return;
+            }
+            
             const container = document.getElementById('parkirList');
             let html = '';
             
-            parkirData.forEach(item => {
+            data.forEach(item => {
                 html += `
                     <div class="parkir-item">
                         <h3>${item.nama}</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0;">
+                        <p>${item.alamat}</p>
+                        <div class="kapasitas-inputs">
                             <div>
                                 <label>Bus:</label>
-                                <input type="number" id="bus-${item.id}" value="${item.bus}">
+                                <input type="number" id="bus-${item.id}" value="${item.bus}" min="0">
                             </div>
                             <div>
                                 <label>Mobil:</label>
-                                <input type="number" id="mobil-${item.id}" value="${item.mobil}">
+                                <input type="number" id="mobil-${item.id}" value="${item.mobil}" min="0">
                             </div>
                             <div>
                                 <label>Motor:</label>
-                                <input type="number" id="motor-${item.id}" value="${item.motor}">
+                                <input type="number" id="motor-${item.id}" value="${item.motor}" min="0">
                             </div>
                         </div>
-                        <button onclick="updateParkir(${item.id})" style="background: #059669;">Update</button>
+                        <button onclick="updateParkir(${item.id})" class="success">Update</button>
+                        <button onclick="resetParkir(${item.id})">Reset</button>
+                        <span style="font-size: 12px; color: #666; margin-left: 10px;">
+                            Terakhir update: ${new Date(item.updated_at).toLocaleString()}
+                        </span>
                     </div>
                 `;
             });
@@ -94,30 +161,41 @@
             container.innerHTML = html;
         }
         
-        function updateParkir(id) {
-            const bus = document.getElementById(`bus-${id}`).value;
-            const mobil = document.getElementById(`mobil-${id}`).value;
-            const motor = document.getElementById(`motor-${id}`).value;
+        async function updateParkir(id) {
+            const bus = parseInt(document.getElementById(`bus-${id}`).value) || 0;
+            const mobil = parseInt(document.getElementById(`mobil-${id}`).value) || 0;
+            const motor = parseInt(document.getElementById(`motor-${id}`).value) || 0;
             
-            // Simpan ke localStorage (sementara)
-            const index = parkirData.findIndex(item => item.id === id);
-            parkirData[index] = {...parkirData[index], bus, mobil, motor};
+            const { error } = await supabase
+                .from('parkir_lokasi')
+                .update({ 
+                    bus: bus,
+                    mobil: mobil,
+                    motor: motor,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', id);
             
-            localStorage.setItem('parkirData', JSON.stringify(parkirData));
-            alert('Data berhasil diupdate!');
+            if (error) {
+                alert('Error updating: ' + error.message);
+                return;
+            }
             
-            // NANTI: Kirim ke database/API
-            console.log('Update data:', {id, bus, mobil, motor});
+            alert('✅ Data berhasil diperbarui!');
+            loadParkirData();
         }
         
-        // Cek jika sudah login
-        window.onload = function() {
-            const saved = localStorage.getItem('isLoggedIn');
-            if (saved === 'true') {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadParkirData();
+        function resetParkir(id) {
+            if (confirm('Reset data ke 0?')) {
+                document.getElementById(`bus-${id}`).value = 0;
+                document.getElementById(`mobil-${id}`).value = 0;
+                document.getElementById(`motor-${id}`).value = 0;
+                updateParkir(id);
             }
+        }
+        
+        function refreshData() {
+            loadParkirData();
         }
     </script>
 </body>
