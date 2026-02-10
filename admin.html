@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Parkir Jogja</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1e40af; margin-bottom: 20px; border-bottom: 3px solid #1e40af; padding-bottom: 10px; }
+        .login-form { max-width: 400px; margin: 50px auto; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #1e3a8a; }
+        .parkir-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LOGIN FORM (SEMENTARA) -->
+        <div class="login-form" id="loginForm">
+            <h1>Login Admin</h1>
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p style="color: #666; font-size: 12px; margin-top: 20px;">
+                Password default: admin123 (nanti ganti di production)
+            </p>
+        </div>
+        
+        <!-- ADMIN PANEL (DISEMBUNYIKAN) -->
+        <div class="hidden" id="adminPanel">
+            <h1>Admin Panel - Update Kapasitas Parkir</h1>
+            <div id="parkirList">
+                <!-- Data parkir akan dimuat di sini -->
+            </div>
+            <button onclick="logout()" style="background: #dc2626; margin-top: 20px;">Logout</button>
+        </div>
+    </div>
+    
+    <script>
+        // SIMULASI DATA (nanti ganti dengan database)
+        let parkirData = [
+            {id:1, nama:"SENOPATI", bus:62, mobil:200, motor:0},
+            {id:2, nama:"NGABEAN", bus:60, mobil:80, motor:100},
+            // ... tambahkan lainnya
+        ];
+        
+        function login() {
+            const password = document.getElementById('password').value;
+            // Password sementara (GANTI DI PRODUCTION!)
+            if (password === 'admin123') {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadParkirData();
+            } else {
+                alert('Password salah!');
+            }
+        }
+        
+        function logout() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+        
+        function loadParkirData() {
+            const container = document.getElementById('parkirList');
+            let html = '';
+            
+            parkirData.forEach(item => {
+                html += `
+                    <div class="parkir-item">
+                        <h3>${item.nama}</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0;">
+                            <div>
+                                <label>Bus:</label>
+                                <input type="number" id="bus-${item.id}" value="${item.bus}">
+                            </div>
+                            <div>
+                                <label>Mobil:</label>
+                                <input type="number" id="mobil-${item.id}" value="${item.mobil}">
+                            </div>
+                            <div>
+                                <label>Motor:</label>
+                                <input type="number" id="motor-${item.id}" value="${item.motor}">
+                            </div>
+                        </div>
+                        <button onclick="updateParkir(${item.id})" style="background: #059669;">Update</button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function updateParkir(id) {
+            const bus = document.getElementById(`bus-${id}`).value;
+            const mobil = document.getElementById(`mobil-${id}`).value;
+            const motor = document.getElementById(`motor-${id}`).value;
+            
+            // Simpan ke localStorage (sementara)
+            const index = parkirData.findIndex(item => item.id === id);
+            parkirData[index] = {...parkirData[index], bus, mobil, motor};
+            
+            localStorage.setItem('parkirData', JSON.stringify(parkirData));
+            alert('Data berhasil diupdate!');
+            
+            // NANTI: Kirim ke database/API
+            console.log('Update data:', {id, bus, mobil, motor});
+        }
+        
+        // Cek jika sudah login
+        window.onload = function() {
+            const saved = localStorage.getItem('isLoggedIn');
+            if (saved === 'true') {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadParkirData();
+            }
+        }
+    </script>
+</body>
+</html>
