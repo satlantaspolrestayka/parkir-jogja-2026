@@ -80,20 +80,193 @@
             to { opacity: 1; }
         }
         
+        /* ====== MENU NAVIGASI ====== */
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-600);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            transition: var(--transition-base);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-toggle:hover {
+            transform: scale(1.05);
+            background: var(--primary-700);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 27, 61, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .menu-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            z-index: 1002;
+            padding: 30px 25px;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+        
+        .menu-sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .menu-close:hover {
+            background: var(--primary-600);
+            transform: rotate(90deg);
+        }
+        
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition-base);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .menu-item.active {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: var(--primary-500);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+        
+        .menu-item.active .menu-item-icon {
+            background: var(--primary-500);
+        }
+        
+        .menu-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: var(--transition-base);
+        }
+        
+        .menu-item-text {
+            font-size: 16px;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .menu-item-badge {
+            background: var(--primary-500);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .menu-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            text-align: center;
+        }
+        
         /* ====== HEADER UTAMA ====== */
         .main-header { 
             background: linear-gradient(135deg, var(--navy-900), var(--navy-800)); 
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
-            padding: 40px 60px;
+            padding: 60px 60px 40px;
             position: relative;
             overflow: hidden;
+            margin-top: 20px;
         }
         
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
         
         .main-header h1 { 
@@ -136,7 +309,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
             backdrop-filter: blur(10px);
             animation: fadeIn 0.3s ease-out;
         }
@@ -175,7 +348,7 @@
         /* ====== RESPONSIVE HEADER ====== */
         @media (max-width: 1024px) {
             .main-header {
-                padding: 35px 40px;
+                padding: 50px 40px 35px;
             }
             
             .main-header h1 {
@@ -185,7 +358,7 @@
         
         @media (max-width: 767px) {
             .main-header {
-                padding: 30px 20px;
+                padding: 40px 20px 30px;
             }
             
             .main-header h1 {
@@ -201,9 +374,21 @@
             border-radius: 16px; 
             box-shadow: var(--shadow-deep);
             overflow: hidden;
+            min-height: 600px;
         }
         
-        /* ====== MOBILE COMPACT HEADER ====== */
+        /* ====== HIDDEN PAGES ====== */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* ====== PAGE 1: INFORMASI PARKIR ====== */
+        /* MOBILE COMPACT HEADER */
         .compact-header {
             background: white;
             padding: 20px 15px;
@@ -306,7 +491,7 @@
         .tab-motor .tab-number { color: var(--success-600); }
         .tab-motor { border-top: 4px solid var(--success-600); }
         
-        /* ====== ACTIONS SECTION ====== */
+        /* ACTIONS SECTION */
         .actions-section {
             padding: 0 15px 25px;
             margin-top: 20px;
@@ -346,7 +531,7 @@
             transform: none !important;
         }
         
-        /* ====== MAIN CONTENT ====== */
+        /* MAIN CONTENT */
         .main-content {
             padding: 0 15px 25px;
             background: var(--gray-50);
@@ -375,7 +560,7 @@
             border-radius: 3px;
         }
         
-        /* ====== LOKASI GRID - FIXED ====== */
+        /* LOKASI GRID - FIXED */
         .lokasi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -395,17 +580,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            /* HAPUS ANIMASI FADE IN UNTUK ITEM INDIVIDUAL */
         }
-        
-        /* HAPUS ANIMASI DELAY UNTUK ITEM INDIVIDUAL */
-        /*
-        .lokasi-item:nth-child(1) { animation-delay: 0.1s; }
-        .lokasi-item:nth-child(2) { animation-delay: 0.2s; }
-        .lokasi-item:nth-child(3) { animation-delay: 0.3s; }
-        .lokasi-item:nth-child(4) { animation-delay: 0.4s; }
-        .lokasi-item:nth-child(5) { animation-delay: 0.5s; }
-        */
         
         .lokasi-item:hover { 
             transform: translateY(-2px);
@@ -417,7 +592,6 @@
             border-color: var(--success-600);
             background: var(--gray-50);
             animation: pulseBorder 2s infinite;
-            /* TAMBAHKAN UNTUK MEMASTIKAN VISIBILITY */
             opacity: 1 !important;
             z-index: 1;
             position: relative;
@@ -425,7 +599,7 @@
         
         @keyframes pulseBorder {
             0%, 100% { border-color: var(--success-600); }
-            50% { border-color: #34d399; } /* success-400 */
+            50% { border-color: #34d399; }
         }
         
         .card-header {
@@ -503,7 +677,7 @@
             100% { background-position: -200% 0; }
         }
         
-        /* ====== PROFESSIONAL KAPASITAS DISPLAY ====== */
+        /* PROFESSIONAL KAPASITAS DISPLAY */
         .kapasitas-display {
             background: #f8fafc;
             border-radius: 10px;
@@ -564,7 +738,7 @@
         .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         
-        /* ====== PERBAIKAN TOMBOL RUTE KE SINI ====== */
+        /* PERBAIKAN TOMBOL RUTE KE SINI */
         .btn-route { 
             width: 100%;
             padding: 14px 16px; 
@@ -596,6 +770,33 @@
             color: #ffffff !important;
         }
         
+        /* ====== PAGE 2: INFORMASI LALU LINTAS ====== */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray-500);
+        }
+        
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--gray-700);
+        }
+        
+        .empty-description {
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+        
         /* ====== RESPONSIVE ====== */
         @media (min-width: 768px) {
             .compact-header {
@@ -605,6 +806,10 @@
             .actions-section,
             .main-content {
                 padding: 0 50px 30px;
+            }
+            
+            .menu-sidebar {
+                width: 380px;
             }
         }
         
@@ -633,6 +838,11 @@
                 margin-right: auto;
                 font-size: 24px;
             }
+            
+            .menu-sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
         }
         
         @media (max-width: 640px) {
@@ -655,6 +865,12 @@
             .btn-route {
                 font-size: 14px;
                 padding: 12px 14px;
+            }
+            
+            .menu-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
             }
         }
         
@@ -780,91 +996,183 @@
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
+    <!-- MENU TOGGLE BUTTON -->
+    <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- MENU OVERLAY -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- MENU SIDEBAR -->
+    <div class="menu-sidebar" id="menuSidebar">
+        <div class="menu-header">
+            <div class="menu-title">Menu Navigasi</div>
+            <div class="menu-close" id="menuClose">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        
+        <div class="menu-items">
+            <div class="menu-item active" data-page="parkir">
+                <div class="menu-item-icon">
+                    <i class="fas fa-parking"></i>
+                </div>
+                <div class="menu-item-text">Informasi Tempat Parkir</div>
+                <div class="menu-item-badge">Aktif</div>
+            </div>
+            
+            <div class="menu-item" data-page="lalu-lintas">
+                <div class="menu-item-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <div class="menu-item-text">Informasi Lalu Lintas</div>
+                <div class="menu-item-badge">Baru</div>
+            </div>
+        </div>
+        
+        <div class="menu-footer">
+            © 2026 Satlantas Polresta Yogyakarta
+        </div>
+    </div>
+
     <div class="container">
-        <!-- HEADER UTAMA -->
-        <div class="main-header">
-            <div class="header-content">
-                <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
-                <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-                <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
-            </div>
-        </div>
-        
-        <!-- MOBILE COMPACT HEADER -->
-        <div class="compact-header">
-            <div class="total-locations">
-                <div class="total-icon">📍</div>
-                <div class="total-number" id="totalLocations">15</div>
-                <div class="total-label">LOKASI PARKIR</div>
+        <!-- ====== PAGE 1: INFORMASI PARKIR ====== -->
+        <div class="page active" id="pageParkir">
+            <!-- HEADER UTAMA -->
+            <div class="main-header">
+                <div class="header-content">
+                    <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
+                    <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+                    <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+                </div>
             </div>
             
-            <div class="capacity-tabs">
-                <div class="capacity-tab tab-bus">
-                    <div class="tab-icon">🚌</div>
-                    <div class="tab-number" id="totalBus">454</div>
-                    <div class="tab-label">BUS</div>
+            <!-- MOBILE COMPACT HEADER -->
+            <div class="compact-header">
+                <div class="total-locations">
+                    <div class="total-icon">📍</div>
+                    <div class="total-number" id="totalLocations">15</div>
+                    <div class="total-label">LOKASI PARKIR</div>
                 </div>
                 
-                <div class="capacity-tab tab-mobil">
-                    <div class="tab-icon">🚗</div>
-                    <div class="tab-number" id="totalMobil">1,690</div>
-                    <div class="tab-label">MOBIL</div>
-                </div>
-                
-                <div class="capacity-tab tab-motor">
-                    <div class="tab-icon">🏍️</div>
-                    <div class="tab-number" id="totalMotor">1,682</div>
-                    <div class="tab-label">MOTOR</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- ACTIONS SECTION -->
-        <div class="actions-section">
-            <button class="action-btn" onclick="cariParkirTerdekat()" id="btnCari">
-                <span>📍</span> CARI PARKIR TERDEKAT
-            </button>
-        </div>
-        
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
-            <div class="section-title">
-                DAFTAR LOKASI PARKIR
-            </div>
-            
-            <div class="lokasi-grid" id="lokasiList">
-                <!-- Data akan dimuat dari Supabase -->
-                <div class="lokasi-item">
-                    <div class="card-header">
-                        <div class="card-title">Memuat data...</div>
-                        <div class="card-id">⏳</div>
+                <div class="capacity-tabs">
+                    <div class="capacity-tab tab-bus">
+                        <div class="tab-icon">🚌</div>
+                        <div class="tab-number" id="totalBus">454</div>
+                        <div class="tab-label">BUS</div>
                     </div>
-                    <div class="card-address">Harap tunggu sebentar</div>
+                    
+                    <div class="capacity-tab tab-mobil">
+                        <div class="tab-icon">🚗</div>
+                        <div class="tab-number" id="totalMobil">1,690</div>
+                        <div class="tab-label">MOBIL</div>
+                    </div>
+                    
+                    <div class="capacity-tab tab-motor">
+                        <div class="tab-icon">🏍️</div>
+                        <div class="tab-number" id="totalMotor">1,682</div>
+                        <div class="tab-label">MOTOR</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- FOOTER -->
-        <div class="footer">
-            <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
-            <p>Polri Untuk Masyarakat</p>
             
-            <div class="social-links">
-                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" 
-                   target="_blank" class="social-link instagram" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.facebook.com/satlantasjogjacom" 
-                   target="_blank" class="social-link facebook" title="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://x.com/jogjazebra" 
-                   target="_blank" class="social-link twitter" title="Twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
+            <!-- ACTIONS SECTION -->
+            <div class="actions-section">
+                <button class="action-btn" onclick="cariParkirTerdekat()" id="btnCari">
+                    <span>📍</span> CARI PARKIR TERDEKAT
+                </button>
             </div>
             
-            <p class="footer-copyright">© 2026 - Sistem Informasi Parkir Kota Yogyakarta</p>
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <div class="section-title">
+                    DAFTAR LOKASI PARKIR
+                </div>
+                
+                <div class="lokasi-grid" id="lokasiList">
+                    <!-- Data akan dimuat dari Supabase -->
+                    <div class="lokasi-item">
+                        <div class="card-header">
+                            <div class="card-title">Memuat data...</div>
+                            <div class="card-id">⏳</div>
+                        </div>
+                        <div class="card-address">Harap tunggu sebentar</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FOOTER -->
+            <div class="footer">
+                <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
+                <p>Polri Untuk Masyarakat</p>
+                
+                <div class="social-links">
+                    <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" 
+                       target="_blank" class="social-link instagram" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/satlantasjogjacom" 
+                       target="_blank" class="social-link facebook" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://x.com/jogjazebra" 
+                       target="_blank" class="social-link twitter" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+                
+                <p class="footer-copyright">© 2026 - Sistem Informasi Parkir Kota Yogyakarta</p>
+            </div>
+        </div>
+
+        <!-- ====== PAGE 2: INFORMASI LALU LINTAS ====== -->
+        <div class="page" id="pageLaluLintas">
+            <!-- HEADER UTAMA -->
+            <div class="main-header">
+                <div class="header-content">
+                    <h1 class="title-main">INFORMASI LALU LINTAS</h1>
+                    <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+                    <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+                </div>
+            </div>
+            
+            <!-- KONTEN KOSONG (UNTUK DIISI NANTI) -->
+            <div class="empty-state">
+                <div class="empty-icon">🚦</div>
+                <div class="empty-title">Halaman Dalam Pengembangan</div>
+                <div class="empty-description">
+                    Halaman informasi lalu lintas sedang dalam tahap pengembangan. 
+                    Fitur ini akan segera hadir dengan informasi real-time tentang 
+                    kondisi lalu lintas, titik kemacetan, dan rute alternatif.
+                </div>
+                <button class="action-btn" onclick="switchPage('parkir')">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Informasi Parkir
+                </button>
+            </div>
+            
+            <!-- FOOTER SAMA -->
+            <div class="footer">
+                <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
+                <p>Polri Untuk Masyarakat</p>
+                
+                <div class="social-links">
+                    <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" 
+                       target="_blank" class="social-link instagram" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/satlantasjogjacom" 
+                       target="_blank" class="social-link facebook" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://x.com/jogjazebra" 
+                       target="_blank" class="social-link twitter" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+                
+                <p class="footer-copyright">© 2026 - Sistem Informasi Lalu Lintas Kota Yogyakarta</p>
+            </div>
         </div>
     </div>
 
@@ -880,19 +1188,124 @@
             distances: new Map(),
             isOnline: navigator.onLine,
             originalOrder: [],
-            isSortedByDistance: false
+            isSortedByDistance: false,
+            currentPage: 'parkir' // 'parkir' atau 'lalu-lintas'
         };
         
         let supabaseClient = null;
         let supabaseChannel = null;
         
+        // ====== MENU MANAGEMENT ======
+        function initMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuSidebar = document.getElementById('menuSidebar');
+            const menuClose = document.getElementById('menuClose');
+            const menuItems = document.querySelectorAll('.menu-item');
+            
+            // Toggle menu saat tombol hamburger diklik
+            menuToggle.addEventListener('click', () => {
+                menuSidebar.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Tutup menu saat overlay diklik
+            menuOverlay.addEventListener('click', () => {
+                menuSidebar.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Tutup menu saat tombol close diklik
+            menuClose.addEventListener('click', () => {
+                menuSidebar.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Handle klik pada menu item
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const page = item.getAttribute('data-page');
+                    switchPage(page);
+                    
+                    // Tutup menu setelah memilih
+                    menuSidebar.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+            
+            // Tutup menu dengan tombol ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    menuSidebar.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+        
+        // ====== PAGE MANAGEMENT ======
+        function switchPage(pageName) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Tampilkan halaman yang dipilih
+            const targetPage = document.getElementById(`page${pageName.charAt(0).toUpperCase() + pageName.slice(1).replace('-', '')}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.appState.currentPage = pageName;
+                
+                // Update menu aktif
+                updateActiveMenu(pageName);
+                
+                // Update judul dokumen
+                updateDocumentTitle(pageName);
+            }
+        }
+        
+        function updateActiveMenu(pageName) {
+            // Hapus status aktif dari semua menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                const badge = item.querySelector('.menu-item-badge');
+                if (badge) {
+                    badge.textContent = item.getAttribute('data-page') === pageName ? 'Aktif' : 'Baru';
+                }
+            });
+            
+            // Tambahkan status aktif ke menu item yang sesuai
+            const activeMenuItem = document.querySelector(`.menu-item[data-page="${pageName}"]`);
+            if (activeMenuItem) {
+                activeMenuItem.classList.add('active');
+            }
+        }
+        
+        function updateDocumentTitle(pageName) {
+            const titles = {
+                'parkir': 'Informasi Parkir Yogyakarta 2026',
+                'lalu-lintas': 'Informasi Lalu Lintas Yogyakarta 2026'
+            };
+            
+            if (titles[pageName]) {
+                document.title = titles[pageName];
+            }
+        }
+        
         // ====== INITIALIZATION ======
         async function initApp() {
-            // Initialize Supabase
+            // Initialize menu system
+            initMenu();
+            
+            // Initialize Supabase (hanya untuk halaman parkir)
             const success = await initSupabase();
             
             if (success) {
-                console.log('🚀 Aplikasi Parkir Jogja siap!');
+                console.log('🚀 Aplikasi Parkir & Lalu Lintas Jogja siap!');
             }
         }
         
@@ -909,7 +1322,7 @@
                 
                 console.log('✅ Supabase initialized');
                 
-                // Load initial data
+                // Load initial data untuk halaman parkir
                 await loadDataFromSupabase();
                 
                 // Setup realtime updates
@@ -920,7 +1333,7 @@
             } catch (error) {
                 console.error('❌ Init failed:', error);
                 
-                // Load offline data
+                // Load offline data untuk halaman parkir
                 loadOfflineData();
                 
                 return false;
@@ -929,6 +1342,9 @@
         
         // ====== DATA LOADING ======
         async function loadDataFromSupabase() {
+            // Hanya load data jika di halaman parkir
+            if (window.appState.currentPage !== 'parkir') return;
+            
             showLoading('Memuat data parkir...');
             
             try {
@@ -992,11 +1408,11 @@
                     (payload) => {
                         console.log(`🔄 Update: ${payload.new?.nama}`);
                         
-                        // Reload data
-                        loadDataFromSupabase();
-                        
-                        // Show notification
-                        showNotification(`🔄 ${payload.new?.nama} diperbarui`);
+                        // Reload data hanya jika di halaman parkir
+                        if (window.appState.currentPage === 'parkir') {
+                            loadDataFromSupabase();
+                            showNotification(`🔄 ${payload.new?.nama} diperbarui`);
+                        }
                     }
                 )
                 .subscribe();
@@ -1004,6 +1420,12 @@
         
         // ====== SEARCH FUNCTIONS ======
         async function cariParkirTerdekat() {
+            // Hanya berfungsi di halaman parkir
+            if (window.appState.currentPage !== 'parkir') {
+                showNotification('⚠️ Fitur ini hanya tersedia di halaman Informasi Parkir');
+                return;
+            }
+            
             const btn = document.getElementById('btnCari');
             const originalText = btn.innerHTML;
             
@@ -1225,6 +1647,9 @@
         
         // ====== UI RENDER FUNCTIONS ======
         function renderLokasi() {
+            // Hanya render jika di halaman parkir
+            if (window.appState.currentPage !== 'parkir') return;
+            
             const container = document.getElementById('lokasiList');
             if (!container || !window.appState.data.length) {
                 container.innerHTML = '<div class="lokasi-item"><div class="card-header"><div class="card-title">Tidak ada data</div></div></div>';
@@ -1374,6 +1799,9 @@
         }
         
         function highlightClosestParking() {
+            // Hanya highlight jika di halaman parkir
+            if (window.appState.currentPage !== 'parkir') return;
+            
             // Remove previous highlights
             document.querySelectorAll('.lokasi-item').forEach(item => {
                 item.classList.remove('closest');
@@ -1391,6 +1819,9 @@
         }
         
         function updateTotalCounters() {
+            // Hanya update jika di halaman parkir
+            if (window.appState.currentPage !== 'parkir') return;
+            
             if (!window.appState.data.length) return;
             
             const totals = window.appState.data.reduce((acc, lokasi) => {
@@ -1505,7 +1936,7 @@
             if (!window.supabase) {
                 await new Promise((resolve) => {
                     const checkSupabase = setInterval(() => {
-                        if (window.supabase) {
+                         if (window.supabase) {
                             clearInterval(checkSupabase);
                             resolve();
                         }
@@ -1518,4 +1949,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
