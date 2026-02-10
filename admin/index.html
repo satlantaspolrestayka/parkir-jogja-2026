@@ -7,79 +7,241 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f1b3d 0%, #1E3A8A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
         
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
-        .header { background: #1e40af; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .container { 
+            width: 100%; 
+            max-width: 500px; 
+        }
         
-        .login-form, .admin-panel { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .hidden { display: none !important; }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
-        button:hover { background: #1e3a8a; }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
         
-        .parkir-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        .kapasitas-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 10px 0; }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
         
-        .success { background: #10b981; }
-        .danger { background: #ef4444; }
+        .email-display {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
         
-        #console { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
-            background: #000; 
-            color: #0f0; 
-            padding: 10px; 
-            font-family: monospace; 
-            font-size: 12px; 
-            max-height: 200px; 
-            overflow-y: auto; 
-            z-index: 9999; 
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af, #1e3a8a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #cbd5e1;
+        }
+        
+        .status-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 2px solid #86efac;
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+        
+        .status-loading {
+            background: #f0f9ff;
+            color: #1e40af;
+            border: 2px solid #93c5fd;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .admin-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .parkir-item {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        
+        .parkir-item:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .kapasitas-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- LOGIN FORM -->
-        <div class="login-form" id="loginForm">
-            <div class="header">
-                <h1>Admin Login</h1>
-                <p>Sistem Informasi Parkir Yogyakarta</p>
+    <!-- LOGIN SCREEN -->
+    <div class="container" id="loginContainer">
+        <div class="card">
+            <div class="logo">🚗 Satlantas Polresta Yogyakarta</div>
+            <div class="subtitle">Sistem Admin Parkir Real-time</div>
+            
+            <div class="email-display">
+                <span>📧</span>
+                <span id="userEmail">unitkamselpolrestayka@gmail.com</span>
             </div>
-            <input type="email" id="email" placeholder="Email" value="unitkamselpolrestayka@gmail.com">
-            <input type="password" id="password" placeholder="Password" value="unitkamsel123">
-            <button onclick="login()" class="success">Login</button>
-            <button onclick="sendMagicLink()">Login dengan Magic Link</button>
-            <p style="color: #666; font-size: 12px; margin-top: 20px;">
-                Jika password tidak bekerja, gunakan Magic Link
+            
+            <p style="color: #475569; margin-bottom: 20px;">
+                Klik tombol di bawah untuk menerima link login via email
             </p>
-        </div>
-        
-        <!-- ADMIN PANEL -->
-        <div class="admin-panel hidden" id="adminPanel">
-            <div class="header">
-                <h1>Admin Panel</h1>
-                <p>Update Kapasitas Parkir Real-time</p>
-                <p id="userInfo" style="font-size: 14px; margin-top: 10px;"></p>
+            
+            <button class="btn btn-primary" onclick="sendMagicLink()" id="btnSendLink">
+                🔗 Kirim Magic Link ke Email Saya
+            </button>
+            
+            <button class="btn btn-secondary" onclick="showPasswordLogin()">
+                🔐 Login dengan Password
+            </button>
+            
+            <!-- PASSWORD LOGIN (HIDDEN) -->
+            <div id="passwordForm" class="hidden" style="margin-top: 20px;">
+                <input type="password" id="password" placeholder="Masukkan password" 
+                       style="width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 2px solid #cbd5e1;">
+                <button class="btn btn-primary" onclick="loginWithPassword()">Login</button>
             </div>
             
-            <div id="parkirList">
-                <!-- Data akan dimuat di sini -->
-            </div>
+            <div id="status" class="status-box"></div>
             
-            <div style="margin-top: 20px; text-align: center;">
-                <button onclick="logout()" class="danger">Logout</button>
-                <button onclick="refreshData()">Refresh Data</button>
-                <button onclick="testConnection()">Test Connection</button>
+            <div style="margin-top: 30px; font-size: 14px; color: #64748b;">
+                <p>📬 Link login akan dikirim ke email di atas</p>
+                <p>🔄 Setelah klik link, Anda akan login otomatis</p>
+                <p>🔒 Sistem real-time akan update otomatis ke website publik</p>
             </div>
         </div>
     </div>
     
-    <!-- DEBUG CONSOLE -->
-    <div id="console" style="display: none;"></div>
+    <!-- ADMIN PANEL -->
+    <div class="container hidden" id="adminContainer">
+        <div class="admin-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div>
+                    <h1 style="color: #1e40af; margin: 0;">Admin Panel Parkir</h1>
+                    <p style="color: #64748b; margin: 5px 0 0 0;" id="adminInfo">
+                        Loading user info...
+                    </p>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()" style="width: auto; padding: 10px 20px;">
+                    👋 Logout
+                </button>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #475569;">📊 Status Sistem</h3>
+                <div id="systemStatus">Memuat status...</div>
+            </div>
+            
+            <h2 style="color: #1e40af; border-bottom: 3px solid #1e40af; padding-bottom: 10px;">
+                📍 Update Kapasitas Parkir
+            </h2>
+            
+            <div id="parkirList">
+                <!-- Data akan dimuat di sini -->
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+                    <p>Memuat data parkir...</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn btn-primary" onclick="refreshData()" style="width: auto; padding: 12px 30px;">
+                    🔄 Refresh Data
+                </button>
+                <button class="btn btn-secondary" onclick="checkRealtime()" style="width: auto; padding: 12px 30px;">
+                    📡 Test Real-time
+                </button>
+            </div>
+        </div>
+    </div>
     
     <script>
         // ====== KONFIGURASI ======
@@ -89,57 +251,112 @@
         let supabase;
         let currentUser = null;
         
-        // ====== DEBUG CONSOLE ======
-        function debugLog(message, data = null) {
-            console.log(message, data);
-            const consoleDiv = document.getElementById('console');
-            if (consoleDiv) {
-                const line = document.createElement('div');
-                line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-                if (data) line.textContent += `: ${JSON.stringify(data).substring(0, 100)}`;
-                consoleDiv.appendChild(line);
-                consoleDiv.scrollTop = consoleDiv.scrollHeight;
-            }
-        }
-        
         // ====== INISIALISASI ======
         document.addEventListener('DOMContentLoaded', async () => {
-            debugLog('🚀 Initializing Admin Panel...');
+            console.log('🚀 Initializing Admin Panel...');
             
             try {
                 // Inisialisasi Supabase
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                debugLog('✅ Supabase client initialized');
                 
                 // Cek session yang ada
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                
-                if (sessionError) {
-                    debugLog('❌ Session error:', sessionError);
-                    return;
-                }
+                const { data: { session } } = await supabase.auth.getSession();
                 
                 if (session) {
-                    debugLog('✅ Existing session found');
+                    console.log('✅ Existing session found');
                     currentUser = session.user;
                     showAdminPanel();
                     loadParkirData();
+                    updateSystemStatus();
                 } else {
-                    debugLog('⚠️ No active session');
+                    console.log('⚠️ No active session - showing login');
                 }
                 
             } catch (error) {
-                debugLog('❌ Initialization error:', error);
-                alert('Error initializing: ' + error.message);
+                console.error('❌ Initialization error:', error);
+                showStatus('❌ Error initializing: ' + error.message, 'error');
             }
         });
         
-        // ====== FUNGSI LOGIN ======
-        async function login() {
-            const email = document.getElementById('email').value;
+        // ====== MAGIC LINK ======
+        async function sendMagicLink() {
+            const email = document.getElementById('userEmail').textContent;
+            const btn = document.getElementById('btnSendLink');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '📨 Mengirim link...';
+            showStatus('📨 Mengirim magic link ke email Anda...', 'loading');
+            
+            try {
+                const { error } = await supabase.auth.signInWithOtp({
+                    email: email,
+                    options: {
+                        emailRedirectTo: window.location.href
+                    }
+                });
+                
+                if (error) throw error;
+                
+                showStatus(`
+                    ✅ <strong>Magic link telah dikirim!</strong><br>
+                    • Cek inbox: <strong>${email}</strong><br>
+                    • Buka link dalam email<br>
+                    • Anda akan login otomatis<br><br>
+                    <small>Jika tidak ada di inbox, cek folder spam</small>
+                `, 'success');
+                
+                // Auto-check for session every 3 seconds
+                startSessionCheck();
+                
+            } catch (error) {
+                console.error('❌ Magic link error:', error);
+                showStatus('❌ Gagal mengirim link: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        function startSessionCheck() {
+            let attempts = 0;
+            const maxAttempts = 60; // 3 menit (60 * 3 detik)
+            
+            const interval = setInterval(async () => {
+                attempts++;
+                
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    clearInterval(interval);
+                    currentUser = session.user;
+                    showAdminPanel();
+                    loadParkirData();
+                    updateSystemStatus();
+                    showStatus('✅ Login berhasil! Mengalihkan...', 'success');
+                }
+                
+                if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    showStatus('⏱️ Waktu habis. Coba kirim link lagi.', 'error');
+                }
+            }, 3000); // Cek setiap 3 detik
+        }
+        
+        // ====== PASSWORD LOGIN ======
+        function showPasswordLogin() {
+            document.getElementById('passwordForm').classList.remove('hidden');
+        }
+        
+        async function loginWithPassword() {
+            const email = document.getElementById('userEmail').textContent;
             const password = document.getElementById('password').value;
             
-            debugLog(`🔐 Attempting login: ${email}`);
+            if (!password) {
+                showStatus('❌ Masukkan password', 'error');
+                return;
+            }
+            
+            showStatus('🔐 Memproses login...', 'loading');
             
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({
@@ -147,91 +364,40 @@
                     password: password
                 });
                 
-                if (error) {
-                    debugLog('❌ Login failed:', error);
-                    alert('Login gagal: ' + error.message);
-                    return;
-                }
+                if (error) throw error;
                 
-                debugLog('✅ Login successful');
                 currentUser = data.user;
                 showAdminPanel();
                 loadParkirData();
+                updateSystemStatus();
                 
             } catch (error) {
-                debugLog('❌ Login exception:', error);
-                alert('Error: ' + error.message);
+                console.error('❌ Login error:', error);
+                showStatus('❌ Login gagal: ' + error.message, 'error');
             }
         }
         
-        async function sendMagicLink() {
-            const email = document.getElementById('email').value;
-            
-            debugLog(`📧 Sending magic link to: ${email}`);
-            
-            const { error } = await supabase.auth.signInWithOtp({
-                email: email,
-                options: {
-                    emailRedirectTo: window.location.href
-                }
-            });
-            
-            if (error) {
-                debugLog('❌ Magic link error:', error);
-                alert('Error: ' + error.message);
-                return;
-            }
-            
-            debugLog('✅ Magic link sent');
-            alert('✅ Link login telah dikirim ke email Anda! Cek inbox/spam folder.');
-        }
-        
-        // ====== LOGOUT ======
-        async function logout() {
-            try {
-                await supabase.auth.signOut();
-                currentUser = null;
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('adminPanel').classList.add('hidden');
-                debugLog('✅ Logged out');
-            } catch (error) {
-                debugLog('❌ Logout error:', error);
-            }
-        }
-        
-        // ====== TAMPILKAN ADMIN PANEL ======
+        // ====== ADMIN PANEL ======
         function showAdminPanel() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('loginContainer').classList.add('hidden');
+            document.getElementById('adminContainer').classList.remove('hidden');
             
-            // Tampilkan info user
             if (currentUser) {
-                document.getElementById('userInfo').innerHTML = `
-                    Logged in as: <strong>${currentUser.email}</strong><br>
-                    User ID: ${currentUser.id.substring(0, 8)}...
+                document.getElementById('adminInfo').innerHTML = `
+                    Logged in as: <strong>${currentUser.email}</strong> | 
+                    ID: ${currentUser.id.substring(0, 8)}...
                 `;
             }
-            
-            debugLog('👨‍💼 Admin panel shown');
         }
         
-        // ====== LOAD DATA PARKIR ======
         async function loadParkirData() {
-            debugLog('📊 Loading parking data...');
-            
             try {
                 const { data, error } = await supabase
                     .from('parkir_lokasi')
                     .select('*')
                     .order('id');
                 
-                if (error) {
-                    debugLog('❌ Load data error:', error);
-                    alert('Error loading data: ' + error.message);
-                    return;
-                }
-                
-                debugLog(`✅ Loaded ${data.length} parking locations`);
+                if (error) throw error;
                 
                 const container = document.getElementById('parkirList');
                 let html = '';
@@ -239,32 +405,46 @@
                 data.forEach(item => {
                     html += `
                         <div class="parkir-item" data-id="${item.id}">
-                            <h3>${item.nama} (ID: ${item.id})</h3>
-                            <p><strong>Alamat:</strong> ${item.alamat}</p>
-                            <p><strong>Koordinat:</strong> ${item.koordinat}</p>
+                            <h3 style="margin: 0 0 10px 0; color: #1e40af;">${item.nama}</h3>
+                            <p style="margin: 0 0 10px 0; color: #64748b;">
+                                📍 ${item.alamat}
+                            </p>
                             
                             <div class="kapasitas-inputs">
                                 <div>
-                                    <label>Bus:</label>
+                                    <label style="display: block; margin-bottom: 5px; color: #dc2626; font-weight: bold;">
+                                        🚌 Bus
+                                    </label>
                                     <input type="number" id="bus-${item.id}" value="${item.bus}" min="0">
                                 </div>
                                 <div>
-                                    <label>Mobil:</label>
+                                    <label style="display: block; margin-bottom: 5px; color: #1e40af; font-weight: bold;">
+                                        🚗 Mobil
+                                    </label>
                                     <input type="number" id="mobil-${item.id}" value="${item.mobil}" min="0">
                                 </div>
                                 <div>
-                                    <label>Motor:</label>
+                                    <label style="display: block; margin-bottom: 5px; color: #059669; font-weight: bold;">
+                                        🏍️ Motor
+                                    </label>
                                     <input type="number" id="motor-${item.id}" value="${item.motor}" min="0">
                                 </div>
                             </div>
                             
-                            <button onclick="updateParkir(${item.id})" class="success">Update Data</button>
-                            <button onclick="resetParkir(${item.id})">Reset ke 0</button>
-                            <button onclick="testUpdate(${item.id})">Test Update</button>
+                            <div style="margin-top: 15px;">
+                                <button onclick="updateParkir(${item.id})" 
+                                        style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-right: 10px;">
+                                    ✅ Update
+                                </button>
+                                <button onclick="resetParkir(${item.id})" 
+                                        style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                                    🔄 Reset ke 0
+                                </button>
+                            </div>
                             
-                            <span style="font-size: 12px; color: #666; margin-left: 10px;">
-                                <br>Terakhir update: ${item.updated_at ? new Date(item.updated_at).toLocaleString() : 'N/A'}
-                            </span>
+                            <p style="margin-top: 10px; font-size: 12px; color: #94a3b8;">
+                                Terakhir update: ${item.updated_at ? new Date(item.updated_at).toLocaleString() : 'Belum pernah'}
+                            </p>
                         </div>
                     `;
                 });
@@ -272,18 +452,20 @@
                 container.innerHTML = html;
                 
             } catch (error) {
-                debugLog('❌ Load data exception:', error);
-                alert('Exception: ' + error.message);
+                console.error('❌ Load data error:', error);
+                document.getElementById('parkirList').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc2626;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+                        <p>Error loading data: ${error.message}</p>
+                    </div>
+                `;
             }
         }
         
-        // ====== UPDATE DATA PARKIR ======
         async function updateParkir(id) {
             const bus = parseInt(document.getElementById(`bus-${id}`).value) || 0;
             const mobil = parseInt(document.getElementById(`mobil-${id}`).value) || 0;
             const motor = parseInt(document.getElementById(`motor-${id}`).value) || 0;
-            
-            debugLog(`🔄 Updating ID ${id}:`, { bus, mobil, motor });
             
             try {
                 const { error } = await supabase
@@ -296,38 +478,14 @@
                     })
                     .eq('id', id);
                 
-                if (error) {
-                    debugLog('❌ Update error:', error);
-                    alert('Update gagal: ' + error.message);
-                    return;
-                }
+                if (error) throw error;
                 
-                debugLog('✅ Update successful');
-                alert('✅ Data berhasil diperbarui!');
-                
-                // Refresh data
-                loadParkirData();
+                alert(`✅ Data berhasil diperbarui!\n\nBus: ${bus}\nMobil: ${mobil}\nMotor: ${motor}\n\nWebsite publik akan otomatis update.`);
                 
             } catch (error) {
-                debugLog('❌ Update exception:', error);
-                alert('Exception: ' + error.message);
+                console.error('❌ Update error:', error);
+                alert('❌ Update gagal: ' + error.message);
             }
-        }
-        
-        // ====== FUNGSI TEST ======
-        async function testUpdate(id) {
-            // Test update kecil
-            debugLog(`🧪 Testing update for ID ${id}`);
-            
-            const randomBus = Math.floor(Math.random() * 100);
-            const randomMobil = Math.floor(Math.random() * 200);
-            const randomMotor = Math.floor(Math.random() * 300);
-            
-            document.getElementById(`bus-${id}`).value = randomBus;
-            document.getElementById(`mobil-${id}`).value = randomMobil;
-            document.getElementById(`motor-${id}`).value = randomMotor;
-            
-            await updateParkir(id);
         }
         
         function resetParkir(id) {
@@ -339,45 +497,79 @@
             }
         }
         
-        function refreshData() {
-            debugLog('🔄 Manual refresh');
-            loadParkirData();
-        }
-        
-        async function testConnection() {
-            debugLog('🔗 Testing Supabase connection...');
-            
+        // ====== SYSTEM FUNCTIONS ======
+        async function updateSystemStatus() {
             try {
-                // Test 1: Query sederhana
                 const { data, error } = await supabase
                     .from('parkir_lokasi')
                     .select('count', { count: 'exact', head: true });
                 
-                if (error) {
-                    debugLog('❌ Connection test failed:', error);
-                    alert('Connection test failed: ' + error.message);
-                    return;
-                }
+                if (error) throw error;
                 
-                debugLog('✅ Connection test successful');
-                alert(`✅ Koneksi berhasil! Database memiliki ${data || '?'} records.`);
+                const { data: lastUpdate } = await supabase
+                    .from('parkir_lokasi')
+                    .select('updated_at')
+                    .order('updated_at', { ascending: false })
+                    .limit(1);
                 
-                // Test 2: Cek session
-                const { data: sessionData } = await supabase.auth.getSession();
-                debugLog('📝 Session status:', sessionData.session ? 'Active' : 'No session');
+                const statusDiv = document.getElementById('systemStatus');
+                statusDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="background: #dbeafe; padding: 10px; border-radius: 8px;">
+                            <strong>Lokasi</strong><br>
+                            <span style="font-size: 24px; font-weight: bold;">${data}</span>
+                        </div>
+                        <div style="background: #dcfce7; padding: 10px; border-radius: 8px;">
+                            <strong>Update Terakhir</strong><br>
+                            ${lastUpdate && lastUpdate[0] ? new Date(lastUpdate[0].updated_at).toLocaleString() : 'Belum ada'}
+                        </div>
+                    </div>
+                `;
                 
             } catch (error) {
-                debugLog('❌ Connection test exception:', error);
-                alert('Test exception: ' + error.message);
+                console.error('❌ Status update error:', error);
             }
         }
         
-        // ====== TOGGLE DEBUG CONSOLE ======
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'd') {
-                const consoleDiv = document.getElementById('console');
-                consoleDiv.style.display = consoleDiv.style.display === 'none' ? 'block' : 'none';
-                debugLog('Debug console toggled');
+        function refreshData() {
+            loadParkirData();
+            updateSystemStatus();
+        }
+        
+        async function checkRealtime() {
+            alert('🔍 Test real-time:\n1. Buka website publik di tab lain\n2. Update data di sini\n3. Lihat website publik otomatis update');
+        }
+        
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+                currentUser = null;
+                document.getElementById('loginContainer').classList.remove('hidden');
+                document.getElementById('adminContainer').classList.add('hidden');
+                showStatus('✅ Logout berhasil', 'success');
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+            }
+        }
+        
+        // ====== HELPER FUNCTIONS ======
+        function showStatus(message, type) {
+            const statusBox = document.getElementById('status');
+            statusBox.innerHTML = message;
+            statusBox.className = `status-box status-${type}`;
+            statusBox.style.display = 'block';
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    statusBox.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // ====== AUTO-CLEANUP ======
+        window.addEventListener('beforeunload', async () => {
+            if (supabase && currentUser) {
+                await supabase.auth.signOut();
             }
         });
     </script>
