@@ -13,7 +13,7 @@
         .header { background: #1e40af; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         
         .login-form, .admin-panel { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         
         input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
         button { background: #1e40af; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
@@ -24,6 +24,21 @@
         
         .success { background: #10b981; }
         .danger { background: #ef4444; }
+        
+        #console { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #000; 
+            color: #0f0; 
+            padding: 10px; 
+            font-family: monospace; 
+            font-size: 12px; 
+            max-height: 200px; 
+            overflow-y: auto; 
+            z-index: 9999; 
+        }
     </style>
 </head>
 <body>
@@ -35,10 +50,11 @@
                 <p>Sistem Informasi Parkir Yogyakarta</p>
             </div>
             <input type="email" id="email" placeholder="Email" value="unitkamselpolrestayka@gmail.com">
-            <input type="password" id="password" placeholder="Password">
+            <input type="password" id="password" placeholder="Password" value="unitkamsel123">
             <button onclick="login()" class="success">Login</button>
+            <button onclick="sendMagicLink()">Login dengan Magic Link</button>
             <p style="color: #666; font-size: 12px; margin-top: 20px;">
-                Untuk testing: email admin@parkirjogja.com, password sesuai yang dibuat di Supabase
+                Jika password tidak bekerja, gunakan Magic Link
             </p>
         </div>
         
@@ -47,6 +63,7 @@
             <div class="header">
                 <h1>Admin Panel</h1>
                 <p>Update Kapasitas Parkir Real-time</p>
+                <p id="userInfo" style="font-size: 14px; margin-top: 10px;"></p>
             </div>
             
             <div id="parkirList">
@@ -56,137 +73,265 @@
             <div style="margin-top: 20px; text-align: center;">
                 <button onclick="logout()" class="danger">Logout</button>
                 <button onclick="refreshData()">Refresh Data</button>
+                <button onclick="testConnection()">Test Connection</button>
             </div>
         </div>
     </div>
     
+    <!-- DEBUG CONSOLE -->
+    <div id="console" style="display: none;"></div>
+    
     <script>
-        // Konfigurasi Supabase
+        // ====== KONFIGURASI ======
         const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
         
         let supabase;
         let currentUser = null;
         
-        // Inisialisasi
-        document.addEventListener('DOMContentLoaded', () => {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
-            // Cek session
-            checkSession();
-        });
-        
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                showAdminPanel();
-                loadParkirData();
+        // ====== DEBUG CONSOLE ======
+        function debugLog(message, data = null) {
+            console.log(message, data);
+            const consoleDiv = document.getElementById('console');
+            if (consoleDiv) {
+                const line = document.createElement('div');
+                line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                if (data) line.textContent += `: ${JSON.stringify(data).substring(0, 100)}`;
+                consoleDiv.appendChild(line);
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
             }
         }
         
+        // ====== INISIALISASI ======
+        document.addEventListener('DOMContentLoaded', async () => {
+            debugLog('🚀 Initializing Admin Panel...');
+            
+            try {
+                // Inisialisasi Supabase
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                debugLog('✅ Supabase client initialized');
+                
+                // Cek session yang ada
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError) {
+                    debugLog('❌ Session error:', sessionError);
+                    return;
+                }
+                
+                if (session) {
+                    debugLog('✅ Existing session found');
+                    currentUser = session.user;
+                    showAdminPanel();
+                    loadParkirData();
+                } else {
+                    debugLog('⚠️ No active session');
+                }
+                
+            } catch (error) {
+                debugLog('❌ Initialization error:', error);
+                alert('Error initializing: ' + error.message);
+            }
+        });
+        
+        // ====== FUNGSI LOGIN ======
         async function login() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            const { data, error } = await supabase.auth.signInWithPassword({
+            debugLog(`🔐 Attempting login: ${email}`);
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    debugLog('❌ Login failed:', error);
+                    alert('Login gagal: ' + error.message);
+                    return;
+                }
+                
+                debugLog('✅ Login successful');
+                currentUser = data.user;
+                showAdminPanel();
+                loadParkirData();
+                
+            } catch (error) {
+                debugLog('❌ Login exception:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function sendMagicLink() {
+            const email = document.getElementById('email').value;
+            
+            debugLog(`📧 Sending magic link to: ${email}`);
+            
+            const { error } = await supabase.auth.signInWithOtp({
                 email: email,
-                password: password
+                options: {
+                    emailRedirectTo: window.location.href
+                }
             });
             
             if (error) {
-                alert('Login gagal: ' + error.message);
+                debugLog('❌ Magic link error:', error);
+                alert('Error: ' + error.message);
                 return;
             }
             
-            currentUser = data.user;
-            showAdminPanel();
-            loadParkirData();
+            debugLog('✅ Magic link sent');
+            alert('✅ Link login telah dikirim ke email Anda! Cek inbox/spam folder.');
         }
         
+        // ====== LOGOUT ======
         async function logout() {
-            await supabase.auth.signOut();
-            currentUser = null;
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
+            try {
+                await supabase.auth.signOut();
+                currentUser = null;
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('adminPanel').classList.add('hidden');
+                debugLog('✅ Logged out');
+            } catch (error) {
+                debugLog('❌ Logout error:', error);
+            }
         }
         
+        // ====== TAMPILKAN ADMIN PANEL ======
         function showAdminPanel() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
-        }
-        
-        async function loadParkirData() {
-            const { data, error } = await supabase
-                .from('parkir_lokasi')
-                .select('*')
-                .order('id');
             
-            if (error) {
-                alert('Error loading data: ' + error.message);
-                return;
+            // Tampilkan info user
+            if (currentUser) {
+                document.getElementById('userInfo').innerHTML = `
+                    Logged in as: <strong>${currentUser.email}</strong><br>
+                    User ID: ${currentUser.id.substring(0, 8)}...
+                `;
             }
             
-            const container = document.getElementById('parkirList');
-            let html = '';
-            
-            data.forEach(item => {
-                html += `
-                    <div class="parkir-item">
-                        <h3>${item.nama}</h3>
-                        <p>${item.alamat}</p>
-                        <div class="kapasitas-inputs">
-                            <div>
-                                <label>Bus:</label>
-                                <input type="number" id="bus-${item.id}" value="${item.bus}" min="0">
-                            </div>
-                            <div>
-                                <label>Mobil:</label>
-                                <input type="number" id="mobil-${item.id}" value="${item.mobil}" min="0">
-                            </div>
-                            <div>
-                                <label>Motor:</label>
-                                <input type="number" id="motor-${item.id}" value="${item.motor}" min="0">
-                            </div>
-                        </div>
-                        <button onclick="updateParkir(${item.id})" class="success">Update</button>
-                        <button onclick="resetParkir(${item.id})">Reset</button>
-                        <span style="font-size: 12px; color: #666; margin-left: 10px;">
-                            Terakhir update: ${new Date(item.updated_at).toLocaleString()}
-                        </span>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
+            debugLog('👨‍💼 Admin panel shown');
         }
         
+        // ====== LOAD DATA PARKIR ======
+        async function loadParkirData() {
+            debugLog('📊 Loading parking data...');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('parkir_lokasi')
+                    .select('*')
+                    .order('id');
+                
+                if (error) {
+                    debugLog('❌ Load data error:', error);
+                    alert('Error loading data: ' + error.message);
+                    return;
+                }
+                
+                debugLog(`✅ Loaded ${data.length} parking locations`);
+                
+                const container = document.getElementById('parkirList');
+                let html = '';
+                
+                data.forEach(item => {
+                    html += `
+                        <div class="parkir-item" data-id="${item.id}">
+                            <h3>${item.nama} (ID: ${item.id})</h3>
+                            <p><strong>Alamat:</strong> ${item.alamat}</p>
+                            <p><strong>Koordinat:</strong> ${item.koordinat}</p>
+                            
+                            <div class="kapasitas-inputs">
+                                <div>
+                                    <label>Bus:</label>
+                                    <input type="number" id="bus-${item.id}" value="${item.bus}" min="0">
+                                </div>
+                                <div>
+                                    <label>Mobil:</label>
+                                    <input type="number" id="mobil-${item.id}" value="${item.mobil}" min="0">
+                                </div>
+                                <div>
+                                    <label>Motor:</label>
+                                    <input type="number" id="motor-${item.id}" value="${item.motor}" min="0">
+                                </div>
+                            </div>
+                            
+                            <button onclick="updateParkir(${item.id})" class="success">Update Data</button>
+                            <button onclick="resetParkir(${item.id})">Reset ke 0</button>
+                            <button onclick="testUpdate(${item.id})">Test Update</button>
+                            
+                            <span style="font-size: 12px; color: #666; margin-left: 10px;">
+                                <br>Terakhir update: ${item.updated_at ? new Date(item.updated_at).toLocaleString() : 'N/A'}
+                            </span>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                debugLog('❌ Load data exception:', error);
+                alert('Exception: ' + error.message);
+            }
+        }
+        
+        // ====== UPDATE DATA PARKIR ======
         async function updateParkir(id) {
             const bus = parseInt(document.getElementById(`bus-${id}`).value) || 0;
             const mobil = parseInt(document.getElementById(`mobil-${id}`).value) || 0;
             const motor = parseInt(document.getElementById(`motor-${id}`).value) || 0;
             
-            const { error } = await supabase
-                .from('parkir_lokasi')
-                .update({ 
-                    bus: bus,
-                    mobil: mobil,
-                    motor: motor,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', id);
+            debugLog(`🔄 Updating ID ${id}:`, { bus, mobil, motor });
             
-            if (error) {
-                alert('Error updating: ' + error.message);
-                return;
+            try {
+                const { error } = await supabase
+                    .from('parkir_lokasi')
+                    .update({ 
+                        bus: bus,
+                        mobil: mobil,
+                        motor: motor,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+                
+                if (error) {
+                    debugLog('❌ Update error:', error);
+                    alert('Update gagal: ' + error.message);
+                    return;
+                }
+                
+                debugLog('✅ Update successful');
+                alert('✅ Data berhasil diperbarui!');
+                
+                // Refresh data
+                loadParkirData();
+                
+            } catch (error) {
+                debugLog('❌ Update exception:', error);
+                alert('Exception: ' + error.message);
             }
+        }
+        
+        // ====== FUNGSI TEST ======
+        async function testUpdate(id) {
+            // Test update kecil
+            debugLog(`🧪 Testing update for ID ${id}`);
             
-            alert('✅ Data berhasil diperbarui!');
-            loadParkirData();
+            const randomBus = Math.floor(Math.random() * 100);
+            const randomMobil = Math.floor(Math.random() * 200);
+            const randomMotor = Math.floor(Math.random() * 300);
+            
+            document.getElementById(`bus-${id}`).value = randomBus;
+            document.getElementById(`mobil-${id}`).value = randomMobil;
+            document.getElementById(`motor-${id}`).value = randomMotor;
+            
+            await updateParkir(id);
         }
         
         function resetParkir(id) {
-            if (confirm('Reset data ke 0?')) {
+            if (confirm('Reset semua kapasitas ke 0?')) {
                 document.getElementById(`bus-${id}`).value = 0;
                 document.getElementById(`mobil-${id}`).value = 0;
                 document.getElementById(`motor-${id}`).value = 0;
@@ -195,8 +340,46 @@
         }
         
         function refreshData() {
+            debugLog('🔄 Manual refresh');
             loadParkirData();
         }
+        
+        async function testConnection() {
+            debugLog('🔗 Testing Supabase connection...');
+            
+            try {
+                // Test 1: Query sederhana
+                const { data, error } = await supabase
+                    .from('parkir_lokasi')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    debugLog('❌ Connection test failed:', error);
+                    alert('Connection test failed: ' + error.message);
+                    return;
+                }
+                
+                debugLog('✅ Connection test successful');
+                alert(`✅ Koneksi berhasil! Database memiliki ${data || '?'} records.`);
+                
+                // Test 2: Cek session
+                const { data: sessionData } = await supabase.auth.getSession();
+                debugLog('📝 Session status:', sessionData.session ? 'Active' : 'No session');
+                
+            } catch (error) {
+                debugLog('❌ Connection test exception:', error);
+                alert('Test exception: ' + error.message);
+            }
+        }
+        
+        // ====== TOGGLE DEBUG CONSOLE ======
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'd') {
+                const consoleDiv = document.getElementById('console');
+                consoleDiv.style.display = consoleDiv.style.display === 'none' ? 'block' : 'none';
+                debugLog('Debug console toggled');
+            }
+        });
     </script>
 </body>
 </html>
