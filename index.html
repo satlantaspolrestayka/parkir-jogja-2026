@@ -309,37 +309,25 @@
         .actions-section {
             padding: 0 15px 25px;
             margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+            text-align: center;
         }
         
         .action-btn {
-            padding: 14px 24px;
+            padding: 16px 30px;
             border: none;
-            border-radius: 10px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             transition: var(--transition-base);
-            min-width: 160px;
+            min-width: 250px;
             justify-content: center;
-        }
-        
-        .action-primary {
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
             box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
-        }
-        
-        .action-secondary {
-            background: var(--gray-100);
-            color: var(--gray-800);
-            border: 2px solid var(--gray-300);
         }
         
         .action-btn:hover {
@@ -355,165 +343,6 @@
             opacity: 0.7;
             cursor: not-allowed;
             transform: none !important;
-        }
-        
-        /* ====== FILTER MODAL ====== */
-        .filter-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .filter-modal.active {
-            display: flex;
-        }
-        
-        .filter-content {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--shadow-deep);
-            animation: slideUp 0.3s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--gray-200);
-        }
-        
-        .filter-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--gray-900);
-        }
-        
-        .close-filter {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray-500);
-            transition: var(--transition-base);
-        }
-        
-        .close-filter:hover {
-            color: var(--danger-600);
-            transform: rotate(90deg);
-        }
-        
-        .filter-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .filter-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            background: var(--gray-50);
-            border: 2px solid var(--gray-300);
-            transition: var(--transition-base);
-            cursor: pointer;
-        }
-        
-        .filter-option:hover {
-            border-color: var(--primary-500);
-            background: var(--gray-100);
-        }
-        
-        .filter-option.active {
-            border-color: var(--primary-600);
-            background: #dbeafe;
-        }
-        
-        .filter-icon {
-            font-size: 20px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .filter-checkbox {
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
-            border: 2px solid var(--gray-400);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-base);
-        }
-        
-        .filter-option.active .filter-checkbox {
-            background: var(--primary-600);
-            border-color: var(--primary-600);
-        }
-        
-        .filter-option.active .filter-checkbox::after {
-            content: '✓';
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        
-        .filter-label {
-            flex: 1;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-        
-        .filter-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .filter-btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition-base);
-        }
-        
-        .filter-apply {
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-            color: white;
-        }
-        
-        .filter-clear {
-            background: var(--gray-200);
-            color: var(--gray-700);
-            border: 2px solid var(--gray-300);
-        }
-        
-        .filter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         /* ====== MAIN CONTENT ====== */
@@ -569,6 +398,8 @@
         .lokasi-item:nth-child(1) { animation-delay: 0.1s; }
         .lokasi-item:nth-child(2) { animation-delay: 0.2s; }
         .lokasi-item:nth-child(3) { animation-delay: 0.3s; }
+        .lokasi-item:nth-child(4) { animation-delay: 0.4s; }
+        .lokasi-item:nth-child(5) { animation-delay: 0.5s; }
         
         .lokasi-item:hover { 
             transform: translateY(-2px);
@@ -720,8 +551,8 @@
         .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         
-        .btn-action { 
-            flex: 1; 
+        .btn-route { 
+            width: 100%;
             padding: 14px 16px; 
             border: none; 
             border-radius: 8px; 
@@ -735,36 +566,18 @@
             min-height: 46px;
             transition: var(--transition-base);
             border: 2px solid transparent;
-        }
-        
-        .btn-action:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-action:active {
-            transform: translateY(0);
-        }
-        
-        .btn-map { 
-            background: #dbeafe;
-            color: var(--primary-700); 
-            border-color: #93c5fd;
-        }
-        
-        .btn-map:hover {
-            background: #bfdbfe;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-        
-        .btn-route { 
-            background: #dcfce7;
-            color: var(--success-700);
-            border-color: #86efac;
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
         
         .btn-route:hover {
-            background: #bbf7d0;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-route:active {
+            transform: translateY(0);
         }
         
         /* ====== RESPONSIVE ====== */
@@ -804,19 +617,6 @@
                 margin-right: auto;
                 font-size: 24px;
             }
-            
-            .btn-action {
-                padding: 12px 14px;
-                min-height: 44px;
-            }
-            
-            .actions-section {
-                flex-direction: column;
-            }
-            
-            .action-btn {
-                width: 100%;
-            }
         }
         
         @media (max-width: 640px) {
@@ -829,6 +629,11 @@
             .lokasi-item {
                 padding: 16px;
                 margin: 0 8px;
+            }
+            
+            .action-btn {
+                width: 100%;
+                min-width: unset;
             }
         }
         
@@ -942,45 +747,6 @@
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
-    <!-- FILTER MODAL -->
-    <div class="filter-modal" id="filterModal">
-        <div class="filter-content">
-            <div class="filter-header">
-                <h2 class="filter-title">Filter Ketersediaan</h2>
-                <button class="close-filter" onclick="closeFilter()">&times;</button>
-            </div>
-            
-            <div class="filter-options">
-                <div class="filter-option" onclick="toggleFilter('bus')">
-                    <div class="filter-icon">🚌</div>
-                    <div class="filter-checkbox"></div>
-                    <div class="filter-label">Tersedia Bus</div>
-                </div>
-                
-                <div class="filter-option" onclick="toggleFilter('mobil')">
-                    <div class="filter-icon">🚗</div>
-                    <div class="filter-checkbox"></div>
-                    <div class="filter-label">Tersedia Mobil</div>
-                </div>
-                
-                <div class="filter-option" onclick="toggleFilter('motor')">
-                    <div class="filter-icon">🏍️</div>
-                    <div class="filter-checkbox"></div>
-                    <div class="filter-label">Tersedia Motor</div>
-                </div>
-            </div>
-            
-            <div class="filter-actions">
-                <button class="filter-btn filter-clear" onclick="clearFilters()">
-                    Bersihkan Filter
-                </button>
-                <button class="filter-btn filter-apply" onclick="applyFilters()">
-                    Terapkan Filter
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
         <!-- HEADER UTAMA -->
         <div class="main-header">
@@ -1022,12 +788,8 @@
         
         <!-- ACTIONS SECTION -->
         <div class="actions-section">
-            <button class="action-btn action-primary" onclick="cariParkirTerdekat()" id="btnCari">
+            <button class="action-btn" onclick="cariParkirTerdekat()" id="btnCari">
                 <span>📍</span> CARI PARKIR TERDEKAT
-            </button>
-            
-            <button class="action-btn action-secondary" onclick="openFilter()">
-                <span>🔍</span> FILTER KENDARAAN
             </button>
         </div>
         
@@ -1081,14 +843,8 @@
         // ====== STATE MANAGEMENT ======
         window.appState = {
             data: [],
-            filteredData: [],
             userPosition: null,
             distances: new Map(),
-            activeFilters: {
-                bus: false,
-                mobil: false,
-                motor: false
-            },
             isOnline: navigator.onLine,
             originalOrder: []
         };
@@ -1168,7 +924,6 @@
                 
                 // Update state
                 window.appState.data = processedData;
-                window.appState.filteredData = [...processedData];
                 window.appState.originalOrder = [...processedData];
                 
                 // Render data
@@ -1212,112 +967,6 @@
                 .subscribe();
         }
         
-        // ====== FILTER FUNCTIONS ======
-        function openFilter() {
-            const modal = document.getElementById('filterModal');
-            if (modal) {
-                modal.classList.add('active');
-                
-                // Update filter checkboxes based on current state
-                updateFilterCheckboxes();
-            }
-        }
-        
-        function closeFilter() {
-            const modal = document.getElementById('filterModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
-        
-        function toggleFilter(filterType) {
-            const option = document.querySelector(`.filter-option[onclick="toggleFilter('${filterType}')"]`);
-            if (option) {
-                option.classList.toggle('active');
-            }
-        }
-        
-        function updateFilterCheckboxes() {
-            // Update UI based on current filter state
-            Object.keys(window.appState.activeFilters).forEach(filterType => {
-                const option = document.querySelector(`.filter-option[onclick="toggleFilter('${filterType}')"]`);
-                if (option) {
-                    if (window.appState.activeFilters[filterType]) {
-                        option.classList.add('active');
-                    } else {
-                        option.classList.remove('active');
-                    }
-                }
-            });
-        }
-        
-        function applyFilters() {
-            // Get filter state from UI
-            const filters = {
-                bus: document.querySelector('.filter-option[onclick="toggleFilter(\'bus\')"]').classList.contains('active'),
-                mobil: document.querySelector('.filter-option[onclick="toggleFilter(\'mobil\')"]').classList.contains('active'),
-                motor: document.querySelector('.filter-option[onclick="toggleFilter(\'motor\')"]').classList.contains('active')
-            };
-            
-            window.appState.activeFilters = filters;
-            
-            // Apply filters
-            applyActiveFilters();
-            
-            // Close modal
-            closeFilter();
-            
-            // Show notification
-            const activeFilterCount = Object.values(filters).filter(Boolean).length;
-            if (activeFilterCount > 0) {
-                showNotification(`🔍 Filter diterapkan (${activeFilterCount} aktif)`);
-            }
-        }
-        
-        function clearFilters() {
-            // Reset all filter checkboxes
-            document.querySelectorAll('.filter-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            
-            // Clear filter state
-            window.appState.activeFilters = {
-                bus: false,
-                mobil: false,
-                motor: false
-            };
-            
-            // Reset to original data
-            window.appState.filteredData = [...window.appState.data];
-            
-            // Render
-            renderLokasi();
-            
-            // Close modal
-            closeFilter();
-            
-            // Show notification
-            showNotification('🧹 Filter dibersihkan');
-        }
-        
-        function applyActiveFilters() {
-            let filtered = [...window.appState.data];
-            
-            // Apply each active filter
-            if (window.appState.activeFilters.bus) {
-                filtered = filtered.filter(item => item.bus < item.max_bus);
-            }
-            if (window.appState.activeFilters.mobil) {
-                filtered = filtered.filter(item => item.mobil < item.max_mobil);
-            }
-            if (window.appState.activeFilters.motor) {
-                filtered = filtered.filter(item => item.motor < item.max_motor);
-            }
-            
-            window.appState.filteredData = filtered;
-            renderLokasi();
-        }
-        
         // ====== SEARCH FUNCTIONS ======
         async function cariParkirTerdekat() {
             const btn = document.getElementById('btnCari');
@@ -1333,14 +982,15 @@
                 // Calculate distances
                 await calculateAllDistances();
                 
-                // Sort by distance (closest first)
-                const sorted = [...window.appState.filteredData].sort((a, b) => {
+                // Create a copy of the data and sort by distance
+                const sorted = [...window.appState.data].sort((a, b) => {
                     const distA = window.appState.distances.get(a.id) ?? Infinity;
                     const distB = window.appState.distances.get(b.id) ?? Infinity;
                     return distA - distB;
                 });
                 
-                window.appState.filteredData = sorted;
+                // Update the displayed data with sorted version
+                window.appState.data = sorted;
                 renderLokasi();
                 
                 // Highlight closest
@@ -1360,7 +1010,7 @@
                     message = 'Waktu habis, coba lagi.';
                 }
                 
-                alert(`❌ ${message}`);
+                showNotification(`❌ ${message}`);
                 
             } finally {
                 btn.disabled = false;
@@ -1427,7 +1077,7 @@
         }
         
         async function calculateAllDistances() {
-            if (!window.appState.userPosition || !window.appState.filteredData.length) {
+            if (!window.appState.userPosition || !window.appState.data.length) {
                 console.warn('Cannot calculate distances: missing position or data');
                 return;
             }
@@ -1438,7 +1088,7 @@
             const { lat: userLat, lng: userLng } = window.appState.userPosition;
             
             // Calculate distances
-            window.appState.filteredData.forEach((lokasi) => {
+            window.appState.data.forEach((lokasi) => {
                 try {
                     const coords = lokasi.koordinat.split(',').map(Number);
                     if (coords.length === 2 && !coords.some(isNaN)) {
@@ -1462,17 +1112,91 @@
             hideLoading();
         }
         
+        // ====== ROUTE FUNCTION (FIXED) ======
+        function ruteKeLokasi(koordinat, nama) {
+            // Show loading immediately for better UX
+            showLoading('Membuka aplikasi peta...');
+            
+            // Get user location first
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const userLat = pos.coords.latitude;
+                    const userLng = pos.coords.longitude;
+                    
+                    // Hide loading
+                    hideLoading();
+                    
+                    // Check device type
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    const isAndroid = /Android/.test(navigator.userAgent);
+                    
+                    // Encode the name for URL
+                    const encodedName = encodeURIComponent(nama);
+                    
+                    if (isIOS) {
+                        // Try Apple Maps first
+                        const appleMapsUrl = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
+                        window.location.href = appleMapsUrl;
+                        
+                        // Fallback to Google Maps if Apple Maps fails
+                        setTimeout(() => {
+                            if (document.hasFocus()) {
+                                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                                window.open(googleMapsUrl, '_blank');
+                            }
+                        }, 500);
+                        
+                    } else if (isAndroid) {
+                        // Android - try Google Maps
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                        
+                        // Try to open in Google Maps app first
+                        window.location.href = `google.navigation:q=${koordinat}&mode=d`;
+                        
+                        setTimeout(() => {
+                            if (document.hasFocus()) {
+                                window.open(googleMapsUrl, '_blank');
+                            }
+                        }, 500);
+                        
+                    } else {
+                        // Desktop - open Google Maps
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                        window.open(googleMapsUrl, '_blank');
+                        hideLoading();
+                    }
+                },
+                (error) => {
+                    hideLoading();
+                    
+                    // If can't get location, just open maps to the destination
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    
+                    if (isIOS) {
+                        window.location.href = `maps://?q=${koordinat}&z=16`;
+                    } else {
+                        window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
         // ====== UI RENDER FUNCTIONS ======
         function renderLokasi() {
             const container = document.getElementById('lokasiList');
-            if (!container || !window.appState.filteredData.length) {
+            if (!container || !window.appState.data.length) {
                 container.innerHTML = '<div class="lokasi-item"><div class="card-header"><div class="card-title">Tidak ada data</div></div></div>';
                 return;
             }
             
             let html = '';
             
-            window.appState.filteredData.forEach((lokasi, index) => {
+            window.appState.data.forEach((lokasi, index) => {
                 const distance = window.appState.distances.get(lokasi.id);
                 const distanceText = distance !== undefined && distance !== null ? 
                     `📏 ${formatDistance(distance)} dari lokasi Anda` : 
@@ -1574,12 +1298,9 @@
                             ${distanceText}
                         </div>
                         
-                        <!-- Actions -->
+                        <!-- Action Button -->
                         <div class="card-actions">
-                            <button class="btn-action btn-map" onclick="bukaLokasiDiMaps('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Lihat peta ${lokasi.nama}">
-                                <span>🗺️</span> Lihat Peta
-                            </button>
-                            <button class="btn-action btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Rute ke ${lokasi.nama}">
+                            <button class="btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Rute ke ${lokasi.nama}">
                                 <span>📍</span> Rute ke Sini
                             </button>
                         </div>
@@ -1644,55 +1365,6 @@
             return configs[status] || configs['full'];
         }
         
-        // ====== MAP FUNCTIONS ======
-        function bukaLokasiDiMaps(koordinat, nama) {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const encodedName = encodeURIComponent(nama);
-            
-            if (isIOS) {
-                window.location.href = `maps://?q=${encodedName}&ll=${koordinat}&z=16`;
-                
-                setTimeout(() => {
-                    if (document.hasFocus()) {
-                        window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
-                    }
-                }, 500);
-            } else {
-                window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
-            }
-        }
-        
-        function ruteKeLokasi(koordinat, nama) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const userLat = pos.coords.latitude;
-                        const userLng = pos.coords.longitude;
-                        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                        
-                        if (isIOS) {
-                            window.location.href = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
-                            
-                            setTimeout(() => {
-                                if (document.hasFocus()) {
-                                    window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
-                                }
-                            }, 500);
-                        } else {
-                            window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
-                        }
-                    },
-                    () => {
-                        alert('Tidak dapat mendeteksi lokasi Anda. Buka peta saja?');
-                        bukaLokasiDiMaps(koordinat, nama);
-                    }
-                );
-            } else {
-                alert('Browser tidak mendukung navigasi lokasi.');
-                bukaLokasiDiMaps(koordinat, nama);
-            }
-        }
-        
         // ====== UTILITY FUNCTIONS ======
         function showLoading(message) {
             const overlay = document.getElementById('loadingOverlay');
@@ -1751,7 +1423,6 @@
             ];
             
             window.appState.data = offlineData;
-            window.appState.filteredData = [...offlineData];
             window.appState.originalOrder = [...offlineData];
             
             renderLokasi();
@@ -1777,21 +1448,6 @@
             
             // Initialize the app
             await initApp();
-        });
-        
-        // Close modal when clicking outside
-        document.addEventListener('click', (event) => {
-            const modal = document.getElementById('filterModal');
-            if (modal && event.target === modal) {
-                closeFilter();
-            }
-        });
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeFilter();
-            }
         });
     </script>
 </body>
