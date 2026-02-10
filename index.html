@@ -28,6 +28,7 @@
             --primary-700: #1e40af;
             --success-500: #10b981;
             --success-600: #059669;
+            --success-700: #047857;
             --danger-500: #ef4444;
             --danger-600: #dc2626;
             --warning-500: #f59e0b;
@@ -557,6 +558,7 @@
         .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         
+        /* ====== PERBAIKAN TOMBOL RUTE KE SINI ====== */
         .btn-route { 
             width: 100%;
             padding: 14px 16px; 
@@ -572,17 +574,20 @@
             transition: var(--transition-base);
             border: 2px solid transparent;
             background: linear-gradient(135deg, var(--success-600), var(--success-700));
-            color: white;
+            color: #ffffff !important; /* Pastikan warna putih dengan !important */
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan teks */
         }
         
         .btn-route:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            color: #ffffff !important;
         }
         
         .btn-route:active {
             transform: translateY(0);
+            color: #ffffff !important;
         }
         
         /* ====== RESPONSIVE ====== */
@@ -639,6 +644,11 @@
             .action-btn {
                 width: 100%;
                 min-width: unset;
+            }
+            
+            .btn-route {
+                font-size: 14px;
+                padding: 12px 14px;
             }
         }
         
