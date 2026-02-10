@@ -861,6 +861,184 @@
         .realtime-notification.hiding {
             animation: slideOutRight 0.3s ease-out forwards;
         }
+
+        /* ====== PROFESSIONAL KAPASITAS DISPLAY ====== */
+        .kapasitas-display {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .kapasitas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .kapasitas-title {
+            font-weight: 600;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+
+        .kapasitas-numbers {
+            font-weight: 700;
+            color: #1e40af;
+            font-size: 16px;
+        }
+
+        .visual-bar-container {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .visual-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .status-high { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .status-medium { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+
+        /* ====== PRESISI GRID LAYOUT ====== */
+        .lokasi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            align-items: start;
+        }
+
+        .lokasi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lokasi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+        }
+
+        .card-id {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-address {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .lokasi-jarak {
+            margin: 16px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            color: #059669;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ====== RESPONSIVE GRID ====== */
+        @media (max-width: 640px) {
+            .lokasi-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 16px;
+            }
+            
+            .lokasi-card {
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .lokasi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1439px) {
+            .lokasi-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 32px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .lokasi-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -873,13 +1051,13 @@
 
     <div class="container">
         <!-- HEADER UTAMA -->
-      <div class="main-header">
-        <div class="header-content">
-            <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
+        <div class="main-header">
+            <div class="header-content">
+                <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
                 <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+                <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+            </div>
         </div>
-    </div>
         
         <!-- MOBILE COMPACT HEADER -->
         <div class="compact-header">
@@ -998,14 +1176,17 @@
                 
                 console.log(`✅ Loaded ${data.length} locations from Supabase`);
                 
-                // Simpan ke variabel global
-                dataParkir = data.map(item => ({
+                // Format data untuk kompatibilitas
+                window.dataParkir = data.map(item => ({
                     id: item.id,
                     nama: item.nama,
                     alamat: item.alamat,
                     bus: item.bus || 0,
                     mobil: item.mobil || 0,
                     motor: item.motor || 0,
+                    max_bus: item.max_bus || 100,    // Default jika null
+                    max_mobil: item.max_mobil || 200,
+                    max_motor: item.max_motor || 150,
                     koordinat: item.koordinat,
                     updated_at: item.updated_at
                 }));
@@ -1014,36 +1195,35 @@
                 renderLokasi();
                 updateTotalCounters();
                 
-                return dataParkir;
+                return window.dataParkir;
                 
             } catch (error) {
                 console.error('❌ Error loading from Supabase:', error);
-                
-                // Fallback ke data statis
                 alert('Koneksi database gagal. Menggunakan data offline.');
                 
-                dataParkir = [
-                    {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:62, mobil:200, motor:0, koordinat:"-7.8017074,110.3681792"},
-                    {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:60, mobil:80, motor:100, koordinat:"-7.8014685,110.3562862"},
-                    {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:60, motor:250, koordinat:"-7.800385,110.368361"},
-                    {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:130, motor:0, koordinat:"-7.8018505,110.3632816"},
-                    {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:20, motor:382, koordinat:"-7.7973211,110.3641841"},
-                    {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:100, mobil:50, motor:0, koordinat:"-7.787088,110.366706"},
-                    {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:20, mobil:50, motor:0, koordinat:"-7.7897929,110.3706896"},
-                    {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:115, motor:250, koordinat:"-7.7992907,110.3663957"},
-                    {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:125, motor:0, koordinat:"-7.7978843,110.3673653"},
-                    {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:40, mobil:150, motor:0, koordinat:"-7.8002542,110.3560535"},
-                    {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:82, mobil:100, motor:300, koordinat:"-7.8037595,110.3968204"},
-                    {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:100, motor:200, koordinat:"-7.7920043,110.3611007"},
-                    {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:60, motor:200, koordinat:"-7.7832641,110.3683152"},
-                    {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:130, mobil:300, motor:0, koordinat:"-7.7883952,110.36693"},
-                    {id:15, nama:"STADION KRIDOSONO", alamat:"JL YOS SUDARSO", bus:0, mobil:30, motor:150, koordinat:"-7.7877683,110.3736898"}
+                // Fallback dengan max values default
+                window.dataParkir = [
+                    {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:62, mobil:200, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8017074,110.3681792"},
+                    {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:60, mobil:80, motor:100, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8014685,110.3562862"},
+                    {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:60, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.800385,110.368361"},
+                    {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:130, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8018505,110.3632816"},
+                    {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:20, motor:382, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7973211,110.3641841"},
+                    {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:100, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.787088,110.366706"},
+                    {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:20, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7897929,110.3706896"},
+                    {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:115, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7992907,110.3663957"},
+                    {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:125, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7978843,110.3673653"},
+                    {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:40, mobil:150, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8002542,110.3560535"},
+                    {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:82, mobil:100, motor:300, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8037595,110.3968204"},
+                    {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:100, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7920043,110.3611007"},
+                    {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:60, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7832641,110.3683152"},
+                    {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:130, mobil:300, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7883952,110.36693"},
+                    {id:15, nama:"STADION KRIDOSONO", alamat:"JL YOS SUDARSO", bus:0, mobil:30, motor:150, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7877683,110.3736898"}
                 ];
                 
                 renderLokasi();
                 updateTotalCounters();
                 
-                return dataParkir;
+                return window.dataParkir;
                 
             } finally {
                 hideLoading();
@@ -1076,6 +1256,9 @@
                                 bus: payload.new.bus || 0,
                                 mobil: payload.new.mobil || 0,
                                 motor: payload.new.motor || 0,
+                                max_bus: payload.new.max_bus || 100,
+                                max_mobil: payload.new.max_mobil || 200,
+                                max_motor: payload.new.max_motor || 150,
                                 koordinat: payload.new.koordinat,
                                 updated_at: payload.new.updated_at
                             };
@@ -1100,16 +1283,69 @@
             // Cari semua item dengan data-id yang sesuai
             const items = document.querySelectorAll('.lokasi-item');
             items.forEach(item => {
-                const namaEl = item.querySelector('.lokasi-nama');
+                const namaEl = item.querySelector('.card-title');
                 if (namaEl && namaEl.textContent === newData.nama) {
-                    // Update kapasitas badges
-                    const busBadge = item.querySelector('.badge-bus .kap-number');
-                    const mobilBadge = item.querySelector('.badge-mobil .kap-number');
-                    const motorBadge = item.querySelector('.badge-motor .kap-number');
+                    // Update kapasitas displays
+                    const busDisplay = item.querySelector('.kapasitas-display:nth-child(1) .kapasitas-numbers');
+                    const mobilDisplay = item.querySelector('.kapasitas-display:nth-child(2) .kapasitas-numbers');
+                    const motorDisplay = item.querySelector('.kapasitas-display:nth-child(3) .kapasitas-numbers');
                     
-                    if (busBadge && newData.bus > 0) busBadge.textContent = newData.bus;
-                    if (mobilBadge && newData.mobil > 0) mobilBadge.textContent = newData.mobil;
-                    if (motorBadge && newData.motor > 0) motorBadge.textContent = newData.motor;
+                    if (busDisplay) busDisplay.textContent = `${newData.bus}/${newData.max_bus || 100}`;
+                    if (mobilDisplay) mobilDisplay.textContent = `${newData.mobil}/${newData.max_mobil || 200}`;
+                    if (motorDisplay) motorDisplay.textContent = `${newData.motor}/${newData.max_motor || 150}`;
+                    
+                    // Recalculate status and percentages
+                    const busStatus = calculateStatus(newData.bus, newData.max_bus || 100);
+                    const mobilStatus = calculateStatus(newData.mobil, newData.max_mobil || 200);
+                    const motorStatus = calculateStatus(newData.motor, newData.max_motor || 150);
+                    
+                    const busConfig = getStatusConfig(busStatus);
+                    const mobilConfig = getStatusConfig(mobilStatus);
+                    const motorConfig = getStatusConfig(motorStatus);
+                    
+                    const busPercentage = newData.max_bus > 0 ? (newData.bus / newData.max_bus) * 100 : 0;
+                    const mobilPercentage = newData.max_mobil > 0 ? (newData.mobil / newData.max_mobil) * 100 : 0;
+                    const motorPercentage = newData.max_motor > 0 ? (newData.motor / newData.max_motor) * 100 : 0;
+                    
+                    const busAvailable = Math.round(100 - busPercentage);
+                    const mobilAvailable = Math.round(100 - mobilPercentage);
+                    const motorAvailable = Math.round(100 - motorPercentage);
+                    
+                    // Update visual bars
+                    const busBar = item.querySelector('.kapasitas-display:nth-child(1) .visual-bar');
+                    const mobilBar = item.querySelector('.kapasitas-display:nth-child(2) .visual-bar');
+                    const motorBar = item.querySelector('.kapasitas-display:nth-child(3) .visual-bar');
+                    
+                    if (busBar) {
+                        busBar.style.width = `${busPercentage}%`;
+                        busBar.style.backgroundColor = busConfig.color;
+                    }
+                    if (mobilBar) {
+                        mobilBar.style.width = `${mobilPercentage}%`;
+                        mobilBar.style.backgroundColor = mobilConfig.color;
+                    }
+                    if (motorBar) {
+                        motorBar.style.width = `${motorPercentage}%`;
+                        motorBar.style.backgroundColor = motorConfig.color;
+                    }
+                    
+                    // Update status badges
+                    const busBadge = item.querySelector('.kapasitas-display:nth-child(1) .status-badge');
+                    const mobilBadge = item.querySelector('.kapasitas-display:nth-child(2) .status-badge');
+                    const motorBadge = item.querySelector('.kapasitas-display:nth-child(3) .status-badge');
+                    
+                    if (busBadge) {
+                        busBadge.className = `status-badge status-${busStatus}`;
+                        busBadge.innerHTML = `<span>${busConfig.icon}</span><span>${busAvailable}% ${busConfig.text}</span>`;
+                    }
+                    if (mobilBadge) {
+                        mobilBadge.className = `status-badge status-${mobilStatus}`;
+                        mobilBadge.innerHTML = `<span>${mobilConfig.icon}</span><span>${mobilAvailable}% ${mobilConfig.text}</span>`;
+                    }
+                    if (motorBadge) {
+                        motorBadge.className = `status-badge status-${motorStatus}`;
+                        motorBadge.innerHTML = `<span>${motorConfig.icon}</span><span>${motorAvailable}% ${motorConfig.text}</span>`;
+                    }
                     
                     // Highlight efek
                     item.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.3)';
@@ -1145,11 +1381,186 @@
             }, 5000);
         }
         
+        // ====== FUNGSI STATUS & PERSENTASE ======
+        function calculateStatus(current, max) {
+            if (max === 0 || max === null) return 'full';
+            
+            const usedPercentage = (current / max) * 100;
+            const availablePercentage = 100 - usedPercentage;
+            
+            if (availablePercentage >= 70) return 'high';     // Banyak tersedia
+            if (availablePercentage >= 30) return 'medium';   // Sedang
+            if (availablePercentage > 0) return 'low';        // Sedikit
+            return 'full';                                    // Penuh
+        }
+
+        function getStatusConfig(status) {
+            const configs = {
+                'high': { 
+                    color: '#10b981', 
+                    label: 'BANYAK',
+                    icon: '✅',
+                    text: 'tersedia'
+                },
+                'medium': { 
+                    color: '#f59e0b', 
+                    label: 'SEDANG',
+                    icon: '⚠️',
+                    text: 'tersedia'
+                },
+                'low': { 
+                    color: '#ef4444', 
+                    label: 'SEDIKIT',
+                    icon: '🚨',
+                    text: 'tersedia'
+                },
+                'full': { 
+                    color: '#6b7280', 
+                    label: 'PENUH',
+                    icon: '⛔',
+                    text: 'tersedia'
+                }
+            };
+            return configs[status] || configs['full'];
+        }
+        
+        // ====== UPDATE FUNGSI RENDER LOKASI ======
+        function renderLokasi() {
+            const container = document.getElementById('lokasiList');
+            if (!container || !window.dataParkir) return;
+            
+            let html = '';
+            
+            window.dataParkir.forEach((lokasi, index) => {
+                const jarak = distancesCache.get(lokasi.id);
+                const jarakText = jarak !== undefined ? 
+                    `📏 ${formatJarak(jarak)} dari lokasi Anda` : 
+                    '📏 Mendeteksi lokasi...';
+                const jarakClass = jarak !== undefined ? '' : 'lokasi-jarak-loading';
+                
+                // Hitung status untuk setiap jenis kendaraan
+                const maxBus = lokasi.max_bus || 100;
+                const maxMobil = lokasi.max_mobil || 200;
+                const maxMotor = lokasi.max_motor || 150;
+                
+                const busStatus = calculateStatus(lokasi.bus, maxBus);
+                const mobilStatus = calculateStatus(lokasi.mobil, maxMobil);
+                const motorStatus = calculateStatus(lokasi.motor, maxMotor);
+                
+                const busConfig = getStatusConfig(busStatus);
+                const mobilConfig = getStatusConfig(mobilStatus);
+                const motorConfig = getStatusConfig(motorStatus);
+                
+                // Hitung persentase terisi
+                const busPercentage = maxBus > 0 ? (lokasi.bus / maxBus) * 100 : 0;
+                const mobilPercentage = maxMobil > 0 ? (lokasi.mobil / maxMobil) * 100 : 0;
+                const motorPercentage = maxMotor > 0 ? (lokasi.motor / maxMotor) * 100 : 0;
+                
+                // Hitung persentase tersedia
+                const busAvailable = Math.round(100 - busPercentage);
+                const mobilAvailable = Math.round(100 - mobilPercentage);
+                const motorAvailable = Math.round(100 - motorPercentage);
+                
+                html += `
+                    <div class="lokasi-item" data-id="${lokasi.id}">
+                        <div class="card-header">
+                            <div class="card-title">${lokasi.nama}</div>
+                            <div class="card-id">${index + 1}</div>
+                        </div>
+                        
+                        <div class="card-address">
+                            <span>📍</span>
+                            <span>${lokasi.alamat}</span>
+                        </div>
+                        
+                        <!-- Kapasitas Bus -->
+                        <div class="kapasitas-display">
+                            <div class="kapasitas-header">
+                                <div class="kapasitas-title">
+                                    <span>🚌</span>
+                                    <span>BUS</span>
+                                </div>
+                                <div class="kapasitas-numbers">${lokasi.bus}/${maxBus}</div>
+                            </div>
+                            
+                            <div class="visual-bar-container">
+                                <div class="visual-bar" style="width: ${busPercentage}%; background-color: ${busConfig.color};"></div>
+                            </div>
+                            
+                            <div class="status-badge status-${busStatus}">
+                                <span>${busConfig.icon}</span>
+                                <span>${busAvailable}% ${busConfig.text}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Kapasitas Mobil -->
+                        <div class="kapasitas-display">
+                            <div class="kapasitas-header">
+                                <div class="kapasitas-title">
+                                    <span>🚗</span>
+                                    <span>MOBIL</span>
+                                </div>
+                                <div class="kapasitas-numbers">${lokasi.mobil}/${maxMobil}</div>
+                            </div>
+                            
+                            <div class="visual-bar-container">
+                                <div class="visual-bar" style="width: ${mobilPercentage}%; background-color: ${mobilConfig.color};"></div>
+                            </div>
+                            
+                            <div class="status-badge status-${mobilStatus}">
+                                <span>${mobilConfig.icon}</span>
+                                <span>${mobilAvailable}% ${mobilConfig.text}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Kapasitas Motor -->
+                        <div class="kapasitas-display">
+                            <div class="kapasitas-header">
+                                <div class="kapasitas-title">
+                                    <span>🏍️</span>
+                                    <span>MOTOR</span>
+                                </div>
+                                <div class="kapasitas-numbers">${lokasi.motor}/${maxMotor}</div>
+                            </div>
+                            
+                            <div class="visual-bar-container">
+                                <div class="visual-bar" style="width: ${motorPercentage}%; background-color: ${motorConfig.color};"></div>
+                            </div>
+                            
+                            <div class="status-badge status-${motorStatus}">
+                                <span>${motorConfig.icon}</span>
+                                <span>${motorAvailable}% ${motorConfig.text}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Jarak -->
+                        <div class="lokasi-jarak ${jarakClass}">
+                            ${jarakText}
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="card-actions">
+                            <button class="btn-action btn-map" onclick="bukaLokasiDiMaps('${lokasi.koordinat}', '${lokasi.nama}')">
+                                <span>🗺️</span> Lihat Peta
+                            </button>
+                            <button class="btn-action btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')">
+                                <span>📍</span> Rute ke Sini
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Update container dengan class lokasi-grid
+            container.className = 'lokasi-grid';
+            container.innerHTML = html;
+        }
+
         // ====== UPDATE TOTAL COUNTERS ======
         function updateTotalCounters() {
-            if (!dataParkir || dataParkir.length === 0) return;
+            if (!window.dataParkir || window.dataParkir.length === 0) return;
             
-            const totals = dataParkir.reduce((acc, lokasi) => {
+            const totals = window.dataParkir.reduce((acc, lokasi) => {
                 return {
                     bus: acc.bus + (lokasi.bus || 0),
                     mobil: acc.mobil + (lokasi.mobil || 0),
@@ -1158,7 +1569,7 @@
             }, { bus: 0, mobil: 0, motor: 0 });
             
             // Update UI
-            document.getElementById('totalLocations').textContent = dataParkir.length;
+            document.getElementById('totalLocations').textContent = window.dataParkir.length;
             document.getElementById('totalBus').textContent = totals.bus.toLocaleString();
             document.getElementById('totalMobil').textContent = totals.mobil.toLocaleString();
             document.getElementById('totalMotor').textContent = totals.motor.toLocaleString();
@@ -1279,7 +1690,7 @@
             jarakElements.forEach((element) => {
                 const lokasiElement = element.closest('.lokasi-item');
                 if (lokasiElement) {
-                    const lokasiNama = lokasiElement.querySelector('.lokasi-nama');
+                    const lokasiNama = lokasiElement.querySelector('.card-title');
                     if (lokasiNama) {
                         const lokasi = dataParkir.find(l => l.nama === lokasiNama.textContent);
                         if (lokasi && lokasi.id === lokasiId) {
@@ -1357,67 +1768,6 @@
                     behavior: 'smooth'
                 });
             }
-        }
-        
-        function renderLokasi() {
-            const container = document.getElementById('lokasiList');
-            if (!container) return;
-            
-            let html = '';
-            
-            dataParkir.forEach((lokasi, index) => {
-                const jarak = distancesCache.get(lokasi.id);
-                const jarakText = jarak ? 
-                    `📏 ${formatJarak(jarak)} dari lokasi Anda` : 
-                    '📏 Mendeteksi lokasi...';
-                const jarakClass = jarak ? '' : 'lokasi-jarak-loading';
-                
-                html += `
-                    <div class="lokasi-item" data-id="${lokasi.id}">
-                        <div class="lokasi-header">
-                            <div class="lokasi-nama">${lokasi.nama}</div>
-                            <div class="lokasi-id">${index + 1}</div>
-                        </div>
-                        <div class="lokasi-alamat">${lokasi.alamat}</div>
-                        <div class="lokasi-jarak ${jarakClass}">
-                            ${jarakText}
-                        </div>
-                        <div class="kapasitas-container">
-                            ${lokasi.bus > 0 ? `
-                                <span class="kap-badge badge-bus">
-                                    <span class="kap-icon">🚌</span>
-                                    <span class="kap-number">${lokasi.bus}</span>
-                                    <span class="kap-label">Bus</span>
-                                </span>
-                            ` : ''}
-                            ${lokasi.mobil > 0 ? `
-                                <span class="kap-badge badge-mobil">
-                                    <span class="kap-icon">🚗</span>
-                                    <span class="kap-number">${lokasi.mobil}</span>
-                                    <span class="kap-label">Mobil</span>
-                                </span>
-                            ` : ''}
-                            ${lokasi.motor > 0 ? `
-                                <span class="kap-badge badge-motor">
-                                    <span class="kap-icon">🏍️</span>
-                                    <span class="kap-number">${lokasi.motor}</span>
-                                    <span class="kap-label">Motor</span>
-                                </span>
-                            ` : ''}
-                        </div>
-                        <div class="lokasi-actions">
-                            <button class="btn-action btn-map" onclick="bukaLokasiDiMaps('${lokasi.koordinat}', '${lokasi.nama}')">
-                                <span>🗺️</span> Lihat di Maps
-                            </button>
-                            <button class="btn-action btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')">
-                                <span>📍</span> Rute ke Sini
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
         }
         
         function bukaLokasiDiMaps(koordinat, nama) {
