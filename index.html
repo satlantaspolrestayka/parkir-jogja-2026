@@ -1,498 +1,1497 @@
-// ====== KONFIGURASI SUPABASE ======
-const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co'; // GANTI
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA'; // GANTI
-
-let supabaseClient = null;
-let userPosition = null;
-const distancesCache = new Map();
-let isCalculating = false;
-
-// ====== INISIALISASI SUPABASE ======
-function initSupabase() {
-    if (window.supabase) {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase initialized');
-    }
-}
-
-// ====== FUNGSI LOAD DATA DARI SUPABASE ======
-async function loadDataFromSupabase() {
-    if (!supabaseClient) initSupabase();
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Informasi Parkir Yogyakarta 2026</title>
     
-    showLoading('Memuat data parkir terbaru...');
+    <!-- iOS Meta Tags -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-title" content="Parkir Jogja">
     
-    try {
-        const { data, error } = await supabaseClient
-            .from('parkir_lokasi')
-            .select('*')
-            .order('id', { ascending: true });
-        
-        if (error) throw error;
-        
-        console.log('📊 Data loaded from Supabase:', data.length, 'locations');
-        
-        // Format data untuk kompatibilitas
-        const formattedData = data.map(item => ({
-            id: item.id,
-            nama: item.nama,
-            alamat: item.alamat,
-            bus: item.bus || 0,
-            mobil: item.mobil || 0,
-            motor: item.motor || 0,
-            koordinat: item.koordinat
-        }));
-        
-        // Simpan ke variabel global
-        window.dataParkir = formattedData;
-        
-        // Render ulang
-        renderLokasi();
-        updateTotalCounters();
-        
-        // Setup real-time subscription
-        setupRealtimeUpdates();
-        
-        return formattedData;
-        
-    } catch (error) {
-        console.error('❌ Error loading data:', error);
-        
-        // Fallback ke data statis
-        alert('Gagal memuat data terbaru. Menggunakan data offline.');
-        
-        const staticData = [
-            // ... (data statis yang lama) ...
-        ];
-        window.dataParkir = staticData;
-        renderLokasi();
-        updateTotalCounters();
-        
-        return staticData;
-        
-    } finally {
-        hideLoading();
-    }
-}
-
-// ====== REAL-TIME UPDATES ======
-function setupRealtimeUpdates() {
-    if (!supabaseClient) return;
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    // Subscribe to changes
-    const channel = supabaseClient
-        .channel('parkir-updates')
-        .on(
-            'postgres_changes',
-            {
-                event: '*',
-                schema: 'public',
-                table: 'parkir_lokasi'
-            },
-            (payload) => {
-                console.log('🔄 Real-time update:', payload);
-                
-                // Update data lokal
-                if (payload.eventType === 'UPDATE') {
-                    const index = window.dataParkir.findIndex(item => item.id === payload.new.id);
-                    if (index !== -1) {
-                        window.dataParkir[index] = {
-                            id: payload.new.id,
-                            nama: payload.new.nama,
-                            alamat: payload.new.alamat,
-                            bus: payload.new.bus,
-                            mobil: payload.new.mobil,
-                            motor: payload.new.motor,
-                            koordinat: payload.new.koordinat
-                        };
-                        
-                        // Update UI spesifik untuk item ini
-                        updateLokasiItemUI(payload.new.id, payload.new);
-                        
-                        // Update total counters
-                        updateTotalCounters();
-                        
-                        // Show notification
-                        showUpdateNotification(payload.new.nama);
-                    }
-                }
+    <style>
+        /* ====== CSS VARIABLES & RESET ====== */
+        :root {
+            /* Color System - Lebih Gelap & Profesional */
+            --primary-500: #2563eb;
+            --primary-600: #1d4ed8;
+            --primary-700: #1e40af;
+            --success-500: #10b981;
+            --success-600: #059669;
+            --danger-500: #ef4444;
+            --danger-600: #dc2626;
+            --warning-500: #f59e0b;
+            --warning-600: #d97706;
+            --navy-900: #0f1b3d;
+            --navy-800: #1e293b;
+            
+            /* Neutral Colors */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            /* Shadow System - Lebih Dalam */
+            --shadow-soft: 0 2px 8px rgba(15, 27, 61, 0.08);
+            --shadow-medium: 0 4px 12px rgba(15, 27, 61, 0.12);
+            --shadow-card: 0 6px 20px rgba(15, 27, 61, 0.1);
+            --shadow-deep: 0 10px 25px rgba(15, 27, 61, 0.15);
+            
+            /* Animation */
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.25s ease;
+            --transition-slow: 0.4s ease;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--navy-900) 0%, #1E3A8A 50%, #3b82f6 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            color: var(--gray-800);
+            line-height: 1.5;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ====== HEADER UTAMA ====== */
+        .main-header { 
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800)); 
+            color: white; 
+            text-align: center;
+            border-bottom: 3px solid var(--primary-600);
+            padding: 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+            animation: headerLine 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes headerLine {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideDown 0.6s ease-out 0.2s both;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .main-header h1 { 
+            font-size: 34px; 
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .operation-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            letter-spacing: 0.5px;
+            transition: var(--transition-base);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .operation-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+        }
+        
+        /* ====== LOADING OVERLAY ====== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 27, 61, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--primary-500);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            animation: fadeInOut 2s infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ====== RESPONSIVE HEADER ====== */
+        @media (max-width: 1024px) {
+            .main-header {
+                padding: 35px 40px;
             }
-        )
-        .subscribe();
-    
-    console.log('👂 Listening for real-time updates');
-}
+            
+            .main-header h1 {
+                font-size: 30px;
+            }
+            
+            .operation-badge {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .main-header {
+                padding: 30px 20px;
+            }
+            
+            .main-header h1 {
+                font-size: 26px;
+            }
+            
+            .operation-badge {
+                font-size: 14px;
+                padding: 8px 20px;
+            }
+        }
+        
+        /* ====== CONTAINER ====== */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 16px; 
+            box-shadow: var(--shadow-deep);
+            overflow: hidden;
+            animation: containerSlide 0.6s ease-out 0.1s both;
+        }
+        
+        @keyframes containerSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* ====== MOBILE COMPACT HEADER ====== */
+        .compact-header {
+            background: white;
+            padding: 20px 15px;
+            border-bottom: 2px solid var(--gray-200);
+            animation: slideIn 0.5s ease-out 0.3s both;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .total-locations {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px 15px;
+            background: var(--gray-50);
+            border-radius: 12px;
+            border: 2px solid var(--gray-300);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-base);
+            cursor: pointer;
+        }
+        
+        .total-locations:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-500);
+        }
+        
+        .total-locations:active {
+            transform: translateY(0);
+        }
+        
+        .total-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .total-number {
+            font-size: clamp(36px, 10vw, 48px);
+            font-weight: 900;
+            color: var(--primary-600);
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+        }
+        
+        .total-label {
+            font-size: clamp(13px, 3vw, 14px);
+            color: var(--gray-600);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .capacity-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .capacity-tab {
+            flex: 1;
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 18px 10px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--gray-300);
+            transition: var(--transition-base);
+            cursor: pointer;
+        }
+        
+        .capacity-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .capacity-tab:active {
+            transform: translateY(-1px);
+        }
+        
+        .tab-icon {
+            font-size: clamp(24px, 6vw, 28px);
+            margin-bottom: 10px;
+            display: block;
+            transition: var(--transition-base);
+        }
+        
+        .capacity-tab:hover .tab-icon {
+            transform: scale(1.1);
+        }
+        
+        .tab-number {
+            font-size: clamp(24px, 6vw, 32px);
+            font-weight: 800;
+            margin-bottom: 5px;
+            line-height: 1;
+            transition: var(--transition-base);
+        }
+        
+        .tab-label {
+            font-size: clamp(11px, 2.5vw, 13px);
+            color: var(--gray-600);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tab-bus .tab-icon { color: var(--danger-600); }
+        .tab-bus .tab-number { color: var(--danger-600); }
+        .tab-bus { border-top: 4px solid var(--danger-600); }
+        
+        .tab-mobil .tab-icon { color: var(--primary-600); }
+        .tab-mobil .tab-number { color: var(--primary-600); }
+        .tab-mobil { border-top: 4px solid var(--primary-600); }
+        
+        .tab-motor .tab-icon { color: var(--success-600); }
+        .tab-motor .tab-number { color: var(--success-600); }
+        .tab-motor { border-top: 4px solid var(--success-600); }
+        
+        /* ====== ACTIONS SECTION ====== */
+        .actions-section {
+            padding: 0 15px 25px;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+        
+        .action-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .btn-primary { 
+            width: 100%;
+            padding: clamp(16px, 4vw, 20px); 
+            border: none; 
+            border-radius: 12px; 
+            font-size: clamp(16px, 4vw, 18px); 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            transition: var(--transition-base);
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+        
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+        }
+        
+        .btn-primary:active { 
+            transform: translateY(0); 
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* ====== MAIN CONTENT ====== */
+        .main-content {
+            padding: 0 15px 25px;
+            background: var(--gray-50);
+        }
+        
+        .section-title {
+            font-size: clamp(18px, 5vw, 22px);
+            font-weight: 800;
+            color: var(--gray-900);
+            margin: 0 0 25px 0;
+            padding: 25px 0 20px;
+            border-bottom: 3px solid var(--primary-600);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            line-height: 1.3;
+            position: relative;
+            animation: fadeIn 0.8s ease-out 0.5s both;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 24px;
+            background: var(--primary-600);
+            border-radius: 3px;
+        }
+        
+        /* ====== LOKASI LIST ====== */
+        .lokasi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .lokasi-item { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 22px 20px; 
+            transition: var(--transition-base);
+            border: 2px solid var(--gray-300);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: itemSlideUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes itemSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered animation for items */
+        .lokasi-item:nth-child(1) { animation-delay: 0.1s; }
+        .lokasi-item:nth-child(2) { animation-delay: 0.2s; }
+        .lokasi-item:nth-child(3) { animation-delay: 0.3s; }
+        .lokasi-item:nth-child(4) { animation-delay: 0.4s; }
+        .lokasi-item:nth-child(5) { animation-delay: 0.5s; }
+        .lokasi-item:nth-child(6) { animation-delay: 0.6s; }
+        .lokasi-item:nth-child(7) { animation-delay: 0.7s; }
+        .lokasi-item:nth-child(8) { animation-delay: 0.8s; }
+        .lokasi-item:nth-child(9) { animation-delay: 0.9s; }
+        .lokasi-item:nth-child(10) { animation-delay: 1.0s; }
+        .lokasi-item:nth-child(11) { animation-delay: 1.1s; }
+        .lokasi-item:nth-child(12) { animation-delay: 1.2s; }
+        .lokasi-item:nth-child(13) { animation-delay: 1.3s; }
+        .lokasi-item:nth-child(14) { animation-delay: 1.4s; }
+        .lokasi-item:nth-child(15) { animation-delay: 1.5s; }
+        
+        .lokasi-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-600), var(--success-600));
+        }
+        
+        .lokasi-item:hover { 
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-deep);
+            border-color: var(--primary-500);
+        }
+        
+        .lokasi-item:active { 
+            transform: translateY(-1px);
+        }
+        
+        .lokasi-item.closest {
+            border-color: var(--success-600);
+            background: var(--gray-50);
+            animation: pulseBorder 2s infinite;
+        }
+        
+        @keyframes pulseBorder {
+            0%, 100% { border-color: var(--success-600); }
+            50% { border-color: var(--success-400); }
+        }
+        
+        .lokasi-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 16px; 
+        }
+        
+        .lokasi-nama { 
+            font-size: clamp(17px, 4.5vw, 20px); 
+            font-weight: 800; 
+            color: var(--gray-900); 
+            line-height: 1.3;
+            flex: 1;
+        }
+        
+        .lokasi-id { 
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); 
+            color: white; 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800;
+            font-size: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+            margin-left: 10px;
+        }
+        
+        .lokasi-alamat { 
+            color: var(--gray-700); 
+            margin-bottom: 16px; 
+            font-size: clamp(14px, 3.5vw, 15px);
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .lokasi-alamat::before {
+            content: '📍';
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+        
+        .lokasi-jarak {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: clamp(14px, 3.5vw, 15px);
+            color: var(--success-600);
+            font-weight: 700;
+            padding: 10px 14px;
+            background: var(--gray-50);
+            border-radius: 8px;
+            border: 1px solid var(--gray-300);
+        }
+        
+        .lokasi-jarak::before {
+            content: '📏';
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .lokasi-jarak-loading {
+            color: var(--gray-400);
+            background: linear-gradient(90deg, var(--gray-50), var(--gray-100), var(--gray-50));
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-color: var(--gray-300);
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .kapasitas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .kap-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: clamp(13px, 3vw, 14px);
+            font-weight: 700;
+            white-space: nowrap;
+            border: 2px solid transparent;
+            transition: var(--transition-base);
+        }
+        
+        .kap-badge:hover {
+            transform: translateY(-2px);
+        }
+        
+        .badge-bus { 
+            background: #fee2e2;
+            color: var(--danger-700);
+            border-color: #fca5a5;
+        }
+        
+        .badge-mobil { 
+            background: #dbeafe;
+            color: var(--primary-700);
+            border-color: #93c5fd;
+        }
+        
+        .badge-motor { 
+            background: #dcfce7;
+            color: var(--success-700);
+            border-color: #86efac;
+        }
+        
+        .lokasi-actions { 
+            display: flex; 
+            gap: 12px; 
+        }
+        
+        .btn-action { 
+            flex: 1; 
+            padding: 14px 16px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: clamp(14px, 3.5vw, 15px); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            font-weight: 700;
+            min-height: 46px;
+            transition: var(--transition-base);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-action:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-action:active {
+            transform: translateY(0);
+        }
+        
+        .btn-map { 
+            background: #dbeafe;
+            color: var(--primary-700); 
+            border-color: #93c5fd;
+        }
+        
+        .btn-map:hover {
+            background: #bfdbfe;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+        
+        .btn-route { 
+            background: #dcfce7;
+            color: var(--success-700);
+            border-color: #86efac;
+        }
+        
+        .btn-route:hover {
+            background: #bbf7d0;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        /* ====== RESPONSIVE UTAMA ====== */
+        @media (min-width: 768px) {
+            .compact-header {
+                display: none;
+            }
+            
+            .actions-section,
+            .main-content {
+                padding: 0 50px 30px;
+            }
+            
+            .lokasi-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+                gap: 22px;
+            }
+            
+            .lokasi-item {
+                padding: 26px 24px;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .capacity-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .capacity-tab {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                padding: 16px 15px;
+                gap: 20px;
+            }
+            
+            .tab-icon {
+                margin-bottom: 0;
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+            
+            .tab-number {
+                margin-bottom: 0;
+                margin-right: auto;
+                font-size: 24px;
+            }
+            
+            .btn-action {
+                padding: 12px 14px;
+                min-height: 44px;
+            }
+        }
+        
+        /* ====== FOOTER ====== */
+        .footer { 
+            text-align: center; 
+            padding: 30px 20px; 
+            color: white; 
+            font-size: clamp(13px, 3vw, 14px); 
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            line-height: 1.6;
+            border-top: 3px solid var(--primary-600);
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+        
+        .footer-logo {
+            font-size: clamp(20px, 5vw, 24px);
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer p {
+            margin: 8px 0;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+        
+        .footer-copyright {
+            margin-top: 20px;
+            font-size: clamp(12px, 2.5vw, 13px);
+            opacity: 0.9;
+        }
+        
+        /* ====== REAL-TIME NOTIFICATION ====== */
+        .realtime-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-600), var(--success-600));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-deep);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        .realtime-notification.hiding {
+            animation: slideOutRight 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Mendeteksi lokasi Anda...</div>
+        <div class="loading-subtext">Harap tunggu sebentar</div>
+    </div>
 
-function updateLokasiItemUI(lokasiId, newData) {
-    const lokasiElement = document.querySelector(`.lokasi-item:nth-child(${lokasiId})`);
-    if (!lokasiElement) return;
-    
-    // Update kapasitas badges
-    const busBadge = lokasiElement.querySelector('.badge-bus .kap-number');
-    const mobilBadge = lokasiElement.querySelector('.badge-mobil .kap-number');
-    const motorBadge = lokasiElement.querySelector('.badge-motor .kap-number');
-    
-    if (busBadge && newData.bus > 0) busBadge.textContent = newData.bus;
-    if (mobilBadge && newData.mobil > 0) mobilBadge.textContent = newData.mobil;
-    if (motorBadge && newData.motor > 0) motorBadge.textContent = newData.motor;
-    
-    // Add visual feedback
-    lokasiElement.style.backgroundColor = '#f0f9ff';
-    setTimeout(() => {
-        lokasiElement.style.backgroundColor = '';
-    }, 1000);
-}
-
-function showUpdateNotification(namaLokasi) {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.innerHTML = `
-        <div style="position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999; animation: slideIn 0.3s ease-out;">
-            🔄 <strong>${namaLokasi}</strong> telah diperbarui
+    <div class="container">
+        <!-- HEADER UTAMA -->
+      <div class="main-header">
+        <div class="header-content">
+            <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
+                <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-// ====== UPDATE TOTAL COUNTERS ======
-function updateTotalCounters() {
-    if (!window.dataParkir) return;
-    
-    const totals = window.dataParkir.reduce((acc, lokasi) => {
-        acc.bus += lokasi.bus || 0;
-        acc.mobil += lokasi.mobil || 0;
-        acc.motor += lokasi.motor || 0;
-        return acc;
-    }, { bus: 0, mobil: 0, motor: 0 });
-    
-    // Update compact header
-    const busTab = document.querySelector('.tab-bus .tab-number');
-    const mobilTab = document.querySelector('.tab-mobil .tab-number');
-    const motorTab = document.querySelector('.tab-motor .tab-number');
-    
-    if (busTab) busTab.textContent = totals.bus.toLocaleString();
-    if (mobilTab) mobilTab.textContent = totals.mobil.toLocaleString();
-    if (motorTab) motorTab.textContent = totals.motor.toLocaleString();
-    
-    // Update total locations
-    document.querySelector('.total-number').textContent = window.dataParkir.length;
-}
-
-// ====== FUNGSI UTAMA (tidak banyak berubah) ======
-function hitungJarak(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-}
-
-function formatJarak(km) {
-    if (km < 1) {
-        return `${Math.round(km * 1000)} meter`;
-    } else {
-        return `${km.toFixed(1)} km`;
-    }
-}
-
-async function getLocation() {
-    return new Promise((resolve, reject) => {
-        if (userPosition) {
-            resolve(userPosition);
-            return;
-        }
+    </div>
         
-        if (isCalculating) {
-            reject(new Error('Sedang menghitung lokasi...'));
-            return;
-        }
-        
-        if (!navigator.geolocation) {
-            reject(new Error('Browser tidak mendukung GPS'));
-            return;
-        }
-        
-        showLoading('Mendeteksi lokasi Anda...');
-        isCalculating = true;
-        
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                userPosition = {
-                    lat: pos.coords.latitude,
-                    lng: pos.coords.longitude
-                };
-                hideLoading();
-                isCalculating = false;
-                resolve(userPosition);
-            },
-            (err) => {
-                hideLoading();
-                isCalculating = false;
-                reject(err);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 8000,
-                maximumAge: 0
-            }
-        );
-    });
-}
-
-async function hitungSemuaJarak() {
-    if (!userPosition || !window.dataParkir) return;
-    
-    showLoading('Menghitung jarak ke lokasi parkir...');
-    
-    distancesCache.clear();
-    
-    for (const lokasi of window.dataParkir) {
-        try {
-            const [lokasiLat, lokasiLng] = lokasi.koordinat.split(',').map(Number);
-            const jarak = hitungJarak(
-                userPosition.lat,
-                userPosition.lng,
-                lokasiLat,
-                lokasiLng
-            );
-            distancesCache.set(lokasi.id, jarak);
+        <!-- MOBILE COMPACT HEADER -->
+        <div class="compact-header">
+            <div class="total-locations">
+                <div class="total-icon">📍</div>
+                <div class="total-number" id="totalLocations">15</div>
+                <div class="total-label">LOKASI PARKIR</div>
+            </div>
             
-            updateJarakDisplay(lokasi.id, jarak);
-            
-            await delay(50);
-        } catch (error) {
-            console.error(`Error menghitung jarak untuk ${lokasi.nama}:`, error);
-            distancesCache.set(lokasi.id, Infinity);
-        }
-    }
-    
-    hideLoading();
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function showLoading(message) {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        const text = overlay.querySelector('.loading-text');
-        if (text && message) {
-            text.textContent = message;
-        }
-        overlay.classList.add('active');
-    }
-}
-
-function hideLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-}
-
-async function cariParkirTerdekat() {
-    const btn = document.getElementById('btnCari');
-    if (!btn) return;
-    
-    btn.disabled = true;
-    btn.innerHTML = '<span>📍</span> MENGHITUNG...';
-    
-    try {
-        if (!userPosition) {
-            await getLocation();
-        }
-        
-        if (distancesCache.size === 0) {
-            await hitungSemuaJarak();
-        }
-        
-        // Sort berdasarkan jarak
-        window.dataParkir.sort((a, b) => {
-            const jarakA = distancesCache.get(a.id) || Infinity;
-            const jarakB = distancesCache.get(b.id) || Infinity;
-            return jarakA - jarakB;
-        });
-        
-        // Render ulang
-        renderLokasi();
-        
-        // Highlight yang terdekat
-        highlightClosestParking();
-        
-        console.log('✅ Parkir berhasil diurutkan berdasarkan jarak');
-        
-    } catch (error) {
-        console.error('Error mengurutkan parkir:', error);
-        
-        if (error.code === 1) {
-            alert('Izinkan akses lokasi untuk mengurutkan parkir terdekat.');
-        } else if (error.message === 'Timeout') {
-            alert('Waktu habis. Pastikan GPS aktif dan coba lagi.');
-        } else {
-            alert('Tidak dapat mengakses lokasi Anda.');
-        }
-        
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span>📍</span> CARI PARKIR TERDEKAT';
-    }
-}
-
-function highlightClosestParking() {
-    // Remove existing highlights
-    document.querySelectorAll('.lokasi-item').forEach(item => {
-        item.classList.remove('closest');
-    });
-    
-    // Add highlight to first item (closest)
-    const firstItem = document.querySelector('.lokasi-item');
-    if (firstItem) {
-        firstItem.classList.add('closest');
-        
-        // Scroll to top
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-}
-
-function renderLokasi() {
-    const container = document.getElementById('lokasiList');
-    if (!container || !window.dataParkir) return;
-    
-    let html = '';
-    
-    window.dataParkir.forEach((lokasi, index) => {
-        const jarak = distancesCache.get(lokasi.id);
-        const jarakText = jarak !== undefined ? 
-            `📏 ${formatJarak(jarak)} dari lokasi Anda` : 
-            '📏 Mendeteksi lokasi...';
-        const jarakClass = jarak !== undefined ? '' : 'lokasi-jarak-loading';
-        
-        html += `
-            <div class="lokasi-item">
-                <div class="lokasi-header">
-                    <div class="lokasi-nama">${lokasi.nama}</div>
-                    <div class="lokasi-id">${index + 1}</div>
+            <div class="capacity-tabs">
+                <div class="capacity-tab tab-bus">
+                    <div class="tab-icon">🚌</div>
+                    <div class="tab-number" id="totalBus">454</div>
+                    <div class="tab-label">BUS</div>
                 </div>
-                <div class="lokasi-alamat">${lokasi.alamat}</div>
-                <div class="lokasi-jarak ${jarakClass}">
-                    ${jarakText}
+                
+                <div class="capacity-tab tab-mobil">
+                    <div class="tab-icon">🚗</div>
+                    <div class="tab-number" id="totalMobil">1,690</div>
+                    <div class="tab-label">MOBIL</div>
                 </div>
-                <div class="kapasitas-container">
-                    ${lokasi.bus > 0 ? `
-                        <span class="kap-badge badge-bus">
-                            <span class="kap-icon">🚌</span>
-                            <span class="kap-number">${lokasi.bus}</span>
-                            <span class="kap-label">Bus</span>
-                        </span>
-                    ` : ''}
-                    ${lokasi.mobil > 0 ? `
-                        <span class="kap-badge badge-mobil">
-                            <span class="kap-icon">🚗</span>
-                            <span class="kap-number">${lokasi.mobil}</span>
-                            <span class="kap-label">Mobil</span>
-                        </span>
-                    ` : ''}
-                    ${lokasi.motor > 0 ? `
-                        <span class="kap-badge badge-motor">
-                            <span class="kap-icon">🏍️</span>
-                            <span class="kap-number">${lokasi.motor}</span>
-                            <span class="kap-label">Motor</span>
-                        </span>
-                    ` : ''}
-                </div>
-                <div class="lokasi-actions">
-                    <button class="btn-action btn-map" onclick="bukaLokasiDiMaps('${lokasi.koordinat}', '${lokasi.nama}')">
-                        <span>🗺️</span> Lihat di Maps
-                    </button>
-                    <button class="btn-action btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')">
-                        <span>📍</span> Rute ke Sini
-                    </button>
+                
+                <div class="capacity-tab tab-motor">
+                    <div class="tab-icon">🏍️</div>
+                    <div class="tab-number" id="totalMotor">1,682</div>
+                    <div class="tab-label">MOTOR</div>
                 </div>
             </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-
-function bukaLokasiDiMaps(koordinat, nama) {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    
-    if (isIOS) {
-        window.location.href = `maps://?q=${koordinat}&z=16`;
+        </div>
         
-        setTimeout(() => {
-            if (document.hasFocus()) {
+        <!-- ACTIONS SECTION -->
+        <div class="actions-section">
+            <div class="action-wrapper">
+                <button class="btn btn-primary" onclick="cariParkirTerdekat()" id="btnCari">
+                    <span>📍</span> CARI PARKIR TERDEKAT
+                </button>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="section-title">
+                DAFTAR LOKASI PARKIR
+            </div>
+            
+            <div class="lokasi-list" id="lokasiList">
+                <!-- Data akan dimuat dari Supabase -->
+                <div class="lokasi-item">
+                    <div class="lokasi-header">
+                        <div class="lokasi-nama">Memuat data...</div>
+                        <div class="lokasi-id">⏳</div>
+                    </div>
+                    <div class="lokasi-alamat">Harap tunggu sebentar</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
+            <p>Polri Untuk Masyarakat</p>
+            <p class="footer-copyright">© 2026 - Sistem Informasi Parkir Kota Yogyakarta</p>
+            <p class="footer-copyright">Data diperbarui secara real-time</p>
+        </div>
+    </div>
+
+    <script>
+        // ====== KONFIGURASI SUPABASE ======
+        const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
+        
+        // ====== VARIABEL GLOBAL ======
+        let supabaseClient = null;
+        let userPosition = null;
+        const distancesCache = new Map();
+        let dataParkir = [];
+        
+        // ====== INISIALISASI SUPABASE ======
+        async function initSupabase() {
+            if (window.supabase) {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase initialized');
+                
+                // Load data pertama
+                await loadDataFromSupabase();
+                
+                // Setup real-time updates
+                setupRealtimeUpdates();
+                
+                // Coba dapatkan lokasi user
+                try {
+                    await getLocation();
+                    await hitungSemuaJarak();
+                } catch (error) {
+                    console.log('📍 Lokasi tidak tersedia:', error.message);
+                }
+                
+                return true;
+            } else {
+                console.error('❌ Supabase library not loaded');
+                return false;
+            }
+        }
+        
+        // ====== LOAD DATA DARI SUPABASE ======
+        async function loadDataFromSupabase() {
+            showLoading('Memuat data parkir...');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('parkir_lokasi')
+                    .select('*')
+                    .order('id', { ascending: true });
+                
+                if (error) throw error;
+                
+                console.log(`✅ Loaded ${data.length} locations from Supabase`);
+                
+                // Simpan ke variabel global
+                dataParkir = data.map(item => ({
+                    id: item.id,
+                    nama: item.nama,
+                    alamat: item.alamat,
+                    bus: item.bus || 0,
+                    mobil: item.mobil || 0,
+                    motor: item.motor || 0,
+                    koordinat: item.koordinat,
+                    updated_at: item.updated_at
+                }));
+                
+                // Render UI
+                renderLokasi();
+                updateTotalCounters();
+                
+                return dataParkir;
+                
+            } catch (error) {
+                console.error('❌ Error loading from Supabase:', error);
+                
+                // Fallback ke data statis
+                alert('Koneksi database gagal. Menggunakan data offline.');
+                
+                dataParkir = [
+                    {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:62, mobil:200, motor:0, koordinat:"-7.8017074,110.3681792"},
+                    {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:60, mobil:80, motor:100, koordinat:"-7.8014685,110.3562862"},
+                    {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:60, motor:250, koordinat:"-7.800385,110.368361"},
+                    {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:130, motor:0, koordinat:"-7.8018505,110.3632816"},
+                    {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:20, motor:382, koordinat:"-7.7973211,110.3641841"},
+                    {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:100, mobil:50, motor:0, koordinat:"-7.787088,110.366706"},
+                    {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:20, mobil:50, motor:0, koordinat:"-7.7897929,110.3706896"},
+                    {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:115, motor:250, koordinat:"-7.7992907,110.3663957"},
+                    {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:125, motor:0, koordinat:"-7.7978843,110.3673653"},
+                    {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:40, mobil:150, motor:0, koordinat:"-7.8002542,110.3560535"},
+                    {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:82, mobil:100, motor:300, koordinat:"-7.8037595,110.3968204"},
+                    {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:100, motor:200, koordinat:"-7.7920043,110.3611007"},
+                    {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:60, motor:200, koordinat:"-7.7832641,110.3683152"},
+                    {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:130, mobil:300, motor:0, koordinat:"-7.7883952,110.36693"},
+                    {id:15, nama:"STADION KRIDOSONO", alamat:"JL YOS SUDARSO", bus:0, mobil:30, motor:150, koordinat:"-7.7877683,110.3736898"}
+                ];
+                
+                renderLokasi();
+                updateTotalCounters();
+                
+                return dataParkir;
+                
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // ====== REAL-TIME UPDATES ======
+        function setupRealtimeUpdates() {
+            if (!supabaseClient) return;
+            
+            const channel = supabaseClient
+                .channel('parkir-updates')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'parkir_lokasi'
+                    },
+                    (payload) => {
+                        console.log('🔄 Real-time update received:', payload.new.nama);
+                        
+                        // Update data lokal
+                        const index = dataParkir.findIndex(item => item.id === payload.new.id);
+                        if (index !== -1) {
+                            dataParkir[index] = {
+                                id: payload.new.id,
+                                nama: payload.new.nama,
+                                alamat: payload.new.alamat,
+                                bus: payload.new.bus || 0,
+                                mobil: payload.new.mobil || 0,
+                                motor: payload.new.motor || 0,
+                                koordinat: payload.new.koordinat,
+                                updated_at: payload.new.updated_at
+                            };
+                            
+                            // Update UI untuk item spesifik
+                            updateLokasiItemUI(payload.new.id, payload.new);
+                            
+                            // Update total counters
+                            updateTotalCounters();
+                            
+                            // Tampilkan notifikasi
+                            showRealtimeNotification(payload.new.nama, payload.new);
+                        }
+                    }
+                )
+                .subscribe((status) => {
+                    console.log(`📡 Real-time status: ${status}`);
+                });
+        }
+        
+        function updateLokasiItemUI(lokasiId, newData) {
+            // Cari semua item dengan data-id yang sesuai
+            const items = document.querySelectorAll('.lokasi-item');
+            items.forEach(item => {
+                const namaEl = item.querySelector('.lokasi-nama');
+                if (namaEl && namaEl.textContent === newData.nama) {
+                    // Update kapasitas badges
+                    const busBadge = item.querySelector('.badge-bus .kap-number');
+                    const mobilBadge = item.querySelector('.badge-mobil .kap-number');
+                    const motorBadge = item.querySelector('.badge-motor .kap-number');
+                    
+                    if (busBadge && newData.bus > 0) busBadge.textContent = newData.bus;
+                    if (mobilBadge && newData.mobil > 0) mobilBadge.textContent = newData.mobil;
+                    if (motorBadge && newData.motor > 0) motorBadge.textContent = newData.motor;
+                    
+                    // Highlight efek
+                    item.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.3)';
+                    setTimeout(() => {
+                        item.style.boxShadow = '';
+                    }, 1000);
+                }
+            });
+        }
+        
+        function showRealtimeNotification(namaLokasi, data) {
+            // Hapus notifikasi sebelumnya
+            const existing = document.querySelector('.realtime-notification');
+            if (existing) existing.remove();
+            
+            // Buat notifikasi baru
+            const notification = document.createElement('div');
+            notification.className = 'realtime-notification';
+            notification.innerHTML = `
+                <div style="font-size: 20px;">🔄</div>
+                <div>
+                    <strong>${namaLokasi}</strong> diperbarui<br>
+                    <small>Bus: ${data.bus} | Mobil: ${data.mobil} | Motor: ${data.motor}</small>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-hide setelah 5 detik
+            setTimeout(() => {
+                notification.classList.add('hiding');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+        
+        // ====== UPDATE TOTAL COUNTERS ======
+        function updateTotalCounters() {
+            if (!dataParkir || dataParkir.length === 0) return;
+            
+            const totals = dataParkir.reduce((acc, lokasi) => {
+                return {
+                    bus: acc.bus + (lokasi.bus || 0),
+                    mobil: acc.mobil + (lokasi.mobil || 0),
+                    motor: acc.motor + (lokasi.motor || 0)
+                };
+            }, { bus: 0, mobil: 0, motor: 0 });
+            
+            // Update UI
+            document.getElementById('totalLocations').textContent = dataParkir.length;
+            document.getElementById('totalBus').textContent = totals.bus.toLocaleString();
+            document.getElementById('totalMobil').textContent = totals.mobil.toLocaleString();
+            document.getElementById('totalMotor').textContent = totals.motor.toLocaleString();
+        }
+        
+        // ====== FUNGSI GPS & JARAK ======
+        function hitungJarak(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius bumi dalam km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        function formatJarak(km) {
+            if (km < 1) {
+                return `${Math.round(km * 1000)} meter`;
+            } else {
+                return `${km.toFixed(1)} km`;
+            }
+        }
+        
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (userPosition) {
+                    resolve(userPosition);
+                    return;
+                }
+                
+                if (!navigator.geolocation) {
+                    reject(new Error('Browser tidak mendukung GPS'));
+                    return;
+                }
+                
+                showLoading('Mendeteksi lokasi Anda...');
+                
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userPosition = {
+                            lat: pos.coords.latitude,
+                            lng: pos.coords.longitude
+                        };
+                        hideLoading();
+                        resolve(userPosition);
+                    },
+                    (err) => {
+                        hideLoading();
+                        reject(err);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 8000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+        
+        async function hitungSemuaJarak() {
+            if (!userPosition || !dataParkir) return;
+            
+            showLoading('Menghitung jarak ke lokasi parkir...');
+            
+            distancesCache.clear();
+            
+            for (const lokasi of dataParkir) {
+                try {
+                    const [lokasiLat, lokasiLng] = lokasi.koordinat.split(',').map(Number);
+                    const jarak = hitungJarak(
+                        userPosition.lat,
+                        userPosition.lng,
+                        lokasiLat,
+                        lokasiLng
+                    );
+                    distancesCache.set(lokasi.id, jarak);
+                    
+                    updateJarakDisplay(lokasi.id, jarak);
+                    
+                    // Delay kecil untuk animasi
+                    await delay(30);
+                } catch (error) {
+                    console.error(`Error menghitung jarak untuk ${lokasi.nama}:`, error);
+                    distancesCache.set(lokasi.id, Infinity);
+                }
+            }
+            
+            hideLoading();
+        }
+        
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        function showLoading(message) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                const text = overlay.querySelector('.loading-text');
+                if (text && message) {
+                    text.textContent = message;
+                }
+                overlay.classList.add('active');
+            }
+        }
+        
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+        
+        function updateJarakDisplay(lokasiId, jarak) {
+            const jarakElements = document.querySelectorAll('.lokasi-jarak');
+            jarakElements.forEach((element) => {
+                const lokasiElement = element.closest('.lokasi-item');
+                if (lokasiElement) {
+                    const lokasiNama = lokasiElement.querySelector('.lokasi-nama');
+                    if (lokasiNama) {
+                        const lokasi = dataParkir.find(l => l.nama === lokasiNama.textContent);
+                        if (lokasi && lokasi.id === lokasiId) {
+                            element.textContent = `📏 ${formatJarak(jarak)} dari lokasi Anda`;
+                            element.classList.remove('lokasi-jarak-loading');
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function cariParkirTerdekat() {
+            const btn = document.getElementById('btnCari');
+            if (!btn) return;
+            
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>📍</span> MENGHITUNG...';
+            
+            try {
+                if (!userPosition) {
+                    await getLocation();
+                }
+                
+                if (distancesCache.size === 0) {
+                    await hitungSemuaJarak();
+                }
+                
+                // Urutkan berdasarkan jarak
+                dataParkir.sort((a, b) => {
+                    const jarakA = distancesCache.get(a.id) || Infinity;
+                    const jarakB = distancesCache.get(b.id) || Infinity;
+                    return jarakA - jarakB;
+                });
+                
+                // Render ulang
+                renderLokasi();
+                
+                // Highlight yang terdekat
+                highlightClosestParking();
+                
+                console.log('✅ Parkir berhasil diurutkan berdasarkan jarak');
+                
+            } catch (error) {
+                console.error('Error mengurutkan parkir:', error);
+                
+                if (error.code === 1) {
+                    alert('Izinkan akses lokasi untuk mengurutkan parkir terdekat.');
+                } else if (error.message === 'Timeout') {
+                    alert('Waktu habis. Pastikan GPS aktif dan coba lagi.');
+                } else {
+                    alert('Tidak dapat mengakses lokasi Anda.');
+                }
+                
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        function highlightClosestParking() {
+            // Hapus highlight sebelumnya
+            document.querySelectorAll('.lokasi-item').forEach(item => {
+                item.classList.remove('closest');
+            });
+            
+            // Tambahkan highlight ke item pertama (terdekat)
+            const firstItem = document.querySelector('.lokasi-item');
+            if (firstItem) {
+                firstItem.classList.add('closest');
+                
+                // Scroll ke atas dengan smooth
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        function renderLokasi() {
+            const container = document.getElementById('lokasiList');
+            if (!container) return;
+            
+            let html = '';
+            
+            dataParkir.forEach((lokasi, index) => {
+                const jarak = distancesCache.get(lokasi.id);
+                const jarakText = jarak ? 
+                    `📏 ${formatJarak(jarak)} dari lokasi Anda` : 
+                    '📏 Mendeteksi lokasi...';
+                const jarakClass = jarak ? '' : 'lokasi-jarak-loading';
+                
+                html += `
+                    <div class="lokasi-item" data-id="${lokasi.id}">
+                        <div class="lokasi-header">
+                            <div class="lokasi-nama">${lokasi.nama}</div>
+                            <div class="lokasi-id">${index + 1}</div>
+                        </div>
+                        <div class="lokasi-alamat">${lokasi.alamat}</div>
+                        <div class="lokasi-jarak ${jarakClass}">
+                            ${jarakText}
+                        </div>
+                        <div class="kapasitas-container">
+                            ${lokasi.bus > 0 ? `
+                                <span class="kap-badge badge-bus">
+                                    <span class="kap-icon">🚌</span>
+                                    <span class="kap-number">${lokasi.bus}</span>
+                                    <span class="kap-label">Bus</span>
+                                </span>
+                            ` : ''}
+                            ${lokasi.mobil > 0 ? `
+                                <span class="kap-badge badge-mobil">
+                                    <span class="kap-icon">🚗</span>
+                                    <span class="kap-number">${lokasi.mobil}</span>
+                                    <span class="kap-label">Mobil</span>
+                                </span>
+                            ` : ''}
+                            ${lokasi.motor > 0 ? `
+                                <span class="kap-badge badge-motor">
+                                    <span class="kap-icon">🏍️</span>
+                                    <span class="kap-number">${lokasi.motor}</span>
+                                    <span class="kap-label">Motor</span>
+                                </span>
+                            ` : ''}
+                        </div>
+                        <div class="lokasi-actions">
+                            <button class="btn-action btn-map" onclick="bukaLokasiDiMaps('${lokasi.koordinat}', '${lokasi.nama}')">
+                                <span>🗺️</span> Lihat di Maps
+                            </button>
+                            <button class="btn-action btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')">
+                                <span>📍</span> Rute ke Sini
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function bukaLokasiDiMaps(koordinat, nama) {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            
+            if (isIOS) {
+                window.location.href = `maps://?q=${koordinat}&z=16`;
+                
+                setTimeout(() => {
+                    if (document.hasFocus()) {
+                        window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
+                    }
+                }, 500);
+            } else {
                 window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
             }
-        }, 500);
-    } else {
-        window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
-    }
-}
-
-function ruteKeLokasi(koordinat, nama) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const userLat = pos.coords.latitude;
-                const userLng = pos.coords.longitude;
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                
-                if (isIOS) {
-                    window.location.href = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
-                    
-                    setTimeout(() => {
-                        if (document.hasFocus()) {
+        }
+        
+        function ruteKeLokasi(koordinat, nama) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        const userLat = pos.coords.latitude;
+                        const userLng = pos.coords.longitude;
+                        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                        
+                        if (isIOS) {
+                            window.location.href = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
+                            
+                            setTimeout(() => {
+                                if (document.hasFocus()) {
+                                    window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
+                                }
+                            }, 500);
+                        } else {
                             window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
                         }
-                    }, 500);
-                } else {
-                    window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
-                }
-            },
-            () => {
-                alert('Tidak dapat mendeteksi lokasi Anda.');
+                    },
+                    () => {
+                        alert('Tidak dapat mendeteksi lokasi Anda.');
+                    }
+                );
+            } else {
+                alert('Browser tidak mendukung navigasi lokasi.');
             }
-        );
-    } else {
-        alert('Browser tidak mendukung navigasi lokasi.');
-    }
-}
-
-// ====== INISIALISASI ======
-document.addEventListener('DOMContentLoaded', async () => {
-    // Load Supabase JS library
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    document.head.appendChild(script);
-    
-    script.onload = async () => {
-        initSupabase();
-        await loadDataFromSupabase();
-        
-        try {
-            await getLocation();
-            await hitungSemuaJarak();
-        } catch (error) {
-            console.log('Lokasi tidak tersedia:', error.message);
         }
-    };
-    
-    // Auto-refresh setiap 30 detik
-    setInterval(async () => {
-        await loadDataFromSupabase();
-    }, 30000);
-});
+        
+        // ====== INISIALISASI APLIKASI ======
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Tunggu Supabase library siap
+            if (!window.supabase) {
+                // Load Supabase library jika belum
+                await new Promise((resolve) => {
+                    const checkSupabase = setInterval(() => {
+                        if (window.supabase) {
+                            clearInterval(checkSupabase);
+                            resolve();
+                        }
+                    }, 100);
+                });
+            }
+            
+            // Inisialisasi Supabase
+            await initSupabase();
+            
+            // Auto-refresh data setiap 30 detik
+            setInterval(async () => {
+                console.log('🔄 Auto-refresh data parkir');
+                await loadDataFromSupabase();
+            }, 30000);
+            
+            // Tampilkan status koneksi
+            console.log('🚀 Aplikasi Parkir Jogja siap!');
+        });
+    </script>
+</body>
+</html>
