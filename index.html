@@ -567,7 +567,6 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            gap: 10px; 
             font-weight: 700;
             min-height: 46px;
             transition: var(--transition-base);
@@ -864,7 +863,8 @@
             userPosition: null,
             distances: new Map(),
             isOnline: navigator.onLine,
-            originalOrder: []
+            originalOrder: [],
+            isSortedByDistance: false
         };
         
         let supabaseClient = null;
@@ -943,6 +943,7 @@
                 // Update state
                 window.appState.data = processedData;
                 window.appState.originalOrder = [...processedData];
+                window.appState.isSortedByDistance = false;
                 
                 // Render data
                 renderLokasi();
@@ -1009,6 +1010,8 @@
                 
                 // Update the displayed data with sorted version
                 window.appState.data = sorted;
+                window.appState.isSortedByDistance = true;
+                
                 renderLokasi();
                 
                 // Highlight closest
@@ -1239,8 +1242,15 @@
                 const mobilAvailable = Math.round(100 - mobilPercentage);
                 const motorAvailable = Math.round(100 - motorPercentage);
                 
-                // Gunakan ID asli dari data, bukan index + 1
-                const cardId = lokasi.id;
+                // Tentukan penomoran: jika diurutkan berdasarkan jarak, gunakan index + 1
+                // Jika tidak, gunakan ID asli dari database
+                let cardId;
+                if (window.appState.isSortedByDistance) {
+                    cardId = index + 1;
+                } else {
+                    // Untuk tampilan awal, urutkan berdasarkan ID asli
+                    cardId = lokasi.id;
+                }
                 
                 html += `
                     <div class="lokasi-item" data-id="${lokasi.id}">
@@ -1445,6 +1455,7 @@
             
             window.appState.data = offlineData;
             window.appState.originalOrder = [...offlineData];
+            window.appState.isSortedByDistance = false;
             
             renderLokasi();
             updateTotalCounters();
