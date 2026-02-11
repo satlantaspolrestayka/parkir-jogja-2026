@@ -262,7 +262,7 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            padding-left: 60px; /* Beri ruang untuk tombol di kiri */
+            padding-left: 60px; /* Ruang untuk tombol di kiri */
             padding-right: 20px;
         }
         
@@ -1090,19 +1090,19 @@
                 <div class="capacity-tab tab-bus">
                     <div class="tab-icon">🚌</div>
                     <div class="tab-number" id="totalBus">454</div>
-                    <div class="tab-label">BUS</div>
+                    <div class="tab-label">BUS TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-mobil">
                     <div class="tab-icon">🚗</div>
                     <div class="tab-number" id="totalMobil">1,690</div>
-                    <div class="tab-label">MOBIL</div>
+                    <div class="tab-label">MOBIL TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-motor">
                     <div class="tab-icon">🏍️</div>
                     <div class="tab-number" id="totalMotor">1,682</div>
-                    <div class="tab-label">MOTOR</div>
+                    <div class="tab-label">MOTOR TERSEDIA</div>
                 </div>
             </div>
         </div>
@@ -1302,7 +1302,7 @@
                 window.appState.originalOrder = [...processedData];
                 window.appState.isSortedByDistance = false;
                 
-                // Render data
+                // Render data dengan tampilan KETERSEDIAAN
                 renderLokasi();
                 updateTotalCounters();
                 
@@ -1549,7 +1549,7 @@
             );
         }
         
-        // ====== UI RENDER FUNCTIONS ======
+        // ====== UI RENDER FUNCTIONS (KETERSEDIAAN) ======
         function renderLokasi() {
             const container = document.getElementById('lokasiList');
             if (!container || !window.appState.data.length) {
@@ -1566,23 +1566,28 @@
                     '📏 Jarak tidak tersedia';
                 const distanceClass = distance !== undefined && distance !== null ? '' : 'lokasi-jarak-loading';
                 
-                // Calculate status for each vehicle type
-                const busStatus = calculateStatus(lokasi.bus, lokasi.max_bus);
-                const mobilStatus = calculateStatus(lokasi.mobil, lokasi.max_mobil);
-                const motorStatus = calculateStatus(lokasi.motor, lokasi.max_motor);
+                // Hitung KETERSEDIAAN (available) bukan yang terisi
+                const busAvailable = Math.max(0, lokasi.max_bus - lokasi.bus);
+                const mobilAvailable = Math.max(0, lokasi.max_mobil - lokasi.mobil);
+                const motorAvailable = Math.max(0, lokasi.max_motor - lokasi.motor);
+                
+                // Hitung status berdasarkan persentase KETERSEDIAAN
+                const busStatus = calculateStatus(busAvailable, lokasi.max_bus);
+                const mobilStatus = calculateStatus(mobilAvailable, lokasi.max_mobil);
+                const motorStatus = calculateStatus(motorAvailable, lokasi.max_motor);
                 
                 const busConfig = getStatusConfig(busStatus);
                 const mobilConfig = getStatusConfig(mobilStatus);
                 const motorConfig = getStatusConfig(motorStatus);
                 
-                // Calculate percentages
-                const busPercentage = lokasi.max_bus > 0 ? (lokasi.bus / lokasi.max_bus) * 100 : 0;
-                const mobilPercentage = lokasi.max_mobil > 0 ? (lokasi.mobil / lokasi.max_mobil) * 100 : 0;
-                const motorPercentage = lokasi.max_motor > 0 ? (lokasi.motor / lokasi.max_motor) * 100 : 0;
+                // Hitung persentase KETERSEDIAAN
+                const busAvailablePercentage = lokasi.max_bus > 0 ? (busAvailable / lokasi.max_bus) * 100 : 0;
+                const mobilAvailablePercentage = lokasi.max_mobil > 0 ? (mobilAvailable / lokasi.max_mobil) * 100 : 0;
+                const motorAvailablePercentage = lokasi.max_motor > 0 ? (motorAvailable / lokasi.max_motor) * 100 : 0;
                 
-                const busAvailable = Math.round(100 - busPercentage);
-                const mobilAvailable = Math.round(100 - mobilPercentage);
-                const motorAvailable = Math.round(100 - motorPercentage);
+                const busAvailablePercent = Math.round(busAvailablePercentage);
+                const mobilAvailablePercent = Math.round(mobilAvailablePercentage);
+                const motorAvailablePercent = Math.round(motorAvailablePercentage);
                 
                 // Tentukan penomoran
                 let cardId;
@@ -1607,63 +1612,63 @@
                             <span>${lokasi.alamat}</span>
                         </div>
                         
-                        <!-- Bus Capacity -->
+                        <!-- Bus Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
                                     <span>🚌</span>
-                                    <span>BUS</span>
+                                    <span>BUS TERSEDIA</span>
                                 </div>
-                                <div class="kapasitas-numbers">${lokasi.bus}/${lokasi.max_bus}</div>
+                                <div class="kapasitas-numbers">${busAvailable}/${lokasi.max_bus}</div>
                             </div>
                             
                             <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${busPercentage}%; background-color: ${busConfig.color};"></div>
+                                <div class="visual-bar" style="width: ${busAvailablePercentage}%; background-color: ${busConfig.color};"></div>
                             </div>
                             
                             <div class="status-badge status-${busStatus}">
                                 <span>${busConfig.icon}</span>
-                                <span>${busAvailable}% ${busConfig.text}</span>
+                                <span>${busAvailablePercent}% ${busConfig.text}</span>
                             </div>
                         </div>
                         
-                        <!-- Mobil Capacity -->
+                        <!-- Mobil Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
                                     <span>🚗</span>
-                                    <span>MOBIL</span>
+                                    <span>MOBIL TERSEDIA</span>
                                 </div>
-                                <div class="kapasitas-numbers">${lokasi.mobil}/${lokasi.max_mobil}</div>
+                                <div class="kapasitas-numbers">${mobilAvailable}/${lokasi.max_mobil}</div>
                             </div>
                             
                             <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${mobilPercentage}%; background-color: ${mobilConfig.color};"></div>
+                                <div class="visual-bar" style="width: ${mobilAvailablePercentage}%; background-color: ${mobilConfig.color};"></div>
                             </div>
                             
                             <div class="status-badge status-${mobilStatus}">
                                 <span>${mobilConfig.icon}</span>
-                                <span>${mobilAvailable}% ${mobilConfig.text}</span>
+                                <span>${mobilAvailablePercent}% ${mobilConfig.text}</span>
                             </div>
                         </div>
                         
-                        <!-- Motor Capacity -->
+                        <!-- Motor Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
                                     <span>🏍️</span>
-                                    <span>MOTOR</span>
+                                    <span>MOTOR TERSEDIA</span>
                                 </div>
-                                <div class="kapasitas-numbers">${lokasi.motor}/${lokasi.max_motor}</div>
+                                <div class="kapasitas-numbers">${motorAvailable}/${lokasi.max_motor}</div>
                             </div>
                             
                             <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${motorPercentage}%; background-color: ${motorConfig.color};"></div>
+                                <div class="visual-bar" style="width: ${motorAvailablePercentage}%; background-color: ${motorConfig.color};"></div>
                             </div>
                             
                             <div class="status-badge status-${motorStatus}">
                                 <span>${motorConfig.icon}</span>
-                                <span>${motorAvailable}% ${motorConfig.text}</span>
+                                <span>${motorAvailablePercent}% ${motorConfig.text}</span>
                             </div>
                         </div>
                         
@@ -1709,14 +1714,15 @@
             }
         }
         
+        // ====== UPDATE TOTAL COUNTERS (KETERSEDIAAN) ======
         function updateTotalCounters() {
             if (!window.appState.data.length) return;
             
             const totals = window.appState.data.reduce((acc, lokasi) => {
                 return {
-                    bus: acc.bus + (lokasi.bus || 0),
-                    mobil: acc.mobil + (lokasi.mobil || 0),
-                    motor: acc.motor + (lokasi.motor || 0)
+                    bus: acc.bus + Math.max(0, lokasi.max_bus - lokasi.bus),
+                    mobil: acc.mobil + Math.max(0, lokasi.max_mobil - lokasi.mobil),
+                    motor: acc.motor + Math.max(0, lokasi.max_motor - lokasi.motor)
                 };
             }, { bus: 0, mobil: 0, motor: 0 });
             
@@ -1726,12 +1732,11 @@
             document.getElementById('totalMotor').textContent = totals.motor.toLocaleString();
         }
         
-        // ====== STATUS CALCULATION ======
-        function calculateStatus(current, max) {
-            if (max === 0 || current >= max) return 'full';
+        // ====== STATUS CALCULATION (BERDASARKAN KETERSEDIAAN) ======
+        function calculateStatus(available, max) {
+            if (max === 0 || available <= 0) return 'full';
             
-            const usedPercentage = (current / max) * 100;
-            const availablePercentage = 100 - usedPercentage;
+            const availablePercentage = (available / max) * 100;
             
             if (availablePercentage >= 70) return 'high';
             if (availablePercentage >= 30) return 'medium';
