@@ -13,6 +13,9 @@
             --satlantas-light: #e3f2fd;
             --satlantas-gray: #f5f5f5;
             --satlantas-dark: #0d1b3e;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
         }
         
         * { 
@@ -194,10 +197,37 @@
             font-size: 16px;
         }
         
-        .max-label {
+        .kapasitas-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
             font-size: 13px;
-            color: #888;
-            font-weight: 500;
+        }
+        
+        .kapasitas-label {
+            color: #666;
+        }
+        
+        .status-label {
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        .status-tersedia {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+        }
+        
+        .status-penuh {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+        }
+        
+        .status-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-orange);
         }
         
         .input-with-max {
@@ -223,6 +253,11 @@
             border-color: var(--satlantas-blue);
             box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
             background: white;
+        }
+        
+        .admin-input.empty-input {
+            border-color: var(--warning-orange);
+            background-color: rgba(245, 158, 11, 0.05);
         }
         
         .admin-input:disabled {
@@ -405,18 +440,18 @@
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🚌</div>
-                <div class="stat-number" id="totalBusAdmin">0</div>
-                <div class="stat-label">Total Bus</div>
+                <div class="stat-number" id="totalSlotBusTersedia">0</div>
+                <div class="stat-label">Slot Bus Tersedia</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🚗</div>
-                <div class="stat-number" id="totalMobilAdmin">0</div>
-                <div class="stat-label">Total Mobil</div>
+                <div class="stat-number" id="totalSlotMobilTersedia">0</div>
+                <div class="stat-label">Slot Mobil Tersedia</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🏍️</div>
-                <div class="stat-number" id="totalMotorAdmin">0</div>
-                <div class="stat-label">Total Motor</div>
+                <div class="stat-number" id="totalSlotMotorTersedia">0</div>
+                <div class="stat-label">Slot Motor Tersedia</div>
             </div>
         </div>
         
@@ -495,6 +530,20 @@
                 const maxMobil = item.max_mobil || 200;
                 const maxMotor = item.max_motor || 150;
                 
+                // Hitung ketersediaan slot (slot tersedia)
+                const busTerpakai = item.bus || 0;
+                const mobilTerpakai = item.mobil || 0;
+                const motorTerpakai = item.motor || 0;
+                
+                const slotBusTersedia = maxBus - busTerpakai;
+                const slotMobilTersedia = maxMobil - mobilTerpakai;
+                const slotMotorTersedia = maxMotor - motorTerpakai;
+                
+                // Tentukan status ketersediaan
+                const statusBus = getStatusKetersediaan(slotBusTersedia, maxBus);
+                const statusMobil = getStatusKetersediaan(slotMobilTersedia, maxMobil);
+                const statusMotor = getStatusKetersediaan(slotMotorTersedia, maxMotor);
+                
                 html += `
                     <div class="lokasi-admin-card" data-id="${item.id}">
                         <div class="lokasi-admin-header">
@@ -506,63 +555,81 @@
                             📍 ${item.alamat}
                         </div>
                         
-                        <!-- Input Bus -->
+                        <!-- Input Slot Bus Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
                                 <div class="input-label-icon">
                                     <span>🚌</span>
-                                    <span>BUS</span>
+                                    <span>SLOT BUS TERSEDIA</span>
                                 </div>
-                                <span class="max-label">Maks: ${maxBus}</span>
                             </div>
                             <div class="input-with-max">
                                 <input type="number" 
                                        class="admin-input" 
                                        id="admin-bus-${item.id}" 
-                                       value="${item.bus || 0}" 
+                                       value="${slotBusTersedia}" 
+                                       placeholder="Masukkan slot tersedia"
                                        min="0" 
                                        max="${maxBus}"
-                                       oninput="validateAdminInput(this, ${maxBus})">
+                                       oninput="handleAdminInput(this, ${maxBus})"
+                                       onfocus="handleInputFocus(this)"
+                                       onblur="handleInputBlur(this, ${maxBus})">
+                            </div>
+                            <div class="kapasitas-info">
+                                <span class="kapasitas-label">Kapasitas: ${maxBus} (Terpakai: ${busTerpakai})</span>
+                                <span class="status-label ${statusBus.class}">${statusBus.text}</span>
                             </div>
                         </div>
                         
-                        <!-- Input Mobil -->
+                        <!-- Input Slot Mobil Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
                                 <div class="input-label-icon">
                                     <span>🚗</span>
-                                    <span>MOBIL</span>
+                                    <span>SLOT MOBIL TERSEDIA</span>
                                 </div>
-                                <span class="max-label">Maks: ${maxMobil}</span>
                             </div>
                             <div class="input-with-max">
                                 <input type="number" 
                                        class="admin-input" 
                                        id="admin-mobil-${item.id}" 
-                                       value="${item.mobil || 0}" 
+                                       value="${slotMobilTersedia}" 
+                                       placeholder="Masukkan slot tersedia"
                                        min="0" 
                                        max="${maxMobil}"
-                                       oninput="validateAdminInput(this, ${maxMobil})">
+                                       oninput="handleAdminInput(this, ${maxMobil})"
+                                       onfocus="handleInputFocus(this)"
+                                       onblur="handleInputBlur(this, ${maxMobil})">
+                            </div>
+                            <div class="kapasitas-info">
+                                <span class="kapasitas-label">Kapasitas: ${maxMobil} (Terpakai: ${mobilTerpakai})</span>
+                                <span class="status-label ${statusMobil.class}">${statusMobil.text}</span>
                             </div>
                         </div>
                         
-                        <!-- Input Motor -->
+                        <!-- Input Slot Motor Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
                                 <div class="input-label-icon">
                                     <span>🏍️</span>
-                                    <span>MOTOR</span>
+                                    <span>SLOT MOTOR TERSEDIA</span>
                                 </div>
-                                <span class="max-label">Maks: ${maxMotor}</span>
                             </div>
                             <div class="input-with-max">
                                 <input type="number" 
                                        class="admin-input" 
                                        id="admin-motor-${item.id}" 
-                                       value="${item.motor || 0}" 
+                                       value="${slotMotorTersedia}" 
+                                       placeholder="Masukkan slot tersedia"
                                        min="0" 
                                        max="${maxMotor}"
-                                       oninput="validateAdminInput(this, ${maxMotor})">
+                                       oninput="handleAdminInput(this, ${maxMotor})"
+                                       onfocus="handleInputFocus(this)"
+                                       onblur="handleInputBlur(this, ${maxMotor})">
+                            </div>
+                            <div class="kapasitas-info">
+                                <span class="kapasitas-label">Kapasitas: ${maxMotor} (Terpakai: ${motorTerpakai})</span>
+                                <span class="status-label ${statusMotor.class}">${statusMotor.text}</span>
                             </div>
                         </div>
                         
@@ -582,22 +649,106 @@
             container.innerHTML = html;
         }
         
-        // ====== VALIDASI INPUT ======
-        function validateAdminInput(input, maxValue) {
+        // ====== FUNGSI BANTUAN ======
+        function getStatusKetersediaan(tersedia, max) {
+            if (tersedia === 0) {
+                return { class: 'status-penuh', text: 'PENUH' };
+            } else if (tersedia <= max * 0.2) {
+                return { class: 'status-warning', text: 'HAMPIR PENUH' };
+            } else if (tersedia >= max * 0.5) {
+                return { class: 'status-tersedia', text: 'BANYAK' };
+            } else {
+                return { class: 'status-tersedia', text: 'TERSEDIA' };
+            }
+        }
+        
+        // ====== HANDLE INPUT ======
+        function handleAdminInput(input, maxValue) {
+            // Hilangkan kelas empty-input jika ada
+            input.classList.remove('empty-input');
+            
+            // Jika input kosong, biarkan kosong (tidak otomatis 0)
+            if (input.value === '') {
+                return;
+            }
+            
             let value = parseInt(input.value);
             
+            // Jika bukan angka, kosongkan
             if (isNaN(value)) {
-                input.value = 0;
-                return 0;
+                input.value = '';
+                return;
             }
             
+            // Batasi nilai minimal 0
             if (value < 0) {
                 input.value = 0;
+            }
+            
+            // Batasi nilai maksimal
+            if (value > maxValue) {
+                input.value = maxValue;
+            }
+        }
+        
+        function handleInputFocus(input) {
+            // Hilangkan kelas empty-input saat focus
+            input.classList.remove('empty-input');
+            
+            // Jika nilai adalah 0, kosongkan saat focus untuk memudahkan input
+            if (parseInt(input.value) === 0) {
+                input.value = '';
+            }
+        }
+        
+        function handleInputBlur(input, maxValue) {
+            // Jika kosong, tambahkan kelas styling
+            if (input.value === '') {
+                input.classList.add('empty-input');
+                return;
+            }
+            
+            let value = parseInt(input.value);
+            
+            // Jika bukan angka, biarkan kosong
+            if (isNaN(value)) {
+                input.value = '';
+                input.classList.add('empty-input');
+                return;
+            }
+            
+            // Batasi nilai minimal 0
+            if (value < 0) {
+                input.value = 0;
+            }
+            
+            // Batasi nilai maksimal
+            if (value > maxValue) {
+                input.value = maxValue;
+            }
+        }
+        
+        // ====== VALIDASI INPUT (untuk update) ======
+        function validateAdminInputForUpdate(input, maxValue) {
+            // Jika input kosong, kembalikan null (bukan 0)
+            if (input.value === '') {
+                return null;
+            }
+            
+            let value = parseInt(input.value);
+            
+            // Jika bukan angka, kembalikan null
+            if (isNaN(value)) {
+                return null;
+            }
+            
+            // Batasi nilai minimal 0
+            if (value < 0) {
                 return 0;
             }
             
+            // Batasi nilai maksimal
             if (value > maxValue) {
-                input.value = maxValue;
                 return maxValue;
             }
             
@@ -617,10 +768,26 @@
             const maxMobil = lokasi.max_mobil || 200;
             const maxMotor = lokasi.max_motor || 150;
             
-            // Validasi input
-            const bus = validateAdminInput(busInput, maxBus);
-            const mobil = validateAdminInput(mobilInput, maxMobil);
-            const motor = validateAdminInput(motorInput, maxMotor);
+            // Validasi input (mengembalikan null jika kosong)
+            const slotBusTersedia = validateAdminInputForUpdate(busInput, maxBus);
+            const slotMobilTersedia = validateAdminInputForUpdate(mobilInput, maxMobil);
+            const slotMotorTersedia = validateAdminInputForUpdate(motorInput, maxMotor);
+            
+            // Validasi: jika ada input yang null (kosong), tampilkan peringatan
+            if (slotBusTersedia === null || slotMobilTersedia === null || slotMotorTersedia === null) {
+                showAdminNotification(`❌ ${lokasi.nama}: Semua field harus diisi!`, 'error');
+                
+                // Highlight input yang kosong
+                if (slotBusTersedia === null) busInput.classList.add('empty-input');
+                if (slotMobilTersedia === null) mobilInput.classList.add('empty-input');
+                if (slotMotorTersedia === null) motorInput.classList.add('empty-input');
+                return;
+            }
+            
+            // Konversi slot tersedia menjadi jumlah terpakai
+            const busTerpakai = maxBus - slotBusTersedia;
+            const mobilTerpakai = maxMobil - slotMobilTersedia;
+            const motorTerpakai = maxMotor - slotMotorTersedia;
             
             // Disable button selama proses
             const btn = document.querySelector(`[onclick="updateAdminLokasi(${id})"]`);
@@ -638,9 +805,9 @@
                         'Prefer': 'return=minimal'
                     },
                     body: JSON.stringify({
-                        bus: bus,
-                        mobil: mobil,
-                        motor: motor,
+                        bus: busTerpakai,
+                        mobil: mobilTerpakai,
+                        motor: motorTerpakai,
                         updated_at: new Date().toISOString()
                     })
                 });
@@ -650,7 +817,10 @@
                     throw new Error(`Update gagal: ${response.status} ${errorText}`);
                 }
                 
-                showAdminNotification(`✅ ${lokasi.nama} berhasil diupdate!<br>Bus: ${bus}, Mobil: ${mobil}, Motor: ${motor}`, 'success');
+                showAdminNotification(`✅ ${lokasi.nama} berhasil diupdate!<br>
+                                      Slot Bus Tersedia: ${slotBusTersedia}/${maxBus}<br>
+                                      Slot Mobil Tersedia: ${slotMobilTersedia}/${maxMobil}<br>
+                                      Slot Motor Tersedia: ${slotMotorTersedia}/${maxMotor}`, 'success');
                 
                 // Refresh data setelah update
                 setTimeout(() => {
@@ -672,16 +842,29 @@
         function updateAdminStats() {
             if (!parkirData.length) return;
             
-            const totals = parkirData.reduce((acc, item) => ({
-                bus: acc.bus + (item.bus || 0),
-                mobil: acc.mobil + (item.mobil || 0),
-                motor: acc.motor + (item.motor || 0)
-            }), { bus: 0, mobil: 0, motor: 0 });
+            // Hitung total slot tersedia (bukan total kendaraan)
+            let totalSlotBusTersedia = 0;
+            let totalSlotMobilTersedia = 0;
+            let totalSlotMotorTersedia = 0;
+            
+            parkirData.forEach(item => {
+                const maxBus = item.max_bus || 100;
+                const maxMobil = item.max_mobil || 200;
+                const maxMotor = item.max_motor || 150;
+                
+                const busTerpakai = item.bus || 0;
+                const mobilTerpakai = item.mobil || 0;
+                const motorTerpakai = item.motor || 0;
+                
+                totalSlotBusTersedia += (maxBus - busTerpakai);
+                totalSlotMobilTersedia += (maxMobil - mobilTerpakai);
+                totalSlotMotorTersedia += (maxMotor - motorTerpakai);
+            });
             
             document.getElementById('totalLokasiAdmin').textContent = parkirData.length;
-            document.getElementById('totalBusAdmin').textContent = totals.bus.toLocaleString();
-            document.getElementById('totalMobilAdmin').textContent = totals.mobil.toLocaleString();
-            document.getElementById('totalMotorAdmin').textContent = totals.motor.toLocaleString();
+            document.getElementById('totalSlotBusTersedia').textContent = totalSlotBusTersedia.toLocaleString();
+            document.getElementById('totalSlotMobilTersedia').textContent = totalSlotMobilTersedia.toLocaleString();
+            document.getElementById('totalSlotMotorTersedia').textContent = totalSlotMotorTersedia.toLocaleString();
         }
         
         // ====== NOTIFICATION ======
