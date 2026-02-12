@@ -22,7 +22,6 @@
     <style>
         /* ====== CSS VARIABLES & RESET ====== */
         :root {
-            /* Color System - Lebih Gelap & Profesional */
             --primary-500: #2563eb;
             --primary-600: #1d4ed8;
             --primary-700: #1e40af;
@@ -36,7 +35,6 @@
             --navy-900: #0f1b3d;
             --navy-800: #1e293b;
             
-            /* Neutral Colors */
             --gray-50: #f8fafc;
             --gray-100: #f1f5f9;
             --gray-200: #e2e8f0;
@@ -47,13 +45,11 @@
             --gray-800: #1e293b;
             --gray-900: #0f172a;
             
-            /* Shadow System */
             --shadow-soft: 0 2px 8px rgba(15, 27, 61, 0.08);
             --shadow-medium: 0 4px 12px rgba(15, 27, 61, 0.12);
             --shadow-card: 0 6px 20px rgba(15, 27, 61, 0.1);
             --shadow-deep: 0 10px 25px rgba(15, 27, 61, 0.15);
             
-            /* Animation */
             --transition-fast: 0.15s ease;
             --transition-base: 0.25s ease;
         }
@@ -65,17 +61,21 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* ====== BACKGROUND DENGAN GAMBAR ====== */
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+        
+        /* ====== BACKGROUND GAMBAR FLEKSIBEL ====== */
         body { 
             min-height: 100vh;
-            /* Gambar latar belakang yang dikirim user */
-            background-image: url('Blue Ramadan Lantern Moon Spot Pattern Background Wallpaper Image For Free Download - Pngtree.jpg');
+            /* ========== GANTI 'bg-ramadan.jpg' DENGAN NAMA FILE GAMBAR ANDA ========== */
+            background-image: url('bg-ramadan.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Efek parallax ringan */
             background-repeat: no-repeat;
-            /* Fallback warna solid */
-            background-color: #0f1b3d;
+            background-attachment: fixed; /* Untuk desktop */
+            background-color: #0f1b3d; /* Warna fallback jika gambar tidak muncul */
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 0;
             color: var(--gray-800);
@@ -92,12 +92,22 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.35); /* Sesuaikan kegelapan */
+            background: rgba(0, 0, 0, 0.4); /* Atur kegelapan di sini (0.3 - 0.6) */
             pointer-events: none;
             z-index: 0;
         }
         
-        /* Semua konten utama berada di atas overlay */
+        /* Untuk mobile: matikan fixed attachment agar tidak error/parallax */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+            body::before {
+                position: absolute; /* Hindari bug di beberapa browser */
+            }
+        }
+        
+        /* Semua konten utama di atas overlay */
         .container, 
         .menu-toggle, 
         .menu-sidebar,
@@ -116,7 +126,7 @@
         .menu-toggle {
             position: fixed;
             top: 20px;
-            left: 20px; /* TOMBOL DI KIRI ATAS */
+            left: 20px;
             background: var(--primary-600);
             color: white;
             width: 50px;
@@ -285,7 +295,7 @@
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
-            padding: 60px 20px 40px; /* Padding atas lebih besar untuk ruang tombol */
+            padding: 60px 20px 40px;
             position: relative;
             overflow: hidden;
         }
@@ -294,7 +304,7 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            padding-left: 60px; /* Ruang untuk tombol di kiri */
+            padding-left: 60px;
             padding-right: 20px;
         }
         
@@ -896,7 +906,6 @@
         }
         
         @media (max-width: 768px) {
-            /* Kecilkan header untuk mobile */
             .main-header {
                 padding: 50px 20px 30px;
             }
@@ -916,7 +925,6 @@
                 font-size: 13px;
             }
             
-            /* Tombol menu lebih kecil */
             .menu-toggle {
                 width: 44px;
                 height: 44px;
@@ -925,7 +933,6 @@
                 left: 15px;
             }
             
-            /* Kurangi padding kiri untuk header content di mobile */
             .header-content {
                 padding-left: 55px;
                 padding-right: 15px;
@@ -1214,28 +1221,24 @@
             const menuSidebar = document.getElementById('menuSidebar');
             const menuClose = document.getElementById('menuClose');
             
-            // Toggle menu saat tombol hamburger diklik
             menuToggle.addEventListener('click', () => {
                 menuSidebar.classList.add('active');
                 menuOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
             });
             
-            // Tutup menu saat overlay diklik
             menuOverlay.addEventListener('click', () => {
                 menuSidebar.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 document.body.style.overflow = '';
             });
             
-            // Tutup menu saat tombol close diklik
             menuClose.addEventListener('click', () => {
                 menuSidebar.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 document.body.style.overflow = '';
             });
             
-            // Tutup menu dengan tombol ESC
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     menuSidebar.classList.remove('active');
@@ -1244,7 +1247,6 @@
                 }
             });
             
-            // Setup scroll handler untuk tombol menu dinamis
             setupScrollHandler();
         }
         
@@ -1258,7 +1260,6 @@
                 
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                // Toggle class 'scrolled' berdasarkan scroll position
                 if (scrollTop > 100) {
                     menuToggle.classList.add('scrolled');
                 } else {
@@ -1282,10 +1283,8 @@
                 
                 console.log('✅ Supabase initialized');
                 
-                // Load initial data
                 await loadDataFromSupabase();
                 
-                // Setup realtime updates
                 setupRealtimeUpdates();
                 
                 return true;
@@ -1293,7 +1292,6 @@
             } catch (error) {
                 console.error('❌ Init failed:', error);
                 
-                // Load offline data
                 loadOfflineData();
                 
                 return false;
@@ -1314,7 +1312,6 @@
                 
                 console.log(`✅ Loaded ${data.length} locations`);
                 
-                // Process and validate data
                 const processedData = data.map(item => ({
                     id: item.id,
                     nama: item.nama || 'Unknown',
@@ -1329,12 +1326,10 @@
                     updated_at: item.updated_at
                 }));
                 
-                // Update state
                 window.appState.data = processedData;
                 window.appState.originalOrder = [...processedData];
                 window.appState.isSortedByDistance = false;
                 
-                // Render data dengan tampilan KETERSEDIAAN
                 renderLokasi();
                 updateTotalCounters();
                 
@@ -1380,26 +1375,21 @@
             btn.innerHTML = '<span>📍</span> MENGHITUNG...';
             
             try {
-                // Get user location
                 await getLocation();
                 
-                // Calculate distances
                 await calculateAllDistances();
                 
-                // Create a copy of the data and sort by distance
                 const sorted = [...window.appState.data].sort((a, b) => {
                     const distA = window.appState.distances.get(a.id) ?? Infinity;
                     const distB = window.appState.distances.get(b.id) ?? Infinity;
                     return distA - distB;
                 });
                 
-                // Update the displayed data with sorted version
                 window.appState.data = sorted;
                 window.appState.isSortedByDistance = true;
                 
                 renderLokasi();
                 
-                // Highlight closest
                 setTimeout(highlightClosestParking, 50);
                 
                 showNotification('📍 Parkir terdekat ditemukan!');
@@ -1463,7 +1453,7 @@
         
         // ====== DISTANCE CALCULATION ======
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth radius in km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = 
@@ -1493,7 +1483,6 @@
             const newDistances = new Map();
             const { lat: userLat, lng: userLng } = window.appState.userPosition;
             
-            // Calculate distances
             window.appState.data.forEach((lokasi) => {
                 try {
                     const coords = lokasi.koordinat.split(',').map(Number);
@@ -1581,7 +1570,7 @@
             );
         }
         
-        // ====== UI RENDER FUNCTIONS (KETERSEDIAAN) ======
+        // ====== UI RENDER FUNCTIONS ======
         function renderLokasi() {
             const container = document.getElementById('lokasiList');
             if (!container || !window.appState.data.length) {
@@ -1598,12 +1587,10 @@
                     '📏 Jarak tidak tersedia';
                 const distanceClass = distance !== undefined && distance !== null ? '' : 'lokasi-jarak-loading';
                 
-                // Hitung KETERSEDIAAN (available) bukan yang terisi
                 const busAvailable = Math.max(0, lokasi.max_bus - lokasi.bus);
                 const mobilAvailable = Math.max(0, lokasi.max_mobil - lokasi.mobil);
                 const motorAvailable = Math.max(0, lokasi.max_motor - lokasi.motor);
                 
-                // Hitung status berdasarkan persentase KETERSEDIAAN
                 const busStatus = calculateStatus(busAvailable, lokasi.max_bus);
                 const mobilStatus = calculateStatus(mobilAvailable, lokasi.max_mobil);
                 const motorStatus = calculateStatus(motorAvailable, lokasi.max_motor);
@@ -1612,7 +1599,6 @@
                 const mobilConfig = getStatusConfig(mobilStatus);
                 const motorConfig = getStatusConfig(motorStatus);
                 
-                // Hitung persentase KETERSEDIAAN
                 const busAvailablePercentage = lokasi.max_bus > 0 ? (busAvailable / lokasi.max_bus) * 100 : 0;
                 const mobilAvailablePercentage = lokasi.max_mobil > 0 ? (mobilAvailable / lokasi.max_mobil) * 100 : 0;
                 const motorAvailablePercentage = lokasi.max_motor > 0 ? (motorAvailable / lokasi.max_motor) * 100 : 0;
@@ -1621,7 +1607,6 @@
                 const mobilAvailablePercent = Math.round(mobilAvailablePercentage);
                 const motorAvailablePercent = Math.round(motorAvailablePercentage);
                 
-                // Tentukan penomoran
                 let cardId;
                 if (window.appState.isSortedByDistance) {
                     cardId = index + 1;
@@ -1644,7 +1629,6 @@
                             <span>${lokasi.alamat}</span>
                         </div>
                         
-                        <!-- Bus Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
@@ -1664,7 +1648,6 @@
                             </div>
                         </div>
                         
-                        <!-- Mobil Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
@@ -1684,7 +1667,6 @@
                             </div>
                         </div>
                         
-                        <!-- Motor Availability -->
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
                                 <div class="kapasitas-title">
@@ -1704,12 +1686,10 @@
                             </div>
                         </div>
                         
-                        <!-- Distance -->
                         <div class="lokasi-jarak ${distanceClass}">
                             ${distanceText}
                         </div>
                         
-                        <!-- Action Button -->
                         <div class="card-actions">
                             <button class="btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Rute ke ${lokasi.nama}">
                                 Rute ke Sini
@@ -1746,7 +1726,7 @@
             }
         }
         
-        // ====== UPDATE TOTAL COUNTERS (KETERSEDIAAN) ======
+        // ====== UPDATE TOTAL COUNTERS ======
         function updateTotalCounters() {
             if (!window.appState.data.length) return;
             
@@ -1764,7 +1744,7 @@
             document.getElementById('totalMotor').textContent = totals.motor.toLocaleString();
         }
         
-        // ====== STATUS CALCULATION (BERDASARKAN KETERSEDIAAN) ======
+        // ====== STATUS CALCULATION ======
         function calculateStatus(available, max) {
             if (max === 0 || available <= 0) return 'full';
             
