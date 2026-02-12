@@ -244,36 +244,33 @@
         }
         
         /* ====== HEADER UTAMA ====== */
-        /* Lapisan 1: Background biru gradasi */
-        /* Lapisan 2: Gambar ramadhan.jpg dengan opacity, di atas biru */
-        /* Lapisan 3: Konten teks dengan background semi-transparan */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             background: linear-gradient(135deg, var(--navy-900), #1E3A8A, #3b82f6); /* background biru */
-            isolation: isolate;
             min-height: 320px;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 60px 20px;
             overflow: hidden;
+            isolation: isolate;
         }
         
-        /* Gambar ramadhan.jpg - di atas background biru, di bawah teks */
-        .main-header::after {
-            content: '';
+        /* Gambar ramadhan.jpg - background putih hilang, hanya konten teks yang terlihat */
+        .ramadan-bg-img {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('ramadhan.jpg') center/cover no-repeat;
-            opacity: 0.7;  /* atur sesuai keinginan, makin tinggi makin tajam */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;      /* agar gambar menutupi seluruh area */
+            mix-blend-mode: multiply; /* membuat background putih menjadi transparan */
+            opacity: 0.7;           /* sesuaikan ketajaman */
             z-index: 0;
-            pointer-events: none;
+            pointer-events: none;   /* tidak mengganggu klik */
         }
         
         .header-content {
@@ -286,12 +283,12 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            background: rgba(15, 27, 61, 0.5); /* latar semi-transparan agar teks terbaca */
+            background: rgba(15, 27, 61, 0.4); /* latar semi-transparan agar teks lebih terbaca */
             backdrop-filter: blur(4px);
             padding: 30px 40px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         
         .main-header h1 { 
@@ -300,7 +297,7 @@
             line-height: 1.2;
             letter-spacing: 0.5px;
             margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         }
         
         .title-sub {
@@ -308,7 +305,7 @@
             font-weight: 600;
             margin-bottom: 20px;
             opacity: 0.95;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
         }
         
         .operation-badge {
@@ -1101,8 +1098,11 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA -->
+        <!-- HEADER UTAMA DENGAN BACKGROUND BIRU DAN GAMBAR RAMADAN (BACKGROUND PUTIH HILANG) -->
         <div class="main-header">
+            <!-- Gambar ramadhan.jpg - background putih hilang berkat mix-blend-mode -->
+            <img src="ramadhan.jpg" alt="Ramadan" class="ramadan-bg-img">
+            
             <div class="header-content">
                 <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
                 <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
