@@ -76,9 +76,9 @@
             to { opacity: 1; }
         }
         
-        /* ====== MENU NAVIGASI ====== */
+        /* ====== MENU NAVIGASI - ABSOLUTE DI HEADER ====== */
         .menu-toggle {
-            position: fixed;
+            position: absolute;
             top: 20px;
             left: 20px;
             background: var(--primary-600);
@@ -249,10 +249,13 @@
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
-            padding: 60px 20px 40px;
-            overflow: hidden;
             background: url('ramadhan.jpg') center/cover no-repeat fixed;
             isolation: isolate;
+            min-height: 300px; /* Tinggi minimal agar konten vertikal center */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px; /* padding asimetris diatur oleh flex */
         }
         
         /* OVERLAY GELAP AGAR TEKS TERBACA */
@@ -271,13 +274,12 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            padding-left: 60px; /* ruang untuk tombol menu */
-            padding-right: 20px;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* konten horizontal tengah */
-            z-index: 1;
+            justify-content: center;
+            width: 100%;
         }
         
         .main-header h1 { 
@@ -875,13 +877,15 @@
             }
             
             .main-header {
-                padding: 50px 40px;
+                padding: 40px 20px;
+                min-height: 300px;
             }
         }
         
         @media (max-width: 768px) {
             .main-header {
-                padding: 50px 20px 30px;
+                padding: 40px 20px;
+                min-height: 280px;
             }
             
             .main-header h1 {
@@ -906,16 +910,12 @@
                 top: 15px;
                 left: 15px;
             }
-            
-            .header-content {
-                padding-left: 55px;
-                padding-right: 15px;
-            }
         }
         
         @media (max-width: 640px) {
             .main-header {
-                padding: 40px 15px 25px;
+                padding: 30px 15px;
+                min-height: 260px;
             }
             
             .main-header h1 {
@@ -932,11 +932,6 @@
                 height: 42px;
                 top: 12px;
                 left: 12px;
-            }
-            
-            .header-content {
-                padding-left: 50px;
-                padding-right: 12px;
             }
             
             .lokasi-grid {
@@ -963,7 +958,8 @@
         
         @media (max-width: 375px) {
             .main-header {
-                padding: 35px 12px 20px;
+                padding: 25px 12px;
+                min-height: 240px;
             }
             
             .main-header h1 {
@@ -984,11 +980,6 @@
                 height: 40px;
                 top: 10px;
                 left: 10px;
-            }
-            
-            .header-content {
-                padding-left: 48px;
-                padding-right: 10px;
             }
             
             .capacity-tabs {
@@ -1043,7 +1034,7 @@
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
-    <!-- MENU TOGGLE BUTTON -->
+    <!-- MENU TOGGLE BUTTON - ABSOLUTE DI HEADER -->
     <div class="menu-toggle" id="menuToggle">
         <i class="fas fa-bars"></i>
     </div>
