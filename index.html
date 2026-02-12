@@ -249,8 +249,9 @@
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
-            background: linear-gradient(135deg, var(--navy-900), #1E3A8A, #3b82f6); /* background biru */
-            min-height: 320px;
+            background: linear-gradient(135deg, var(--navy-900), #1E3A8A, #3b82f6);
+            width: 100%;
+            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -269,7 +270,7 @@
             height: 100%;
             object-fit: cover;      /* agar gambar menutupi seluruh area */
             mix-blend-mode: multiply; /* membuat background putih menjadi transparan */
-            opacity: 1;            /* OPAKITAS DIHAPUS (sekarang 100% tajam) */
+            opacity: 1;            /* TANPA OPAKITAS */
             z-index: 0;
             pointer-events: none;   /* tidak mengganggu klik */
         }
@@ -875,14 +876,12 @@
             }
             
             .main-header {
-                min-height: 350px;
                 padding: 60px 40px;
             }
         }
         
         @media (max-width: 768px) {
             .main-header {
-                min-height: 300px;
                 padding: 50px 20px;
             }
             
@@ -912,7 +911,6 @@
         
         @media (max-width: 640px) {
             .main-header {
-                min-height: 280px;
                 padding: 40px 15px;
             }
             
@@ -956,7 +954,6 @@
         
         @media (max-width: 375px) {
             .main-header {
-                min-height: 260px;
                 padding: 35px 12px;
             }
             
