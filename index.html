@@ -260,7 +260,7 @@
             isolation: isolate;
         }
         
-        /* Gambar ramadhan.png - background putih hilang, hanya konten teks yang terlihat */
+        /* Gambar ramadhan.jpg - background putih hilang, tampil 100% tajam */
         .ramadan-bg-img {
             position: absolute;
             top: 0;
@@ -269,7 +269,7 @@
             height: 100%;
             object-fit: cover;      /* agar gambar menutupi seluruh area */
             mix-blend-mode: multiply; /* membuat background putih menjadi transparan */
-            opacity: 0.7;           /* sesuaikan ketajaman */
+            opacity: 1;            /* OPAKITAS DIHAPUS (sekarang 100% tajam) */
             z-index: 0;
             pointer-events: none;   /* tidak mengganggu klik */
         }
@@ -1071,12 +1071,11 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA DENGAN BACKGROUND BIRU DAN GAMBAR RAMADAN -->
+        <!-- HEADER UTAMA DENGAN BACKGROUND BIRU DAN GAMBAR RAMADAN TANPA OPAKITAS -->
         <div class="main-header">
-            <!-- Gambar ramadhan.png - background putih hilang berkat mix-blend-mode -->
-            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
+            <!-- Gambar ramadhan.jpg - background putih hilang, tampil 100% tajam -->
+            <img src="ramadhan.jpg" alt="Ramadan" class="ramadan-bg-img">
             
-            <!-- Teks langsung tanpa kontainer -->
             <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
             <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
