@@ -252,6 +252,7 @@
             background: linear-gradient(135deg, var(--navy-900), #1E3A8A, #3b82f6); /* background biru */
             min-height: 320px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 60px 20px;
@@ -273,25 +274,9 @@
             pointer-events: none;   /* tidak mengganggu klik */
         }
         
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        .main-header h1 { 
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            background: rgba(15, 27, 61, 0.4); /* latar semi-transparan agar teks lebih terbaca */
-            backdrop-filter: blur(4px);
-            padding: 30px 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .main-header h1 { 
             font-size: clamp(26px, 5vw, 34px); 
             font-weight: 800;
             line-height: 1.2;
@@ -301,6 +286,8 @@
         }
         
         .title-sub {
+            position: relative;
+            z-index: 1;
             font-size: clamp(18px, 3vw, 22px);
             font-weight: 600;
             margin-bottom: 20px;
@@ -309,6 +296,8 @@
         }
         
         .operation-badge {
+            position: relative;
+            z-index: 1;
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
@@ -889,10 +878,6 @@
                 min-height: 350px;
                 padding: 60px 40px;
             }
-            
-            .header-content {
-                padding: 40px 60px;
-            }
         }
         
         @media (max-width: 768px) {
@@ -923,10 +908,6 @@
                 top: 15px;
                 left: 15px;
             }
-            
-            .header-content {
-                padding: 25px 30px;
-            }
         }
         
         @media (max-width: 640px) {
@@ -949,10 +930,6 @@
                 height: 42px;
                 top: 12px;
                 left: 12px;
-            }
-            
-            .header-content {
-                padding: 20px 20px;
             }
             
             .lokasi-grid {
@@ -1001,10 +978,6 @@
                 height: 40px;
                 top: 10px;
                 left: 10px;
-            }
-            
-            .header-content {
-                padding: 15px 15px;
             }
             
             .capacity-tabs {
@@ -1098,16 +1071,15 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA DENGAN BACKGROUND BIRU DAN GAMBAR RAMADAN (BACKGROUND PUTIH HILANG) -->
+        <!-- HEADER UTAMA DENGAN BACKGROUND BIRU DAN GAMBAR RAMADAN -->
         <div class="main-header">
             <!-- Gambar ramadhan.jpg - background putih hilang berkat mix-blend-mode -->
             <img src="ramadhan.jpg" alt="Ramadan" class="ramadan-bg-img">
             
-            <div class="header-content">
-                <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
-                <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-                <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
-            </div>
+            <!-- Teks langsung tanpa kontainer -->
+            <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
+            <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
         
         <!-- MOBILE COMPACT HEADER -->
