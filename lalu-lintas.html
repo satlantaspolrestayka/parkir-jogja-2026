@@ -623,8 +623,8 @@
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit'
-                        }) 
-                        : 'Belum update';
+                    }) 
+                    : 'Belum update';
                 
                 html += `
                     <div class="video-card">
@@ -660,7 +660,16 @@
         // ====== UPDATE TIMESTAMP ======
         function updateLastUpdated() {
             const info = document.getElementById('lastUpdatedInfo');
-            const now = new Date().toLocaleString('id-ID', { hour12: false });
+            const now = new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Jakarta', 
+                hour12: false,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
             info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
         }
     </script>
