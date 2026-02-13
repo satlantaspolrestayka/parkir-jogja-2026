@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Parkir - Satlantas Polresta Yogyakarta</title>
+    <title>Admin Parkir & Lalu Lintas - Satlantas Polresta Yogyakarta</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ====== SATLANTAS THEME ====== */
         :root {
@@ -13,16 +15,10 @@
             --satlantas-light: #e3f2fd;
             --satlantas-gray: #f5f5f5;
             --satlantas-dark: #0d1b3e;
-            --success-green: #10b981;
-            --warning-orange: #f59e0b;
-            --danger-red: #ef4444;
+            --traffic-orange: #ff9800;
         }
         
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -63,6 +59,30 @@
             font-weight: 700;
             font-size: 14px;
             letter-spacing: 0.5px;
+        }
+        
+        /* ====== SECTION DIVIDER ====== */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 50px 0 30px;
+        }
+        
+        .section-divider-line {
+            flex: 1;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--satlantas-blue), transparent);
+        }
+        
+        .section-divider-text {
+            padding: 0 20px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--satlantas-navy);
+            background: white;
+            border-radius: 40px;
+            text-transform: uppercase;
         }
         
         /* ====== MAIN CONTAINER ====== */
@@ -116,7 +136,7 @@
             letter-spacing: 1px;
         }
         
-        /* ====== LOKASI GRID ====== */
+        /* ====== LOKASI GRID (PARKIR) ====== */
         .lokasi-admin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -197,37 +217,10 @@
             font-size: 16px;
         }
         
-        .kapasitas-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
+        .max-label {
             font-size: 13px;
-        }
-        
-        .kapasitas-label {
-            color: #666;
-        }
-        
-        .status-label {
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        
-        .status-tersedia {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success-green);
-        }
-        
-        .status-penuh {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--danger-red);
-        }
-        
-        .status-warning {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: var(--warning-orange);
+            color: #888;
+            font-weight: 500;
         }
         
         .input-with-max {
@@ -255,18 +248,12 @@
             background: white;
         }
         
-        .admin-input.empty-input {
-            border-color: var(--warning-orange);
-            background-color: rgba(245, 158, 11, 0.05);
-        }
-        
         .admin-input:disabled {
             background: #f5f5f5;
             color: #999;
             cursor: not-allowed;
         }
         
-        /* ====== UPDATE BUTTON ====== */
         .btn-update-lokasi {
             background: linear-gradient(135deg, var(--satlantas-blue), #1976d2);
             color: white;
@@ -292,14 +279,140 @@
             box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
         }
         
-        .btn-update-lokasi:active {
-            transform: translateY(-1px);
-        }
-        
         .btn-update-lokasi:disabled {
             background: #cccccc;
-            cursor: not-allowed;
             transform: none !important;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        /* ====== TRAFFIC POSTS STYLES ====== */
+        .traffic-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .traffic-admin-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #fff3e0;
+            transition: all 0.3s ease;
+        }
+        
+        .traffic-admin-card:hover {
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
+            border-color: var(--traffic-orange);
+        }
+        
+        .traffic-admin-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #ffe0b2;
+        }
+        
+        .traffic-admin-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f09433, #bc1888);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .traffic-admin-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--satlantas-navy);
+            flex: 1;
+        }
+        
+        .traffic-input-group {
+            margin: 20px 0;
+        }
+        
+        .traffic-label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .traffic-url-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #ffe0b2;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #fffaf2;
+        }
+        
+        .traffic-url-input:focus {
+            outline: none;
+            border-color: var(--traffic-orange);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+            background: white;
+        }
+        
+        .traffic-preview {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            word-break: break-all;
+            border-left: 4px solid #9e9e9e;
+        }
+        
+        .traffic-preview i {
+            color: var(--traffic-orange);
+            margin-right: 6px;
+        }
+        
+        .btn-update-traffic {
+            background: linear-gradient(135deg, var(--traffic-orange), #f57c00);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .btn-update-traffic:hover {
+            background: linear-gradient(135deg, #f57c00, #e65100);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+        }
+        
+        .btn-update-traffic:disabled {
+            background: #cccccc;
+            transform: none !important;
+            box-shadow: none;
+            cursor: not-allowed;
         }
         
         /* ====== UPDATE TIME ====== */
@@ -338,11 +451,6 @@
         .notification-admin.error {
             background: #ef4444;
             border-left-color: #dc2626;
-        }
-        
-        .notification-admin.info {
-            background: var(--satlantas-blue);
-            border-left-color: var(--satlantas-gold);
         }
         
         @keyframes slideInRight {
@@ -391,13 +499,10 @@
                 font-size: 24px;
             }
             
-            .lokasi-admin-grid {
+            .lokasi-admin-grid,
+            .traffic-admin-grid {
                 grid-template-columns: 1fr;
                 gap: 25px;
-            }
-            
-            .lokasi-admin-card {
-                padding: 25px;
             }
             
             .stats-overview {
@@ -409,28 +514,22 @@
             .stats-overview {
                 grid-template-columns: 1fr;
             }
-            
-            .lokasi-admin-card {
-                padding: 20px;
-            }
-            
-            .admin-input {
-                padding: 14px;
-                font-size: 16px;
-            }
         }
     </style>
 </head>
 <body>
     <!-- SATLANTAS HEADER -->
     <header class="satlantas-header">
-        <h1>🚓 ADMIN SISTEM PARKIR YOGYAKARTA</h1>
+        <h1>🚓 ADMIN SISTEM PARKIR & LALU LINTAS YOGYAKARTA</h1>
         <p>Satlantas Polresta Yogyakarta - Update Data Real-time</p>
         <div class="satlantas-badge">ADMIN</div>
     </header>
     
     <!-- MAIN CONTAINER -->
     <div class="admin-container">
+        <!-- === SECTION 1: DATA PARKIR === -->
+        <h2 style="color: var(--satlantas-navy); margin-bottom: 20px; font-size: 26px;">📍 Manajemen Parkir</h2>
+        
         <!-- STATS OVERVIEW -->
         <div class="stats-overview">
             <div class="stat-card">
@@ -440,26 +539,41 @@
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🚌</div>
-                <div class="stat-number" id="totalSlotBusTersedia">0</div>
-                <div class="stat-label">Slot Bus Tersedia</div>
+                <div class="stat-number" id="totalBusAdmin">0</div>
+                <div class="stat-label">Total Bus</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🚗</div>
-                <div class="stat-number" id="totalSlotMobilTersedia">0</div>
-                <div class="stat-label">Slot Mobil Tersedia</div>
+                <div class="stat-number" id="totalMobilAdmin">0</div>
+                <div class="stat-label">Total Mobil</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🏍️</div>
-                <div class="stat-number" id="totalSlotMotorTersedia">0</div>
-                <div class="stat-label">Slot Motor Tersedia</div>
+                <div class="stat-number" id="totalMotorAdmin">0</div>
+                <div class="stat-label">Total Motor</div>
             </div>
         </div>
         
-        <!-- LOKASI GRID -->
+        <!-- LOKASI PARKIR GRID -->
         <div id="lokasiAdminContainer">
             <div class="loading-admin">
                 <div class="loading-spinner-admin"></div>
                 <p>Memuat data parkir...</p>
+            </div>
+        </div>
+        
+        <!-- === DIVIDER === -->
+        <div class="section-divider">
+            <div class="section-divider-line"></div>
+            <div class="section-divider-text">🚦 Kelola Video Lalu Lintas</div>
+            <div class="section-divider-line"></div>
+        </div>
+        
+        <!-- === SECTION 2: TRAFFIC POSTS (INSTAGRAM LINKS) === -->
+        <div id="trafficAdminContainer">
+            <div class="loading-admin">
+                <div class="loading-spinner-admin"></div>
+                <p>Memuat data pos lalu lintas...</p>
             </div>
         </div>
     </div>
@@ -468,25 +582,29 @@
     <div id="notificationAdmin" class="notification-admin" style="display: none;"></div>
     
     <script>
-        // ====== KONFIGURASI ======
+        // ====== KONFIGURASI SUPABASE ======
         const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
         
+        // Global data
         let parkirData = [];
+        let trafficData = [];
         
         // ====== INISIALISASI ======
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚓 Admin System Initializing...');
-            loadAdminData();
+            loadParkirData();
+            loadTrafficData();
             
             // Auto-refresh setiap 30 detik
             setInterval(() => {
-                loadAdminData();
+                loadParkirData();
+                loadTrafficData();
             }, 30000);
         });
         
-        // ====== LOAD DATA ======
-        async function loadAdminData() {
+        // ====== 1. FUNGSI UNTUK DATA PARKIR ======
+        async function loadParkirData() {
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/parkir_lokasi?select=*&order=id`, {
                     headers: {
@@ -496,53 +614,29 @@
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 parkirData = await response.json();
-                renderAdminGrid();
-                updateAdminStats();
-                
+                renderParkirGrid();
+                updateParkirStats();
             } catch (error) {
-                console.error('❌ Error loading admin data:', error);
-                showAdminNotification(`❌ Gagal memuat data: ${error.message}`, 'error');
+                console.error('❌ Error loading parkir data:', error);
+                showNotification(`❌ Gagal memuat data parkir: ${error.message}`, 'error');
+                document.getElementById('lokasiAdminContainer').innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Gagal memuat data. Coba refresh.</div>`;
             }
         }
         
-        // ====== RENDER ADMIN GRID ======
-        function renderAdminGrid() {
+        function renderParkirGrid() {
             const container = document.getElementById('lokasiAdminContainer');
-            
-            if (!parkirData.length) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <p>Tidak ada data parkir</p>
-                    </div>
-                `;
+            if (!parkirData || parkirData.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;">Tidak ada data parkir</div>';
                 return;
             }
             
             let html = '<div class="lokasi-admin-grid">';
-            
             parkirData.forEach((item, index) => {
                 const maxBus = item.max_bus || 100;
                 const maxMobil = item.max_mobil || 200;
                 const maxMotor = item.max_motor || 150;
-                
-                // Hitung ketersediaan slot (slot tersedia)
-                const busTerpakai = item.bus || 0;
-                const mobilTerpakai = item.mobil || 0;
-                const motorTerpakai = item.motor || 0;
-                
-                const slotBusTersedia = maxBus - busTerpakai;
-                const slotMobilTersedia = maxMobil - mobilTerpakai;
-                const slotMotorTersedia = maxMotor - motorTerpakai;
-                
-                // Tentukan status ketersediaan
-                const statusBus = getStatusKetersediaan(slotBusTersedia, maxBus);
-                const statusMobil = getStatusKetersediaan(slotMobilTersedia, maxMobil);
-                const statusMotor = getStatusKetersediaan(slotMotorTersedia, maxMotor);
                 
                 html += `
                     <div class="lokasi-admin-card" data-id="${item.id}">
@@ -550,92 +644,46 @@
                             <div class="lokasi-admin-title">${item.nama}</div>
                             <div class="lokasi-admin-id">${index + 1}</div>
                         </div>
+                        <div class="lokasi-admin-address">📍 ${item.alamat}</div>
                         
-                        <div class="lokasi-admin-address">
-                            📍 ${item.alamat}
-                        </div>
-                        
-                        <!-- Input Slot Bus Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
-                                <div class="input-label-icon">
-                                    <span>🚌</span>
-                                    <span>SLOT BUS TERSEDIA</span>
-                                </div>
+                                <div class="input-label-icon"><span>🚌</span><span>BUS</span></div>
+                                <span class="max-label">Maks: ${maxBus}</span>
                             </div>
                             <div class="input-with-max">
-                                <input type="number" 
-                                       class="admin-input" 
-                                       id="admin-bus-${item.id}" 
-                                       value="${slotBusTersedia}" 
-                                       placeholder="Masukkan slot tersedia"
-                                       min="0" 
-                                       max="${maxBus}"
-                                       oninput="handleAdminInput(this, ${maxBus})"
-                                       onfocus="handleInputFocus(this)"
-                                       onblur="handleInputBlur(this, ${maxBus})">
-                            </div>
-                            <div class="kapasitas-info">
-                                <span class="kapasitas-label">Kapasitas: ${maxBus} (Terpakai: ${busTerpakai})</span>
-                                <span class="status-label ${statusBus.class}">${statusBus.text}</span>
+                                <input type="number" class="admin-input" id="admin-bus-${item.id}" 
+                                       value="${item.bus || 0}" min="0" max="${maxBus}"
+                                       oninput="validateParkirInput(this, ${maxBus})">
                             </div>
                         </div>
                         
-                        <!-- Input Slot Mobil Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
-                                <div class="input-label-icon">
-                                    <span>🚗</span>
-                                    <span>SLOT MOBIL TERSEDIA</span>
-                                </div>
+                                <div class="input-label-icon"><span>🚗</span><span>MOBIL</span></div>
+                                <span class="max-label">Maks: ${maxMobil}</span>
                             </div>
                             <div class="input-with-max">
-                                <input type="number" 
-                                       class="admin-input" 
-                                       id="admin-mobil-${item.id}" 
-                                       value="${slotMobilTersedia}" 
-                                       placeholder="Masukkan slot tersedia"
-                                       min="0" 
-                                       max="${maxMobil}"
-                                       oninput="handleAdminInput(this, ${maxMobil})"
-                                       onfocus="handleInputFocus(this)"
-                                       onblur="handleInputBlur(this, ${maxMobil})">
-                            </div>
-                            <div class="kapasitas-info">
-                                <span class="kapasitas-label">Kapasitas: ${maxMobil} (Terpakai: ${mobilTerpakai})</span>
-                                <span class="status-label ${statusMobil.class}">${statusMobil.text}</span>
+                                <input type="number" class="admin-input" id="admin-mobil-${item.id}" 
+                                       value="${item.mobil || 0}" min="0" max="${maxMobil}"
+                                       oninput="validateParkirInput(this, ${maxMobil})">
                             </div>
                         </div>
                         
-                        <!-- Input Slot Motor Tersedia -->
                         <div class="input-group-admin">
                             <div class="input-label">
-                                <div class="input-label-icon">
-                                    <span>🏍️</span>
-                                    <span>SLOT MOTOR TERSEDIA</span>
-                                </div>
+                                <div class="input-label-icon"><span>🏍️</span><span>MOTOR</span></div>
+                                <span class="max-label">Maks: ${maxMotor}</span>
                             </div>
                             <div class="input-with-max">
-                                <input type="number" 
-                                       class="admin-input" 
-                                       id="admin-motor-${item.id}" 
-                                       value="${slotMotorTersedia}" 
-                                       placeholder="Masukkan slot tersedia"
-                                       min="0" 
-                                       max="${maxMotor}"
-                                       oninput="handleAdminInput(this, ${maxMotor})"
-                                       onfocus="handleInputFocus(this)"
-                                       onblur="handleInputBlur(this, ${maxMotor})">
-                            </div>
-                            <div class="kapasitas-info">
-                                <span class="kapasitas-label">Kapasitas: ${maxMotor} (Terpakai: ${motorTerpakai})</span>
-                                <span class="status-label ${statusMotor.class}">${statusMotor.text}</span>
+                                <input type="number" class="admin-input" id="admin-motor-${item.id}" 
+                                       value="${item.motor || 0}" min="0" max="${maxMotor}"
+                                       oninput="validateParkirInput(this, ${maxMotor})">
                             </div>
                         </div>
                         
-                        <button class="btn-update-lokasi" onclick="updateAdminLokasi(${item.id})">
-                            <span>💾</span>
-                            UPDATE ${item.nama}
+                        <button class="btn-update-lokasi" onclick="updateParkirLokasi(${item.id})">
+                            <span>💾</span> UPDATE ${item.nama}
                         </button>
                         
                         <div class="update-time">
@@ -644,123 +692,22 @@
                     </div>
                 `;
             });
-            
             html += '</div>';
             container.innerHTML = html;
         }
         
-        // ====== FUNGSI BANTUAN ======
-        function getStatusKetersediaan(tersedia, max) {
-            if (tersedia === 0) {
-                return { class: 'status-penuh', text: 'PENUH' };
-            } else if (tersedia <= max * 0.2) {
-                return { class: 'status-warning', text: 'HAMPIR PENUH' };
-            } else if (tersedia >= max * 0.5) {
-                return { class: 'status-tersedia', text: 'BANYAK' };
-            } else {
-                return { class: 'status-tersedia', text: 'TERSEDIA' };
-            }
-        }
-        
-        // ====== HANDLE INPUT ======
-        function handleAdminInput(input, maxValue) {
-            // Hilangkan kelas empty-input jika ada
-            input.classList.remove('empty-input');
-            
-            // Jika input kosong, biarkan kosong (tidak otomatis 0)
-            if (input.value === '') {
-                return;
-            }
-            
+        function validateParkirInput(input, maxValue) {
             let value = parseInt(input.value);
-            
-            // Jika bukan angka, kosongkan
-            if (isNaN(value)) {
-                input.value = '';
-                return;
-            }
-            
-            // Batasi nilai minimal 0
-            if (value < 0) {
-                input.value = 0;
-            }
-            
-            // Batasi nilai maksimal
-            if (value > maxValue) {
-                input.value = maxValue;
-            }
-        }
-        
-        function handleInputFocus(input) {
-            // Hilangkan kelas empty-input saat focus
-            input.classList.remove('empty-input');
-            
-            // Jika nilai adalah 0, kosongkan saat focus untuk memudahkan input
-            if (parseInt(input.value) === 0) {
-                input.value = '';
-            }
-        }
-        
-        function handleInputBlur(input, maxValue) {
-            // Jika kosong, tambahkan kelas styling
-            if (input.value === '') {
-                input.classList.add('empty-input');
-                return;
-            }
-            
-            let value = parseInt(input.value);
-            
-            // Jika bukan angka, biarkan kosong
-            if (isNaN(value)) {
-                input.value = '';
-                input.classList.add('empty-input');
-                return;
-            }
-            
-            // Batasi nilai minimal 0
-            if (value < 0) {
-                input.value = 0;
-            }
-            
-            // Batasi nilai maksimal
-            if (value > maxValue) {
-                input.value = maxValue;
-            }
-        }
-        
-        // ====== VALIDASI INPUT (untuk update) ======
-        function validateAdminInputForUpdate(input, maxValue) {
-            // Jika input kosong, kembalikan null (bukan 0)
-            if (input.value === '') {
-                return null;
-            }
-            
-            let value = parseInt(input.value);
-            
-            // Jika bukan angka, kembalikan null
-            if (isNaN(value)) {
-                return null;
-            }
-            
-            // Batasi nilai minimal 0
-            if (value < 0) {
-                return 0;
-            }
-            
-            // Batasi nilai maksimal
-            if (value > maxValue) {
-                return maxValue;
-            }
-            
+            if (isNaN(value) || value < 0) value = 0;
+            if (value > maxValue) value = maxValue;
+            input.value = value;
             return value;
         }
         
-        // ====== UPDATE LOKASI ======
-        async function updateAdminLokasi(id) {
+        async function updateParkirLokasi(id) {
             const busInput = document.getElementById(`admin-bus-${id}`);
             const mobilInput = document.getElementById(`admin-mobil-${id}`);
             const motorInput = document.getElementById(`admin-motor-${id}`);
-            
             const lokasi = parkirData.find(item => item.id === id);
             if (!lokasi) return;
             
@@ -768,29 +715,11 @@
             const maxMobil = lokasi.max_mobil || 200;
             const maxMotor = lokasi.max_motor || 150;
             
-            // Validasi input (mengembalikan null jika kosong)
-            const slotBusTersedia = validateAdminInputForUpdate(busInput, maxBus);
-            const slotMobilTersedia = validateAdminInputForUpdate(mobilInput, maxMobil);
-            const slotMotorTersedia = validateAdminInputForUpdate(motorInput, maxMotor);
+            const bus = validateParkirInput(busInput, maxBus);
+            const mobil = validateParkirInput(mobilInput, maxMobil);
+            const motor = validateParkirInput(motorInput, maxMotor);
             
-            // Validasi: jika ada input yang null (kosong), tampilkan peringatan
-            if (slotBusTersedia === null || slotMobilTersedia === null || slotMotorTersedia === null) {
-                showAdminNotification(`❌ ${lokasi.nama}: Semua field harus diisi!`, 'error');
-                
-                // Highlight input yang kosong
-                if (slotBusTersedia === null) busInput.classList.add('empty-input');
-                if (slotMobilTersedia === null) mobilInput.classList.add('empty-input');
-                if (slotMotorTersedia === null) motorInput.classList.add('empty-input');
-                return;
-            }
-            
-            // Konversi slot tersedia menjadi jumlah terpakai
-            const busTerpakai = maxBus - slotBusTersedia;
-            const mobilTerpakai = maxMobil - slotMobilTersedia;
-            const motorTerpakai = maxMotor - slotMotorTersedia;
-            
-            // Disable button selama proses
-            const btn = document.querySelector(`[onclick="updateAdminLokasi(${id})"]`);
+            const btn = document.querySelector(`[onclick="updateParkirLokasi(${id})"]`);
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<span>⏳</span> MEMPROSES...';
@@ -805,109 +734,219 @@
                         'Prefer': 'return=minimal'
                     },
                     body: JSON.stringify({
-                        bus: busTerpakai,
-                        mobil: mobilTerpakai,
-                        motor: motorTerpakai,
+                        bus, mobil, motor,
                         updated_at: new Date().toISOString()
                     })
                 });
                 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Update gagal: ${response.status} ${errorText}`);
-                }
-                
-                showAdminNotification(`✅ ${lokasi.nama} berhasil diupdate!<br>
-                                      Slot Bus Tersedia: ${slotBusTersedia}/${maxBus}<br>
-                                      Slot Mobil Tersedia: ${slotMobilTersedia}/${maxMobil}<br>
-                                      Slot Motor Tersedia: ${slotMotorTersedia}/${maxMotor}`, 'success');
-                
-                // Refresh data setelah update
-                setTimeout(() => {
-                    loadAdminData();
-                }, 1000);
-                
+                if (!response.ok) throw new Error(`Update gagal (${response.status})`);
+                showNotification(`✅ ${lokasi.nama} berhasil diupdate! Bus: ${bus}, Mobil: ${mobil}, Motor: ${motor}`, 'success');
+                setTimeout(() => loadParkirData(), 1000);
             } catch (error) {
                 console.error('❌ Update error:', error);
-                showAdminNotification(`❌ Gagal update ${lokasi.nama}: ${error.message}`, 'error');
-                
+                showNotification(`❌ Gagal update ${lokasi.nama}: ${error.message}`, 'error');
             } finally {
-                // Enable button kembali
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
         }
         
-        // ====== UPDATE STATS ======
-        function updateAdminStats() {
-            if (!parkirData.length) return;
-            
-            // Hitung total slot tersedia (bukan total kendaraan)
-            let totalSlotBusTersedia = 0;
-            let totalSlotMobilTersedia = 0;
-            let totalSlotMotorTersedia = 0;
-            
-            parkirData.forEach(item => {
-                const maxBus = item.max_bus || 100;
-                const maxMobil = item.max_mobil || 200;
-                const maxMotor = item.max_motor || 150;
-                
-                const busTerpakai = item.bus || 0;
-                const mobilTerpakai = item.mobil || 0;
-                const motorTerpakai = item.motor || 0;
-                
-                totalSlotBusTersedia += (maxBus - busTerpakai);
-                totalSlotMobilTersedia += (maxMobil - mobilTerpakai);
-                totalSlotMotorTersedia += (maxMotor - motorTerpakai);
-            });
+        function updateParkirStats() {
+            if (!parkirData || parkirData.length === 0) return;
+            const totals = parkirData.reduce((acc, item) => ({
+                bus: acc.bus + (item.bus || 0),
+                mobil: acc.mobil + (item.mobil || 0),
+                motor: acc.motor + (item.motor || 0)
+            }), { bus: 0, mobil: 0, motor: 0 });
             
             document.getElementById('totalLokasiAdmin').textContent = parkirData.length;
-            document.getElementById('totalSlotBusTersedia').textContent = totalSlotBusTersedia.toLocaleString();
-            document.getElementById('totalSlotMobilTersedia').textContent = totalSlotMobilTersedia.toLocaleString();
-            document.getElementById('totalSlotMotorTersedia').textContent = totalSlotMotorTersedia.toLocaleString();
+            document.getElementById('totalBusAdmin').textContent = totals.bus;
+            document.getElementById('totalMobilAdmin').textContent = totals.mobil;
+            document.getElementById('totalMotorAdmin').textContent = totals.motor;
+        }
+        
+        // ====== 2. FUNGSI UNTUK DATA LALU LINTAS ======
+        async function loadTrafficData() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/traffic_posts?select=*&order=id`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                trafficData = await response.json();
+                
+                // Jika data masih kosong, buat default 5 pos
+                if (trafficData.length === 0) {
+                    await initializeTrafficPosts();
+                } else {
+                    renderTrafficGrid();
+                }
+            } catch (error) {
+                console.error('❌ Error loading traffic data:', error);
+                showNotification(`❌ Gagal memuat data lalu lintas: ${error.message}`, 'error');
+                document.getElementById('trafficAdminContainer').innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Gagal memuat data. Coba refresh.</div>`;
+            }
+        }
+        
+        async function initializeTrafficPosts() {
+            const defaultPosts = [
+                { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
+                { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
+                { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
+                { id: 4, nama_pos: 'Posyan Titik Nol KM', instagram_url: null },
+                { id: 5, nama_pos: 'Posyan Bonbin', instagram_url: null }
+            ];
+            
+            try {
+                for (const post of defaultPosts) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/traffic_posts`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(post)
+                    });
+                }
+                showNotification('✅ Data pos lalu lintas berhasil dibuat', 'success');
+                // Reload data setelah inisialisasi
+                setTimeout(() => loadTrafficData(), 1000);
+            } catch (error) {
+                console.error('❌ Gagal inisialisasi traffic posts:', error);
+                showNotification(`❌ Gagal inisialisasi: ${error.message}`, 'error');
+            }
+        }
+        
+        function renderTrafficGrid() {
+            const container = document.getElementById('trafficAdminContainer');
+            if (!trafficData || trafficData.length === 0) {
+                container.innerHTML = '<div class="loading-admin"><p>Memuat ulang data...</p></div>';
+                return;
+            }
+            
+            let html = '<div class="traffic-admin-grid">';
+            trafficData.forEach((item) => {
+                const previewUrl = item.instagram_url || 'Belum ada link';
+                
+                html += `
+                    <div class="traffic-admin-card" data-id="${item.id}">
+                        <div class="traffic-admin-header">
+                            <div class="traffic-admin-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div class="traffic-admin-title">${item.nama_pos}</div>
+                        </div>
+                        
+                        <div class="traffic-input-group">
+                            <label class="traffic-label">
+                                <i class="fas fa-link"></i> Link Video Instagram
+                            </label>
+                            <input type="url" 
+                                   class="traffic-url-input" 
+                                   id="traffic-url-${item.id}" 
+                                   value="${item.instagram_url || ''}" 
+                                   placeholder="https://www.instagram.com/p/...">
+                        </div>
+                        
+                        <div class="traffic-preview">
+                            <i class="fas fa-eye"></i> 
+                            <span id="preview-${item.id}">${previewUrl}</span>
+                        </div>
+                        
+                        <button class="btn-update-traffic" onclick="updateTrafficPost(${item.id})">
+                            <span>📹</span> UPDATE LINK
+                        </button>
+                        
+                        <div class="update-time">
+                            Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum pernah'}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        async function updateTrafficPost(id) {
+            const urlInput = document.getElementById(`traffic-url-${id}`);
+            const post = trafficData.find(item => item.id === id);
+            if (!post) return;
+            
+            const newUrl = urlInput.value.trim() || null;
+            
+            const btn = document.querySelector(`[onclick="updateTrafficPost(${id})"]`);
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳</span> MENYIMPAN...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/traffic_posts?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        instagram_url: newUrl,
+                        updated_at: new Date().toISOString()
+                    })
+                });
+                
+                if (!response.ok) throw new Error(`Update gagal (${response.status})`);
+                
+                showNotification(`✅ Link video ${post.nama_pos} berhasil diperbarui!`, 'success');
+                
+                // Update preview
+                const previewSpan = document.getElementById(`preview-${id}`);
+                if (previewSpan) {
+                    previewSpan.textContent = newUrl || 'Belum ada link';
+                }
+                
+                // Refresh data
+                setTimeout(() => loadTrafficData(), 1000);
+                
+            } catch (error) {
+                console.error('❌ Update traffic error:', error);
+                showNotification(`❌ Gagal update ${post.nama_pos}: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
         }
         
         // ====== NOTIFICATION ======
-        function showAdminNotification(message, type = 'info') {
+        function showNotification(message, type = 'info') {
             const notification = document.getElementById('notificationAdmin');
-            
             notification.innerHTML = `
                 <div style="font-size: 28px;">
                     ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
                 </div>
                 <div style="flex: 1; font-size: 15px; line-height: 1.5;">${message}</div>
-                <button onclick="hideAdminNotification()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; margin-left: 10px;">
-                    ×
-                </button>
+                <button onclick="hideNotification()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
             `;
-            
             notification.className = `notification-admin ${type}`;
             notification.style.display = 'flex';
+            notification.style.animation = 'slideInRight 0.4s ease-out forwards';
             
-            // Auto-hide setelah 5 detik
-            setTimeout(() => {
-                hideAdminNotification();
-            }, 5000);
+            setTimeout(hideNotification, 5000);
         }
         
-        function hideAdminNotification() {
+        function hideNotification() {
             const notification = document.getElementById('notificationAdmin');
             notification.style.animation = 'slideOutRight 0.4s ease-out forwards';
-            
             setTimeout(() => {
                 notification.style.display = 'none';
                 notification.style.animation = '';
             }, 400);
         }
-        
-        // ====== SHORTCUT KEYS ======
-        document.addEventListener('keydown', (e) => {
-            // ESC = Focus ke input pertama
-            if (e.key === 'Escape') {
-                const inputs = document.querySelectorAll('.admin-input');
-                if (inputs.length > 0) inputs[0].focus();
-            }
-        });
     </script>
 </body>
 </html>
