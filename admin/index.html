@@ -646,7 +646,16 @@
                         </button>
                         
                         <div class="update-time">
-                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum update'}
+                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID', { 
+                                timeZone: 'Asia/Jakarta', 
+                                hour12: false,
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            }) : 'Belum update'}
                         </div>
                     </div>
                 `;
@@ -803,7 +812,16 @@
                         </button>
                         
                         <div class="update-time">
-                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum update'}
+                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID', { 
+                                timeZone: 'Asia/Jakarta', 
+                                hour12: false,
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            }) : 'Belum update'}
                         </div>
                     </div>
                 `;
