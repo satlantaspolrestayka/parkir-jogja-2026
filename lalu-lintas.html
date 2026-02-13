@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Instagram Embed Script -->
     <script async src="//www.instagram.com/embed.js"></script>
+    <!-- Supabase Client untuk publik (read only) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ====== CSS VARIABLES & RESET ====== */
         :root {
@@ -128,44 +130,60 @@
             color: rgba(255, 255, 255, 0.7); font-size: 13px; text-align: center;
         }
         
-        /* ====== HEADER UTAMA - CENTER SEMPURNA ====== */
-        .main-header {
-            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
-            color: white;
+        /* ====== HEADER UTAMA - IDENTIK DENGAN INDEX.HTML ====== */
+        .main-header { 
+            position: relative;
+            color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
-            padding: 60px 20px 40px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;  /* simetris kiri-kanan */
+            width: 100%;
+            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            padding: 60px 20px;
+            overflow: hidden;
+            isolation: isolate;
         }
         
-        .main-header h1 {
-            font-size: clamp(26px, 5vw, 34px);
+        .ramadan-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            mix-blend-mode: multiply; /* membuat background putih transparan */
+            opacity: 1;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .main-header h1 { 
+            position: relative;
+            z-index: 1;
+            font-size: clamp(26px, 5vw, 34px); 
             font-weight: 800;
             line-height: 1.2;
+            letter-spacing: 0.5px;
             margin-bottom: 15px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
         
         .title-sub {
+            position: relative;
+            z-index: 1;
             font-size: clamp(18px, 3vw, 22px);
             font-weight: 600;
             margin-bottom: 20px;
-            opacity: 0.9;
+            opacity: 0.95;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
         .operation-badge {
+            position: relative;
+            z-index: 1;
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
@@ -173,8 +191,16 @@
             border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
-            border: 2px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 12px rgba(30,64,175,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            letter-spacing: 0.5px;
+            transition: var(--transition-base);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .operation-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
         }
         
         /* ====== CONTAINER ====== */
@@ -251,7 +277,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 400px; /* agar tidak collapse */
+            min-height: 400px;
         }
         
         .instagram-embed-container iframe,
@@ -330,7 +356,6 @@
         .social-link.instagram:hover {
             background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
         }
-        
         .social-link.facebook:hover { background: #1877F2; }
         .social-link.twitter:hover { background: #1DA1F2; }
         
@@ -361,22 +386,21 @@
         
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
-            .main-header { padding: 50px 20px 30px; }
+            .main-header { padding: 50px 20px; }
             .main-header h1 { font-size: 22px; }
             .menu-toggle { width: 44px; height: 44px; top: 15px; left: 15px; }
-            .header-content { padding: 0 15px; } /* tetap simetris */
             .traffic-videos { padding: 40px 20px; }
             .video-grid { grid-template-columns: 1fr; }
         }
         
         @media (max-width: 640px) {
-            .main-header { padding: 40px 15px 25px; }
+            .main-header { padding: 40px 15px; }
             .main-header h1 { font-size: 20px; }
             .title-sub { font-size: 15px; }
         }
         
         @media (max-width: 375px) {
-            .main-header { padding: 35px 12px 20px; }
+            .main-header { padding: 35px 12px; }
             .main-header h1 { font-size: 18px; }
             .title-sub { font-size: 14px; }
             .operation-badge { padding: 8px 16px; font-size: 12px; }
@@ -407,13 +431,13 @@
     </div>
 
     <div class="container">
-        <!-- HEADER - CENTER SEMPURNA -->
+        <!-- HEADER UTAMA - IDENTIK DENGAN INDEX.HTML, MENGGUNAKAN RAMADHAN.PNG -->
         <div class="main-header">
-            <div class="header-content">
-                <h1>INFORMASI LALU LINTAS</h1>
-                <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-                <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
-            </div>
+            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
+            
+            <h1 class="title-main">INFORMASI LALU LINTAS</h1>
+            <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
         
         <!-- SECTION VIDEO -->
@@ -449,11 +473,12 @@
         const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
         
+        let supabaseClient;
         let trafficData = [];
         
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
-            loadTrafficVideos();
+            await initSupabase();
             setInterval(loadTrafficVideos, 60000); // refresh setiap 60 detik
         });
         
@@ -486,19 +511,50 @@
             });
         }
         
+        // ====== INIT SUPABASE ======
+        async function initSupabase() {
+            try {
+                if (!window.supabase) {
+                    console.error('Supabase library not loaded');
+                    return false;
+                }
+                
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+                    auth: { persistSession: false }
+                });
+                
+                console.log('✅ Supabase initialized for traffic');
+                await loadTrafficVideos();
+                return true;
+            } catch (error) {
+                console.error('❌ Failed to init Supabase:', error);
+                document.getElementById('videoGridContainer').innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <p>Gagal terhubung ke server.</p>
+                    </div>
+                `;
+                return false;
+            }
+        }
+        
         // ====== LOAD DATA TRAFFIC ======
         async function loadTrafficVideos() {
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/traffic_posts?select=*&order=id`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const { data, error } = await supabaseClient
+                    .from('traffic_posts')
+                    .select('*')
+                    .order('id', { ascending: true });
                 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                trafficData = await response.json();
+                if (error) throw error;
+                
+                trafficData = data || [];
+                
+                // Jika tabel kosong, buat default 5 pos
+                if (trafficData.length === 0) {
+                    await initializeTrafficPosts();
+                    return;
+                }
                 
                 renderVideoGrid();
                 updateLastUpdated();
@@ -514,10 +570,33 @@
                 console.error('❌ Gagal memuat video:', error);
                 document.getElementById('videoGridContainer').innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ef4444;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <p style="font-size: 18px;">Gagal memuat data. Silakan muat ulang halaman.</p>
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <p>Gagal memuat data. Silakan muat ulang halaman.</p>
                     </div>
                 `;
+            }
+        }
+        
+        // ====== INITIALIZE TRAFFIC POSTS (jika belum ada) ======
+        async function initializeTrafficPosts() {
+            const defaultPosts = [
+                { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
+                { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
+                { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
+                { id: 4, nama_pos: 'Posyan Titik Nol KM', instagram_url: null },
+                { id: 5, nama_pos: 'Posyan Bonbin', instagram_url: null }
+            ];
+            
+            try {
+                for (const post of defaultPosts) {
+                    await supabaseClient
+                        .from('traffic_posts')
+                        .insert([post]);
+                }
+                console.log('✅ Default traffic posts created');
+                loadTrafficVideos(); // reload
+            } catch (error) {
+                console.error('❌ Gagal inisialisasi traffic posts:', error);
             }
         }
         
@@ -525,7 +604,7 @@
         function renderVideoGrid() {
             const container = document.getElementById('videoGridContainer');
             
-            if (!trafficData || trafficData.length === 0) {
+            if (!trafficData.length) {
                 container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">Belum ada data pos lalu lintas.</div>';
                 return;
             }
@@ -534,6 +613,9 @@
             
             trafficData.forEach(post => {
                 const hasUrl = post.instagram_url && post.instagram_url.trim() !== '';
+                const updateTime = post.updated_at 
+                    ? new Date(post.updated_at).toLocaleString('id-ID', { hour12: false }) 
+                    : 'Belum update';
                 
                 html += `
                     <div class="video-card">
@@ -542,8 +624,7 @@
                             ${post.nama_pos}
                         </h3>
                         <span class="update-time-badge">
-                            <i class="far fa-clock"></i> 
-                            ${post.updated_at ? new Date(post.updated_at).toLocaleString('id-ID', { hour12: false }) : 'Belum update'}
+                            <i class="far fa-clock"></i> ${updateTime}
                         </span>
                         
                         <div class="instagram-embed-container">
