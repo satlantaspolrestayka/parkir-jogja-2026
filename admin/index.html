@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Parkir & Lalu Lintas - Satlantas Polresta Yogyakarta</title>
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome (ditambahkan di head agar rapi) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ====== SATLANTAS THEME ====== */
@@ -13,7 +13,6 @@
             --satlantas-blue: #2196f3;
             --satlantas-gold: #ffd700;
             --satlantas-light: #e3f2fd;
-            --satlantas-gray: #f5f5f5;
             --satlantas-dark: #0d1b3e;
             --traffic-orange: #ff9800;
         }
@@ -254,38 +253,6 @@
             cursor: not-allowed;
         }
         
-        .btn-update-lokasi {
-            background: linear-gradient(135deg, var(--satlantas-blue), #1976d2);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 25px;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        
-        .btn-update-lokasi:hover {
-            background: linear-gradient(135deg, #1976d2, #1565c0);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
-        }
-        
-        .btn-update-lokasi:disabled {
-            background: #cccccc;
-            transform: none !important;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-        
         /* ====== TRAFFIC POSTS STYLES ====== */
         .traffic-admin-grid {
             display: grid;
@@ -415,6 +382,36 @@
             cursor: not-allowed;
         }
         
+        .btn-update-lokasi {
+            background: linear-gradient(135deg, var(--satlantas-blue), #1976d2);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .btn-update-lokasi:hover {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn-update-lokasi:disabled {
+            background: #cccccc;
+            transform: none !important;
+            cursor: not-allowed;
+        }
+        
         /* ====== UPDATE TIME ====== */
         .update-time {
             font-size: 13px;
@@ -487,40 +484,24 @@
         
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
-            .admin-container {
-                padding: 20px;
-            }
-            
-            .satlantas-header {
-                padding: 25px 20px;
-            }
-            
-            .satlantas-header h1 {
-                font-size: 24px;
-            }
-            
+            .admin-container { padding: 20px; }
+            .satlantas-header { padding: 25px 20px; }
+            .satlantas-header h1 { font-size: 24px; }
             .lokasi-admin-grid,
-            .traffic-admin-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .stats-overview {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .traffic-admin-grid { grid-template-columns: 1fr; gap: 25px; }
+            .stats-overview { grid-template-columns: repeat(2, 1fr); }
         }
         
         @media (max-width: 480px) {
-            .stats-overview {
-                grid-template-columns: 1fr;
-            }
+            .stats-overview { grid-template-columns: 1fr; }
+            .lokasi-admin-card { padding: 20px; }
         }
     </style>
 </head>
 <body>
     <!-- SATLANTAS HEADER -->
     <header class="satlantas-header">
-        <h1>ADMIN SISTEM PARKIR & LALU LINTAS YOGYAKARTA</h1>
+        <h1><i class="fas fa-shield-alt"></i> ADMIN SISTEM PARKIR & LALU LINTAS YOGYAKARTA</h1>
         <p>Satlantas Polresta Yogyakarta - Update Data Real-time</p>
         <div class="satlantas-badge">ADMIN</div>
     </header>
@@ -528,13 +509,15 @@
     <!-- MAIN CONTAINER -->
     <div class="admin-container">
         <!-- === SECTION 1: DATA PARKIR === -->
-        <h2 style="color: var(--satlantas-navy); margin-bottom: 20px; font-size: 26px;">Manajemen Parkir</h2>
+        <h2 style="color: var(--satlantas-navy); margin-bottom: 20px; font-size: 26px;">
+            <i class="fas fa-parking"></i> Manajemen Parkir
+        </h2>
         
         <!-- STATS OVERVIEW -->
         <div class="stats-overview">
             <div class="stat-card">
                 <div class="stat-icon">📍</div>
-                <div class="stat-number" id="totalLokasiAdmin">15</div>
+                <div class="stat-number" id="totalLokasiAdmin">0</div>
                 <div class="stat-label">Total Lokasi</div>
             </div>
             <div class="stat-card">
@@ -565,11 +548,13 @@
         <!-- === DIVIDER === -->
         <div class="section-divider">
             <div class="section-divider-line"></div>
-            <div class="section-divider-text">🚦 Kelola Video Lalu Lintas</div>
+            <div class="section-divider-text">
+                <i class="fas fa-traffic-light"></i> Kelola Video Lalu Lintas
+            </div>
             <div class="section-divider-line"></div>
         </div>
         
-        <!-- === SECTION 2: TRAFFIC POSTS (INSTAGRAM LINKS) === -->
+        <!-- === SECTION 2: TRAFFIC POSTS === -->
         <div id="trafficAdminContainer">
             <div class="loading-admin">
                 <div class="loading-spinner-admin"></div>
@@ -621,13 +606,12 @@
             } catch (error) {
                 console.error('❌ Error loading parkir data:', error);
                 showNotification(`❌ Gagal memuat data parkir: ${error.message}`, 'error');
-                document.getElementById('lokasiAdminContainer').innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Gagal memuat data. Coba refresh.</div>`;
             }
         }
         
         function renderParkirGrid() {
             const container = document.getElementById('lokasiAdminContainer');
-            if (!parkirData || parkirData.length === 0) {
+            if (!parkirData.length) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px;">Tidak ada data parkir</div>';
                 return;
             }
@@ -644,7 +628,7 @@
                             <div class="lokasi-admin-title">${item.nama}</div>
                             <div class="lokasi-admin-id">${index + 1}</div>
                         </div>
-                        <div class="lokasi-admin-address">📍 ${item.alamat}</div>
+                        <div class="lokasi-admin-address">📍 ${item.alamat || 'Alamat tidak tersedia'}</div>
                         
                         <div class="input-group-admin">
                             <div class="input-label">
@@ -683,11 +667,11 @@
                         </div>
                         
                         <button class="btn-update-lokasi" onclick="updateParkirLokasi(${item.id})">
-                            <span>💾</span> UPDATE ${item.nama}
+                            <i class="fas fa-save"></i> UPDATE ${item.nama}
                         </button>
                         
                         <div class="update-time">
-                            Update: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum pernah'}
+                            <i class="far fa-clock"></i> Update: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum pernah'}
                         </div>
                     </div>
                 `;
@@ -722,7 +706,7 @@
             const btn = document.querySelector(`[onclick="updateParkirLokasi(${id})"]`);
             const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span>⏳</span> MEMPROSES...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> MEMPROSES...';
             
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/parkir_lokasi?id=eq.${id}`, {
@@ -752,7 +736,7 @@
         }
         
         function updateParkirStats() {
-            if (!parkirData || parkirData.length === 0) return;
+            if (!parkirData.length) return;
             const totals = parkirData.reduce((acc, item) => ({
                 bus: acc.bus + (item.bus || 0),
                 mobil: acc.mobil + (item.mobil || 0),
@@ -779,16 +763,22 @@
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 trafficData = await response.json();
                 
-                // Jika data masih kosong, buat default 5 pos
+                // Jika tabel kosong, buat 5 pos default
                 if (trafficData.length === 0) {
                     await initializeTrafficPosts();
-                } else {
-                    renderTrafficGrid();
+                    return;
                 }
+                
+                renderTrafficGrid();
             } catch (error) {
                 console.error('❌ Error loading traffic data:', error);
                 showNotification(`❌ Gagal memuat data lalu lintas: ${error.message}`, 'error');
-                document.getElementById('trafficAdminContainer').innerHTML = `<div style="text-align:center; padding:40px; color:#ef4444;">Gagal memuat data. Coba refresh.</div>`;
+                document.getElementById('trafficAdminContainer').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <p>Gagal memuat data. Silakan refresh halaman.</p>
+                    </div>
+                `;
             }
         }
         
@@ -815,17 +805,16 @@
                     });
                 }
                 showNotification('✅ Data pos lalu lintas berhasil dibuat', 'success');
-                // Reload data setelah inisialisasi
-                setTimeout(() => loadTrafficData(), 1000);
+                loadTrafficData(); // reload
             } catch (error) {
                 console.error('❌ Gagal inisialisasi traffic posts:', error);
-                showNotification(`❌ Gagal inisialisasi: ${error.message}`, 'error');
+                showNotification('❌ Gagal membuat data awal lalu lintas', 'error');
             }
         }
         
         function renderTrafficGrid() {
             const container = document.getElementById('trafficAdminContainer');
-            if (!trafficData || trafficData.length === 0) {
+            if (!trafficData.length) {
                 container.innerHTML = '<div class="loading-admin"><p>Memuat ulang data...</p></div>';
                 return;
             }
@@ -860,11 +849,11 @@
                         </div>
                         
                         <button class="btn-update-traffic" onclick="updateTrafficPost(${item.id})">
-                            <span>📹</span> UPDATE LINK
+                            <i class="fas fa-video"></i> UPDATE LINK
                         </button>
                         
                         <div class="update-time">
-                            Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum pernah'}
+                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum pernah'}
                         </div>
                     </div>
                 `;
@@ -883,7 +872,7 @@
             const btn = document.querySelector(`[onclick="updateTrafficPost(${id})"]`);
             const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<span>⏳</span> MENYIMPAN...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> MENYIMPAN...';
             
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/traffic_posts?id=eq.${id}`, {
