@@ -614,8 +614,17 @@
             trafficData.forEach(post => {
                 const hasUrl = post.instagram_url && post.instagram_url.trim() !== '';
                 const updateTime = post.updated_at 
-                    ? new Date(post.updated_at).toLocaleString('id-ID', { hour12: false }) 
-                    : 'Belum update';
+                    ? new Date(post.updated_at).toLocaleString('id-ID', { 
+                        timeZone: 'Asia/Jakarta', 
+                        hour12: false,
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                        }) 
+                        : 'Belum update';
                 
                 html += `
                     <div class="video-card">
