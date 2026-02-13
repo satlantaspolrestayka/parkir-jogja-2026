@@ -11,10 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-title" content="Parkir Jogja">
     
-    <!-- Favicon Ramadan -->
-    <link rel="icon" href="https://img.icons8.com/color/48/moon-symbol.png" type="image/png">
-    
-    <title>Informasi Parkir Yogyakarta 2026 | Ramadan 1447 H</title>
+    <title>Informasi Parkir Yogyakarta 2026</title>
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -55,11 +52,6 @@
             
             --transition-fast: 0.15s ease;
             --transition-base: 0.25s ease;
-            
-            /* Ramadan colors */
-            --ramadan-gold: #D4AF37;
-            --ramadan-green: #2E7D32;
-            --ramadan-lantern: #B8860B;
         }
         
         * { 
@@ -256,9 +248,10 @@
             position: relative;
             color: white; 
             text-align: center;
-            border-bottom: 3px solid var(--ramadan-gold);
+            border-bottom: 3px solid var(--primary-600);
+            /* background: dihapus, hanya gambar latar */
             width: 100%;
-            aspect-ratio: 3556 / 1535;
+            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -268,6 +261,7 @@
             isolation: isolate;
         }
         
+        /* Gambar ramadhan.png - background putih hilang via blend-mode, tampil 100% tajam */
         .ramadan-bg-img {
             position: absolute;
             top: 0;
@@ -275,7 +269,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            mix-blend-mode: multiply;
+            mix-blend-mode: multiply; /* membuat background putih transparan */
             opacity: 1;
             z-index: 0;
             pointer-events: none;
@@ -289,7 +283,7 @@
             line-height: 1.2;
             letter-spacing: 0.5px;
             margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7); /* teks lebih terbaca */
         }
         
         .title-sub {
@@ -322,35 +316,6 @@
         .operation-badge:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
-        }
-        
-        /* ====== RAMADAN MESSAGE MINIMALIS ====== */
-        .ramadan-message {
-            position: relative;
-            z-index: 2;
-            margin-top: 12px;
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 14px;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 6px 18px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-            border: 0.5px solid var(--ramadan-gold);
-        }
-        
-        .ramadan-message i {
-            color: #FFD700;
-            font-size: 16px;
-            animation: gentleGlow 2s infinite;
-        }
-        
-        @keyframes gentleGlow {
-            0%, 100% { text-shadow: 0 0 2px #FFD700; }
-            50% { text-shadow: 0 0 8px #FFD700; }
         }
         
         /* ====== LOADING OVERLAY ====== */
@@ -434,7 +399,7 @@
         .total-locations:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
-            border-color: var(--ramadan-gold);
+            border-color: var(--primary-500);
         }
         
         .total-icon {
@@ -480,7 +445,6 @@
         .capacity-tab:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-medium);
-            border-color: var(--ramadan-gold);
         }
         
         .tab-icon {
@@ -568,7 +532,7 @@
             color: var(--gray-900);
             margin: 0 0 25px 0;
             padding: 25px 0 20px;
-            border-bottom: 4px solid var(--ramadan-gold);
+            border-bottom: 3px solid var(--primary-600);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -581,7 +545,7 @@
             display: block;
             width: 6px;
             height: 24px;
-            background: var(--ramadan-gold);
+            background: var(--primary-600);
             border-radius: 3px;
         }
         
@@ -610,7 +574,7 @@
         .lokasi-item:hover { 
             transform: translateY(-2px);
             box-shadow: var(--shadow-deep);
-            border-color: var(--ramadan-gold);
+            border-color: var(--primary-500);
         }
         
         .lokasi-item.closest {
@@ -625,30 +589,6 @@
         @keyframes pulseBorder {
             0%, 100% { border-color: var(--success-600); }
             50% { border-color: #34d399; }
-        }
-        
-        /* Badge Dekat Masjid (Ramadan) */
-        .masjid-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(46, 125, 50, 0.1);
-            backdrop-filter: blur(2px);
-            border: 0.5px solid var(--ramadan-green);
-            color: var(--ramadan-green);
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            z-index: 2;
-        }
-        
-        .masjid-badge i {
-            color: var(--ramadan-gold);
-            font-size: 12px;
         }
         
         .card-header {
@@ -726,7 +666,7 @@
             100% { background-position: -200% 0; }
         }
         
-        /* KAPASITAS DISPLAY */
+        /* PROFESSIONAL KAPASITAS DISPLAY */
         .kapasitas-display {
             background: #f8fafc;
             border-radius: 10px;
@@ -787,7 +727,7 @@
         .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         
-        /* ====== TOMBOL RUTE - WARNA BIRU ====== */
+        /* ====== TOMBOL RUTE - WARNA BIRU (PERUBAHAN) ====== */
         .btn-route { 
             width: 100%;
             padding: 14px 16px; 
@@ -826,7 +766,7 @@
             color: white; 
             background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
             line-height: 1.6;
-            border-top: 4px solid var(--ramadan-gold);
+            border-top: 3px solid var(--primary-600);
         }
         
         .footer-logo {
@@ -866,8 +806,20 @@
         
         .social-link:hover {
             transform: translateY(-3px);
-            background: var(--ramadan-gold);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            background: var(--primary-600);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        }
+        
+        .social-link.facebook:hover {
+            background: #1877F2;
+        }
+        
+        .social-link.twitter:hover {
+            background: #1DA1F2;
         }
         
         .footer-copyright {
@@ -876,93 +828,7 @@
             opacity: 0.9;
         }
         
-        /* ====== NOTIFIKASI RAMADAN CUSTOM ====== */
-        .ramadan-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #2E7D32, #B8860B);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,215,0,0.3);
-            z-index: 9999;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            animation: slideInRight 0.4s cubic-bezier(0.2, 0.9, 0.3, 1), glowPulse 3s infinite;
-            max-width: 360px;
-            width: calc(100% - 32px);
-            border-left: 6px solid #FFD700;
-            backdrop-filter: blur(8px);
-        }
-        
-        .ramadan-notification i {
-            font-size: 24px;
-            color: #FFD700;
-            animation: rotateGentle 4s infinite ease-in-out;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        
-        .notification-content {
-            flex: 1;
-            font-size: 14px;
-            line-height: 1.5;
-            word-break: break-word;
-            font-weight: 500;
-        }
-        
-        .notification-close {
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-left: 4px;
-            flex-shrink: 0;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .notification-close:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(1.1);
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(120%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(120%); opacity: 0; }
-        }
-        
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,215,0,0.3); }
-            50% { box-shadow: 0 15px 40px rgba(180, 83, 9, 0.4), 0 0 0 2px rgba(255,215,0,0.6); }
-        }
-        
-        @keyframes rotateGentle {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(8deg); }
-            75% { transform: rotate(-6deg); }
-            100% { transform: rotate(0deg); }
-        }
-        
-        .ramadan-notification.hiding {
-            animation: slideOutRight 0.4s ease-out forwards;
-        }
-        
-        /* ====== REAL-TIME NOTIFICATION (EXISTING) ====== */
+        /* ====== REAL-TIME NOTIFICATION ====== */
         .realtime-notification {
             position: fixed;
             top: 20px;
@@ -978,6 +844,16 @@
             gap: 10px;
             animation: slideInRight 0.3s ease-out;
             max-width: 300px;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
         
         .realtime-notification.hiding {
@@ -1031,14 +907,6 @@
                 top: 15px;
                 left: 15px;
             }
-            
-            .ramadan-notification {
-                left: 16px;
-                right: 16px;
-                max-width: none;
-                top: 16px;
-                width: auto;
-            }
         }
         
         @media (max-width: 640px) {
@@ -1081,6 +949,74 @@
             .btn-route {
                 font-size: 14px;
                 padding: 12px 14px;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .main-header {
+                padding: 35px 12px;
+            }
+            
+            .main-header h1 {
+                font-size: 18px;
+            }
+            
+            .title-sub {
+                font-size: 14px;
+            }
+            
+            .operation-badge {
+                padding: 6px 16px;
+                font-size: 12px;
+            }
+            
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .capacity-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .capacity-tab {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                padding: 16px 15px;
+                gap: 20px;
+            }
+            
+            .tab-icon {
+                margin-bottom: 0;
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+            
+            .tab-number {
+                margin-bottom: 0;
+                margin-right: auto;
+                font-size: 24px;
+            }
+            
+            .menu-sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .lokasi-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .lokasi-item {
+                margin: 0 5px;
+                padding: 15px;
             }
         }
     </style>
@@ -1127,7 +1063,7 @@
         </div>
         
         <div class="menu-footer">
-             Ramadan 1447 H - Satlantas Polresta Yogyakarta
+            © 2026 Satlantas Polresta Yogyakarta
         </div>
     </div>
 
@@ -1139,7 +1075,8 @@
             <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
             <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
-            
+        </div>
+        
         <!-- MOBILE COMPACT HEADER -->
         <div class="compact-header">
             <div class="total-locations">
@@ -1197,7 +1134,7 @@
         <!-- FOOTER -->
         <div class="footer">
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
-            <p> Ramadan 1447 H - Polri Untuk Masyarakat</p>
+            <p>Polri Untuk Masyarakat</p>
             
             <div class="social-links">
                 <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" 
@@ -1214,7 +1151,7 @@
                 </a>
             </div>
             
-            <p class="footer-copyright">© 2026 - Informasi Parkir Kota Yogyakarta</p>
+            <p class="footer-copyright">© 2026 - Sistem Informasi Parkir Kota Yogyakarta</p>
         </div>
     </div>
 
@@ -1236,140 +1173,7 @@
         let supabaseClient = null;
         let supabaseChannel = null;
         let scrollHandlerActive = true;
-        let isLocating = false; // Flag untuk GPS
         
-        // ====== NOTIFIKASI RAMADAN - 62 PESAN TIME-BASED ======
-        const notifRamadan = {
-            pagi: [
-                "Sahur dulu, baru gas! Jangan sampai begadang bikin ngantuk pas nyetir. Istirahat cukup biar parkirnya juga rapi. 🌙✨",
-                "Pagi-pagi udah macet? Tenang, sambil cek lokasi parkir tujuan biar gak muter-muter. ☕🅿️",
-                "Subuh berjamaah, trus lanjut aktivitas. Jangan lupa parkir kendaraan di tempat aman ya! 🕌🛵",
-                "Sarapan biar kuat puasa. Kendaraan juga butuh 'sarapan' – cek tekanan ban sebelum jalan! 🥖🚗",
-                "Pagi Jumat berkah. Yang cari pahala, parkir rapi termasuk sedekah lho! 🤲🌟",
-                "Udah siapin bekal buat hari ini? Pastiin kendaraanmu juga 'bekal' parkir yang aman. 📦✅",
-                "Ngantuk abis sahur? Jangan dipaksain nyetir. Minggir dulu, parkir aman, tidur 15 menit! 💤🅿️",
-                "Pagi-pagi udah keluar? Cek dulu tujuanmu ada parkir apa kaga. Mampir sini dulu! 📍👀",
-                "Hari Senin, semangat! Jangan sampe stress sendiri gara-gara nyari parkir. Udah cek website kita? 💼🔍",
-                "Ramadan hari ke berapa nih? Puasanya lancar, parkirnya juga harus lancar! 📅💪",
-                "Motor lo udah mandi? Belom? Yang penting parkirnya di tempat resmi, biar gak 'mandi' hujan tanpa atap. ☔🛵",
-                "Pagi yang cerah buat ngabuburit? Eits, masih pagi! Tenang, sambil cek-cek spot parkir buat sore nanti. 🌤️👌",
-                "Sebelum berangkat, luangin 10 detik buat lihat rekomendasi parkir kita. Dijamin gak rugi! ⏱️✅",
-                "Siapa bilang pagi gak macet? Malioboro udah rame dari jam 7. Cek alternatif parkir sini! 🚦🗺️",
-                "Lo tipe orang yang suka dateng awal biar dapet parkir deket? Kudos! Ini rekomendasi spot favorit. 🏆🅿️"
-            ],
-            siang: [
-                "Siang bolong, laper mata? Jangan sampe laper mata lihat parkiran kosong trus masuk sembarangan. Cek dulu gan! 🍜👁️",
-                "Ngantuk abis makan? Jangan dipaksain nyetir. Parkir dulu, power nap 15 menit! 💤🚗",
-                "Jam 12, panas terik. Kendaraan lo kepanasan? Cari parkir teduh, rekomendasi kita ada! 🌞🌳",
-                "Biasanya jam segini parkir Masjid Gede mulai penuh. Yang mau tarawih duluan? Cek kapasitas real-time! 🕌📊",
-                "Siang Jumat, berkah berlipat. Jangan lupa parkir rapi biar ibadah makin khusyuk. 🕋✨",
-                "Puasa itu nahan lapar, haus, dan emosi. Apalagi pas nyari parkir. Tarik napas, buka website kita, tenang. 🧘🚙",
-                "Lagi istirahat kantor? Manfaatin buat cek lokasi parkir buat buka puasa nanti. 📱🕒",
-                "Tau gak? 70% pengendara di Jogja ngaku lebih tenang setelah cek parkir di sini. Lo udah cek belum? 📈😌",
-                "Siang-siang gini enaknya ngabuburit di Malioboro? Cek dulu kapasitas parkirnya biar gak gigit jari! 🚶‍♂️📍",
-                "Jangan sampe kehabisan spot parkir pas jam buka. Mending booking mental dari sekarang! 🧠🅿️",
-                "Motor lo rela berjemur? Kasian. Cari parkir teduh via fitur kita yuk! 🥵🛵",
-                "Siang yang gerah, hati-hati pendingin mobil. Jangan lupa cek kondisi AC sebelum jalan. Parkir aman, adem! ❄️🚘",
-                "Buka puasa di kafe favorit? Klik sini buat lihat ketersediaan parkir real-time! ☕📲",
-                "Ramadan itu tentang berbagi. Share info parkir ini ke temen lo biar mereka gak muter-muter! 🔄💙",
-                "Siapa bilang siang gak rame? Area Stadion Kridosono mulai padat jam segini. Cek alternatifnya! ⚽🚨"
-            ],
-            sore: [
-                "Waktunya buru takjil! Jangan sampe kebablasan nyari parkir sampe adzan magrib. Cek spot sekarang! 🍡🌆",
-                "Sore hari, jalanan makin rame. Pastiin parkir tujuanmu masih available biar gak puter-puter! 🚗💨",
-                "Magrib tinggal 1 jam lagi. Lo udah dapet parkir buat buka puasa di tempat favorit? 🔔⏳",
-                "Ngabuburit keliling kota? Mampir dulu ke website kita buat cari titik kumpul parkir aman! 🚶‍♂️🗺️",
-                "Biasanya jam segini parkir Pasar Senen mulai penuh. Cek alternatif terdekat biar gak gagal buka! 📉🍽️",
-                "Sore Jumat berkah. Yang nyari parkir deket masjid buat tarawih nanti, udah siap? 🕌🌙",
-                "Buru-buru beli es buah? Jangan lupa parkir di tempat resmi. Takjil berkah, motor aman! 🍧✅",
-                "Lo tipe yang suka datang mepet-mepet? Risiko parkir jauh. Mending cek dari sekarang biar gak telat buka! ⏰😅",
-                "Cuaca sore kadang mendadak hujan. Sedia payung sebelum hujan, sedia info parkir sebelum macet! ☔☂️",
-                "Sore ini rekomendasi parkir: dekat Alun-Alun Utara. Banyak pilihan kuliner, parkir oke! 🍢📍",
-                "Temen lo pada di mana? Mabar? Atau malah pada nyari parkir buat buber? Cek bareng yuk! 👥📱",
-                "5 menit lagi adzan. Lo udah siapin parkir? Jangan panik, buka aja website kita! 😇📲",
-                "Parkir liar mulai beraksi pas sore. Tetap waspada, pilih parkir resmi. Laporin ke IG kita kalo ada yang meresahkan! 🚨📸",
-                "Sore itu magis. Tapi gak magis kalo lo muter-muter nyari parkir. Gas cek lokasi! 🔮🅿️",
-                "Adzan Magrib sebentar lagi. Yuk sahut panggilan dengan tenang, parkir udah aman. 🤲🌇"
-            ],
-            malam: [
-                "Tarawih dulu, baru nongkrong! Cek dulu parkir deket masjid biar ibadah makin khusyuk. 🕌🌟",
-                "Malam minggu Ramadan? Seru! Tapi jangan lupa parkir di tempat resmi, ya. Satlantas Jogja pantau 24/7 🌙🛵",
-                "Abis tarawih, jangan buru-buru. Motor juga butuh tempat teduh. Parkir resmi lebih tenang. 🤲🔋",
-                "Malam takbir udah deket. Udah siapin kendaraan buat mudik? Cek kondisi rem & parkir yang aman! 🚗💨",
-                "Sahur sahur! Jangan sampai kesiangan. Bangunin temen juga, biar parkir bareng-bareng! ⏰🥛",
-                "Jam 2 malam, jalanan sepi. Tapi tetep waspada, jangan ngebut. Parkir di rumah aja kalo cuma galau. 🏍️💭",
-                "Buat yang masih mudik tengah malam, istirahat cukup di rest area. Parkir aman, lanjut perjalanan! 🛣️🛏️",
-                "Malam Jumat, perbanyak baca surat. Tapi kalo nyetir, fokus. Parkir dulu kalo mau tadarus! 📖🚘",
-                "Ngabuburit malam? Ada bazar? Cek dulu parkirnya biar gak repot! 🎪🅿️",
-                "Tau gak? Parkir di area masjid selama tarawih bisa dapet pahala plus aman. Double benefit! 🕌💵",
-                "Malam minggu + puasa = lapak nongkrong penuh. Jangan sampe motormu jadi korban 'lapak liar'. Parkir resmi aja! 🛵🔒",
-                "Lo masih melek? Atau lagi cari info parkir buat besok pagi? Pinter! Siapin dari sekarang. 🧠⏳",
-                "Sahur adalah berkah. Jangan lupa parkir kendaraan lo di tempat yang aman selama lo tidur. 🛌🌙",
-                "Cek ramalan cuaca besok pagi? Cek juga rekomendasi parkir buat aktivitas besok! 🌧️📍",
-                "Malam yang tenang, cocok buat planning besok. Udah tahu mau parkir di mana? Kita bantu! 🗺️😴",
-                "H-3 Lebaran, arus mudik mulai padat. Pastikan kendaraan lo fit dan parkir tujuan aman! 🚚🧳",
-                "Jadi pemudik yang cerdas: cek lokasi parkir sebelum berangkat, bukan pas nyampe tujuan. 🎯🅿️"
-            ]
-        };
-
-        // ====== FUNGSI NOTIFIKASI RAMADAN ======
-        function getWaktuSekarang() {
-            const jam = new Date().getHours();
-            if (jam >= 5 && jam < 11) return 'pagi';
-            if (jam >= 11 && jam < 15) return 'siang';
-            if (jam >= 15 && jam < 18) return 'sore';
-            return 'malam';
-        }
-
-        function filterPesanByHari(pesanArray, hariIni) {
-            const pesanHariIni = pesanArray.filter(p => p.includes(hariIni));
-            return pesanHariIni.length > 0 ? pesanHariIni : pesanArray;
-        }
-
-        function getRamadanNotification() {
-            const waktu = getWaktuSekarang();
-            const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][new Date().getDay()];
-            let pesanArray = notifRamadan[waktu];
-            pesanArray = filterPesanByHari(pesanArray, hari);
-            return pesanArray[Math.floor(Math.random() * pesanArray.length)];
-        }
-
-        function showRamadanNotification(message) {
-            const existing = document.querySelector('.ramadan-notification');
-            if (existing) existing.remove();
-
-            const notif = document.createElement('div');
-            notif.className = 'ramadan-notification';
-            
-            const icon = document.createElement('i');
-            icon.className = 'fas fa-moon';
-            
-            const content = document.createElement('div');
-            content.className = 'notification-content';
-            content.textContent = message;
-            
-            const closeBtn = document.createElement('div');
-            closeBtn.className = 'notification-close';
-            closeBtn.innerHTML = '&times;';
-            closeBtn.onclick = function(e) {
-                e.stopPropagation();
-                notif.classList.add('hiding');
-                setTimeout(() => notif.remove(), 400);
-            };
-            
-            notif.appendChild(icon);
-            notif.appendChild(content);
-            notif.appendChild(closeBtn);
-            document.body.appendChild(notif);
-            
-            setTimeout(() => {
-                if (document.body.contains(notif)) {
-                    notif.classList.add('hiding');
-                    setTimeout(() => notif.remove(), 400);
-                }
-            }, 7000); // 7 detik, lebih lama karena bisa di-close manual
-        }
-
         // ====== MENU MANAGEMENT ======
         function initMenu() {
             const menuToggle = document.getElementById('menuToggle');
@@ -1408,15 +1212,21 @@
         
         // ====== SCROLL HANDLER ======
         function setupScrollHandler() {
+            let lastScrollTop = 0;
             const menuToggle = document.getElementById('menuToggle');
+            
             window.addEventListener('scroll', function() {
                 if (!scrollHandlerActive) return;
+                
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
                 if (scrollTop > 100) {
                     menuToggle.classList.add('scrolled');
                 } else {
                     menuToggle.classList.remove('scrolled');
                 }
+                
+                lastScrollTop = scrollTop;
             }, false);
         }
         
@@ -1426,13 +1236,18 @@
                 if (!window.supabase) {
                     throw new Error('Supabase library gagal dimuat');
                 }
+                
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
                     auth: { persistSession: false }
                 });
+                
                 console.log('✅ Supabase initialized');
+                
                 await loadDataFromSupabase();
                 setupRealtimeUpdates();
+                
                 return true;
+                
             } catch (error) {
                 console.error('❌ Init failed:', error);
                 loadOfflineData();
@@ -1443,12 +1258,16 @@
         // ====== DATA LOADING ======
         async function loadDataFromSupabase() {
             showLoading('Memuat data parkir...');
+            
             try {
                 const { data, error } = await supabaseClient
                     .from('parkir_lokasi')
                     .select('*')
                     .order('id', { ascending: true });
+                
                 if (error) throw error;
+                
+                console.log(`✅ Loaded ${data.length} locations`);
                 
                 const processedData = data.map(item => ({
                     id: item.id,
@@ -1461,8 +1280,7 @@
                     max_mobil: Number(item.max_mobil) || 200,
                     max_motor: Number(item.max_motor) || 150,
                     koordinat: item.koordinat || '-7.7973211,110.3641841',
-                    updated_at: item.updated_at,
-                    dekat_masjid: item.dekat_masjid || false // asumsi kolom ini ada di DB
+                    updated_at: item.updated_at
                 }));
                 
                 window.appState.data = processedData;
@@ -1471,10 +1289,13 @@
                 
                 renderLokasi();
                 updateTotalCounters();
+                
                 return processedData;
+                
             } catch (error) {
                 console.error('❌ Error loading data:', error);
                 throw error;
+                
             } finally {
                 hideLoading();
             }
@@ -1483,21 +1304,30 @@
         // ====== REAL-TIME UPDATES ======
         function setupRealtimeUpdates() {
             if (!supabaseClient) return;
+            
             supabaseChannel = supabaseClient
                 .channel('parkir-updates')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'parkir_lokasi' }, (payload) => {
-                    console.log(`🔄 Update: ${payload.new?.nama}`);
-                    loadDataFromSupabase();
-                    showNotification(`🔄 ${payload.new?.nama} diperbarui`);
-                })
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'parkir_lokasi'
+                    },
+                    (payload) => {
+                        console.log(`🔄 Update: ${payload.new?.nama}`);
+                        loadDataFromSupabase();
+                        showNotification(`🔄 ${payload.new?.nama} diperbarui`);
+                    }
+                )
                 .subscribe();
         }
         
         // ====== SEARCH FUNCTIONS ======
         async function cariParkirTerdekat() {
-            isLocating = true; // Set flag
             const btn = document.getElementById('btnCari');
             const originalText = btn.innerHTML;
+            
             btn.disabled = true;
             btn.innerHTML = '<span>📍</span> MENGHITUNG...';
             
@@ -1513,20 +1343,28 @@
                 
                 window.appState.data = sorted;
                 window.appState.isSortedByDistance = true;
+                
                 renderLokasi();
                 setTimeout(highlightClosestParking, 50);
                 showNotification('📍 Parkir terdekat ditemukan!');
+                
             } catch (error) {
                 console.error('Error finding nearest parking:', error);
+                
                 let message = 'Gagal mendapatkan lokasi.';
-                if (error.code === 1) message = 'Izinkan akses lokasi di pengaturan browser.';
-                else if (error.code === 2) message = 'GPS tidak tersedia.';
-                else if (error.code === 3) message = 'Waktu habis, coba lagi.';
+                if (error.code === 1) {
+                    message = 'Izinkan akses lokasi di pengaturan browser.';
+                } else if (error.code === 2) {
+                    message = 'GPS tidak tersedia.';
+                } else if (error.code === 3) {
+                    message = 'Waktu habis, coba lagi.';
+                }
+                
                 showNotification(`❌ ${message}`);
+                
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
-                isLocating = false; // Reset flag
             }
         }
         
@@ -1537,14 +1375,20 @@
                     resolve(window.appState.userPosition);
                     return;
                 }
+                
                 if (!navigator.geolocation) {
                     reject(new Error('Browser tidak mendukung GPS'));
                     return;
                 }
+                
                 showLoading('Mendeteksi lokasi Anda...');
+                
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
-                        window.appState.userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                        window.appState.userPosition = {
+                            lat: pos.coords.latitude,
+                            lng: pos.coords.longitude
+                        };
                         hideLoading();
                         resolve(window.appState.userPosition);
                     },
@@ -1552,7 +1396,11 @@
                         hideLoading();
                         reject(err);
                     },
-                    { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 8000,
+                        maximumAge: 0
+                    }
                 );
             });
         }
@@ -1562,7 +1410,8 @@
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
                 Math.sin(dLon/2) * Math.sin(dLon/2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
@@ -1570,28 +1419,44 @@
         }
         
         function formatDistance(km) {
-            if (km < 1) return `${Math.round(km * 1000)} meter`;
-            return `${km.toFixed(1)} km`;
+            if (km < 1) {
+                return `${Math.round(km * 1000)} meter`;
+            } else {
+                return `${km.toFixed(1)} km`;
+            }
         }
         
         async function calculateAllDistances() {
-            if (!window.appState.userPosition || !window.appState.data.length) return;
+            if (!window.appState.userPosition || !window.appState.data.length) {
+                console.warn('Cannot calculate distances: missing position or data');
+                return;
+            }
+            
             showLoading('Menghitung jarak...');
+            
             const newDistances = new Map();
             const { lat: userLat, lng: userLng } = window.appState.userPosition;
+            
             window.appState.data.forEach((lokasi) => {
                 try {
                     const coords = lokasi.koordinat.split(',').map(Number);
                     if (coords.length === 2 && !coords.some(isNaN)) {
-                        const distance = calculateDistance(userLat, userLng, coords[0], coords[1]);
+                        const distance = calculateDistance(
+                            userLat,
+                            userLng,
+                            coords[0],
+                            coords[1]
+                        );
                         newDistances.set(lokasi.id, distance);
                     } else {
                         newDistances.set(lokasi.id, null);
                     }
                 } catch (error) {
+                    console.error(`Error calculating distance for ${lokasi.nama}:`, error);
                     newDistances.set(lokasi.id, null);
                 }
             });
+            
             window.appState.distances = newDistances;
             hideLoading();
         }
@@ -1599,41 +1464,63 @@
         // ====== ROUTE FUNCTION ======
         function ruteKeLokasi(koordinat, nama) {
             showLoading('Membuka aplikasi peta...');
+            
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const userLat = pos.coords.latitude;
                     const userLng = pos.coords.longitude;
+                    
                     hideLoading();
+                    
                     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
                     const isAndroid = /Android/.test(navigator.userAgent);
+                    
+                    const encodedName = encodeURIComponent(nama);
+                    
                     if (isIOS) {
-                        window.location.href = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
+                        const appleMapsUrl = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
+                        window.location.href = appleMapsUrl;
+                        
                         setTimeout(() => {
                             if (document.hasFocus()) {
-                                window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
+                                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                                window.open(googleMapsUrl, '_blank');
                             }
                         }, 500);
+                        
                     } else if (isAndroid) {
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                        
                         window.location.href = `google.navigation:q=${koordinat}&mode=d`;
+                        
                         setTimeout(() => {
                             if (document.hasFocus()) {
-                                window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
+                                window.open(googleMapsUrl, '_blank');
                             }
                         }, 500);
+                        
                     } else {
-                        window.open(`https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`, '_blank');
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
+                        window.open(googleMapsUrl, '_blank');
                         hideLoading();
                     }
                 },
                 (error) => {
                     hideLoading();
-                    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                    
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    
+                    if (isIOS) {
                         window.location.href = `maps://?q=${koordinat}&z=16`;
                     } else {
                         window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
                     }
                 },
-                { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
             );
         }
         
@@ -1646,10 +1533,12 @@
             }
             
             let html = '';
+            
             window.appState.data.forEach((lokasi, index) => {
                 const distance = window.appState.distances.get(lokasi.id);
                 const distanceText = distance !== undefined && distance !== null ? 
-                    `📏 ${formatDistance(distance)} dari lokasi Anda` : '📏 Jarak tidak tersedia';
+                    `📏 ${formatDistance(distance)} dari lokasi Anda` : 
+                    '📏 Jarak tidak tersedia';
                 const distanceClass = distance !== undefined && distance !== null ? '' : 'lokasi-jarak-loading';
                 
                 const busAvailable = Math.max(0, lokasi.max_bus - lokasi.bus);
@@ -1668,79 +1557,126 @@
                 const mobilAvailablePercentage = lokasi.max_mobil > 0 ? (mobilAvailable / lokasi.max_mobil) * 100 : 0;
                 const motorAvailablePercentage = lokasi.max_motor > 0 ? (motorAvailable / lokasi.max_motor) * 100 : 0;
                 
-                let cardId = window.appState.isSortedByDistance ? index + 1 : lokasi.id;
+                const busAvailablePercent = Math.round(busAvailablePercentage);
+                const mobilAvailablePercent = Math.round(mobilAvailablePercentage);
+                const motorAvailablePercent = Math.round(motorAvailablePercentage);
+                
+                let cardId;
+                if (window.appState.isSortedByDistance) {
+                    cardId = index + 1;
+                } else {
+                    cardId = lokasi.id;
+                }
+                
                 const isClosest = window.appState.isSortedByDistance && index === 0;
                 const closestClass = isClosest ? 'closest' : '';
                 
-                // Badge dekat masjid - contoh, jika ada data
-                const masjidBadge = lokasi.dekat_masjid ? 
-                    '<span class="masjid-badge"><i class="fas fa-mosque"></i> Dekat Masjid</span>' : '';
-                
                 html += `
                     <div class="lokasi-item ${closestClass}" data-id="${lokasi.id}" data-index="${index}">
-                        ${masjidBadge}
                         <div class="card-header">
                             <div class="card-title">${lokasi.nama}</div>
                             <div class="card-id">${cardId}</div>
                         </div>
+                        
                         <div class="card-address">
                             <span>📍</span>
                             <span>${lokasi.alamat}</span>
                         </div>
+                        
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
-                                <div class="kapasitas-title"><span>🚌</span> BUS TERSEDIA</div>
+                                <div class="kapasitas-title">
+                                    <span>🚌</span>
+                                    <span>BUS TERSEDIA</span>
+                                </div>
                                 <div class="kapasitas-numbers">${busAvailable}/${lokasi.max_bus}</div>
                             </div>
                             <div class="visual-bar-container">
                                 <div class="visual-bar" style="width: ${busAvailablePercentage}%; background-color: ${busConfig.color};"></div>
                             </div>
                             <div class="status-badge status-${busStatus}">
-                                <span>${busConfig.icon}</span> ${Math.round(busAvailablePercentage)}% ${busConfig.text}
+                                <span>${busConfig.icon}</span>
+                                <span>${busAvailablePercent}% ${busConfig.text}</span>
                             </div>
                         </div>
+                        
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
-                                <div class="kapasitas-title"><span>🚗</span> MOBIL TERSEDIA</div>
+                                <div class="kapasitas-title">
+                                    <span>🚗</span>
+                                    <span>MOBIL TERSEDIA</span>
+                                </div>
                                 <div class="kapasitas-numbers">${mobilAvailable}/${lokasi.max_mobil}</div>
                             </div>
                             <div class="visual-bar-container">
                                 <div class="visual-bar" style="width: ${mobilAvailablePercentage}%; background-color: ${mobilConfig.color};"></div>
                             </div>
                             <div class="status-badge status-${mobilStatus}">
-                                <span>${mobilConfig.icon}</span> ${Math.round(mobilAvailablePercentage)}% ${mobilConfig.text}
+                                <span>${mobilConfig.icon}</span>
+                                <span>${mobilAvailablePercent}% ${mobilConfig.text}</span>
                             </div>
                         </div>
+                        
                         <div class="kapasitas-display">
                             <div class="kapasitas-header">
-                                <div class="kapasitas-title"><span>🏍️</span> MOTOR TERSEDIA</div>
+                                <div class="kapasitas-title">
+                                    <span>🏍️</span>
+                                    <span>MOTOR TERSEDIA</span>
+                                </div>
                                 <div class="kapasitas-numbers">${motorAvailable}/${lokasi.max_motor}</div>
                             </div>
                             <div class="visual-bar-container">
                                 <div class="visual-bar" style="width: ${motorAvailablePercentage}%; background-color: ${motorConfig.color};"></div>
                             </div>
                             <div class="status-badge status-${motorStatus}">
-                                <span>${motorConfig.icon}</span> ${Math.round(motorAvailablePercentage)}% ${motorConfig.text}
+                                <span>${motorConfig.icon}</span>
+                                <span>${motorAvailablePercent}% ${motorConfig.text}</span>
                             </div>
                         </div>
-                        <div class="lokasi-jarak ${distanceClass}">${distanceText}</div>
+                        
+                        <div class="lokasi-jarak ${distanceClass}">
+                            ${distanceText}
+                        </div>
+                        
                         <div class="card-actions">
-                            <button class="btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')">Rute ke Sini</button>
+                            <button class="btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Rute ke ${lokasi.nama}">
+                                Rute ke Sini
+                            </button>
                         </div>
                     </div>
                 `;
             });
+            
             container.innerHTML = html;
+            
+            if (window.appState.isSortedByDistance) {
+                setTimeout(() => {
+                    const firstItem = container.querySelector('.lokasi-item');
+                    if (firstItem) {
+                        firstItem.style.opacity = '1';
+                        firstItem.style.visibility = 'visible';
+                    }
+                }, 10);
+            }
         }
         
         function highlightClosestParking() {
-            document.querySelectorAll('.lokasi-item').forEach(item => item.classList.remove('closest'));
+            document.querySelectorAll('.lokasi-item').forEach(item => {
+                item.classList.remove('closest');
+            });
+            
             const firstItem = document.querySelector('.lokasi-item');
-            if (firstItem) firstItem.classList.add('closest');
+            if (firstItem) {
+                firstItem.classList.add('closest');
+                firstItem.style.opacity = '1';
+                firstItem.style.visibility = 'visible';
+                firstItem.style.zIndex = '1';
+            }
         }
         
         function updateTotalCounters() {
             if (!window.appState.data.length) return;
+            
             const totals = window.appState.data.reduce((acc, lokasi) => {
                 return {
                     bus: acc.bus + Math.max(0, lokasi.max_bus - lokasi.bus),
@@ -1748,6 +1684,7 @@
                     motor: acc.motor + Math.max(0, lokasi.max_motor - lokasi.motor)
                 };
             }, { bus: 0, mobil: 0, motor: 0 });
+            
             document.getElementById('totalLocations').textContent = window.appState.data.length;
             document.getElementById('totalBus').textContent = totals.bus.toLocaleString();
             document.getElementById('totalMobil').textContent = totals.mobil.toLocaleString();
@@ -1756,10 +1693,10 @@
         
         function calculateStatus(available, max) {
             if (max === 0 || available <= 0) return 'full';
-            const percentage = (available / max) * 100;
-            if (percentage >= 70) return 'high';
-            if (percentage >= 30) return 'medium';
-            if (percentage > 0) return 'low';
+            const availablePercentage = (available / max) * 100;
+            if (availablePercentage >= 70) return 'high';
+            if (availablePercentage >= 30) return 'medium';
+            if (availablePercentage > 0) return 'low';
             return 'full';
         }
         
@@ -1777,23 +1714,29 @@
             const overlay = document.getElementById('loadingOverlay');
             if (overlay) {
                 const text = overlay.querySelector('.loading-text');
-                if (text && message) text.textContent = message;
+                if (text && message) {
+                    text.textContent = message;
+                }
                 overlay.classList.add('active');
             }
         }
         
         function hideLoading() {
             const overlay = document.getElementById('loadingOverlay');
-            if (overlay) overlay.classList.remove('active');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
         }
         
         function showNotification(message) {
             const existing = document.querySelector('.realtime-notification');
             if (existing) existing.remove();
+            
             const notification = document.createElement('div');
             notification.className = 'realtime-notification';
             notification.innerHTML = `<div>${message}</div>`;
             document.body.appendChild(notification);
+            
             setTimeout(() => {
                 notification.classList.add('hiding');
                 setTimeout(() => notification.remove(), 300);
@@ -1802,50 +1745,41 @@
         
         function loadOfflineData() {
             const offlineData = [
-                {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:62, mobil:200, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8017074,110.3681792", dekat_masjid: true},
-                {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:60, mobil:80, motor:100, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8014685,110.3562862", dekat_masjid: false},
-                {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:60, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.800385,110.368361", dekat_masjid: false},
-                {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:130, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8018505,110.3632816", dekat_masjid: true},
-                {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:20, motor:382, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7973211,110.3641841", dekat_masjid: false},
-                {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:100, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.787088,110.366706", dekat_masjid: false},
-                {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:20, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7897929,110.3706896", dekat_masjid: true},
-                {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:115, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7992907,110.3663957", dekat_masjid: false},
-                {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:125, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7978843,110.3673653", dekat_masjid: false},
-                {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:40, mobil:150, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8002542,110.3560535", dekat_masjid: false},
-                {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:82, mobil:100, motor:300, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8037595,110.3968204", dekat_masjid: true},
-                {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:100, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7920043,110.3611007", dekat_masjid: false},
-                {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:60, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7832641,110.3683152", dekat_masjid: false},
-                {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:130, mobil:300, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7883952,110.36693", dekat_masjid: false},
-                {id:15, nama:"STADION KRIDOSONO", alamat:"JL YOS SUDARSO", bus:0, mobil:30, motor:150, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7877683,110.3736898", dekat_masjid: true}
+                {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:62, mobil:200, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8017074,110.3681792"},
+                {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:60, mobil:80, motor:100, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8014685,110.3562862"},
+                {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:60, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.800385,110.368361"},
+                {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:130, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8018505,110.3632816"},
+                {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:20, motor:382, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7973211,110.3641841"},
+                {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:100, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.787088,110.366706"},
+                {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:20, mobil:50, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7897929,110.3706896"},
+                {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:115, motor:250, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7992907,110.3663957"},
+                {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:125, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7978843,110.3673653"},
+                {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:40, mobil:150, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8002542,110.3560535"},
+                {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:82, mobil:100, motor:300, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.8037595,110.3968204"},
+                {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:100, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7920043,110.3611007"},
+                {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:60, motor:200, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7832641,110.3683152"},
+                {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:130, mobil:300, motor:0, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7883952,110.36693"},
+                {id:15, nama:"STADION KRIDOSONO", alamat:"JL YOS SUDARSO", bus:0, mobil:30, motor:150, max_bus:100, max_mobil:200, max_motor:150, koordinat:"-7.7877683,110.3736898"}
             ];
+            
             window.appState.data = offlineData;
             window.appState.originalOrder = [...offlineData];
             window.appState.isSortedByDistance = false;
+            
             renderLokasi();
             updateTotalCounters();
+            
             console.log('📡 Offline data loaded');
             showNotification('📡 Mode offline aktif');
         }
         
-        // ====== INITIALIZATION ======
         async function initApp() {
             initMenu();
             const success = await initSupabase();
-            if (success) console.log('🚀 Aplikasi Parkir Jogja siap!');
-            
-            // Tampilkan notifikasi Ramadan (hanya sekali per sesi, tidak saat locating)
-            setTimeout(() => {
-                if (!sessionStorage.getItem('ramadanNotifShown') && !isLocating) {
-                    const pesan = getRamadanNotification();
-                    showRamadanNotification(pesan);
-                    sessionStorage.setItem('ramadanNotifShown', 'true');
-                }
-            }, 3500); // delay 3.5 detik, biar tidak bentrok dengan pop-up GPS
+            if (success) {
+                console.log('🚀 Aplikasi Parkir Jogja siap!');
+            }
         }
-        
-        // Override fungsi cariParkirTerdekat global
-        window.cariParkirTerdekat = cariParkirTerdekat;
-        window.ruteKeLokasi = ruteKeLokasi;
         
         document.addEventListener('DOMContentLoaded', async () => {
             if (!window.supabase) {
