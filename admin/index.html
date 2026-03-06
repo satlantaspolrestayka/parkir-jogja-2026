@@ -618,16 +618,16 @@
                                     <i class="fas fa-bus" style="color: #dc2626;"></i>
                                     <span>BUS TERSEDIA</span>
                                 </div>
-                                <span class="max-label">Maks ${item.max_bus || 100}</span>
+                                <span class="max-label">Maks ${item.max_bus || 0}</span>
                             </div>
                             <input type="number" 
                                    class="admin-input" 
                                    id="bus-${item.id}" 
                                    value="${busTersedia}" 
                                    min="0" 
-                                   max="${item.max_bus || 100}"
-                                   placeholder="0 - ${item.max_bus || 100}"
-                                   oninput="validateTersedia(this, ${item.max_bus || 100})">
+                                   max="${item.max_bus || 0}"
+                                   placeholder="0 - ${item.max_bus || 0}"
+                                   oninput="validateTersedia(this, ${item.max_bus || 0})">
                         </div>
                         
                         <!-- MOBIL TERSEDIA -->
