@@ -10,8 +10,6 @@
     <meta name="apple-mobile-web-app-title" content="Lalu Lintas Jogja">
     <title>Informasi Lalu Lintas Yogyakarta 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Instagram Embed Script -->
-    <script async src="//www.instagram.com/embed.js"></script>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -282,34 +280,39 @@
             margin: 10px 0 15px;
         }
         
-        /* ====== INSTAGRAM EMBED (MENGGUNAKAN EMBED ASLI INSTAGRAM) ====== */
-        .instagram-embed-container {
+        /* ====== INSTAGRAM VIDEO ONLY ====== */
+        .instagram-video-container {
+            position: relative;
             width: 100%;
+            aspect-ratio: 9 / 16; /* Rasio Instagram vertical video */
+            max-width: 100%;
             margin: 10px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
         }
         
-        .instagram-embed-container iframe,
-        .instagram-embed-container blockquote {
-            max-width: 100% !important;
-            width: 100% !important;
-            min-width: auto !important;
-            border-radius: 12px;
+        .instagram-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         
         .empty-video {
             width: 100%;
-            padding: 60px 20px;
+            aspect-ratio: 9 / 16;
             background: var(--gray-100);
             border-radius: 12px;
             color: var(--gray-500);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 15px;
+            padding: 20px;
         }
         
         .empty-video i {
@@ -416,21 +419,6 @@
             .traffic-videos { padding: 40px 20px; }
             .video-grid { grid-template-columns: 1fr; }
         }
-        
-        @media (max-width: 640px) {
-            .main-header { padding: 40px 15px; }
-            .main-header h1 { font-size: 20px; }
-            .title-sub { font-size: 15px; }
-            .section-title { font-size: 28px; }
-        }
-        
-        @media (max-width: 375px) {
-            .main-header { padding: 35px 12px; }
-            .main-header h1 { font-size: 18px; }
-            .title-sub { font-size: 14px; }
-            .operation-badge { padding: 8px 16px; font-size: 12px; }
-            .menu-sidebar { width: 100%; max-width: 320px; }
-        }
     </style>
 </head>
 <body>
@@ -467,12 +455,12 @@
         
         <!-- SECTION VIDEO -->
         <section class="traffic-videos" id="trafficSection">
-            <h2 class="section-title"></h2>
+            <h2 class="section-title">Pantauan Arus Lalu Lintas</h2>
             
             <div id="videoGridContainer" class="video-grid">
                 <div class="loading-video">
                     <div class="spinner"></div>
-                    <p>Memuat video dari Instagram...</p>
+                    <p>Memuat video...</p>
                 </div>
             </div>
             
@@ -505,11 +493,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
             await initSupabase();
-            
-            // Load data
             await loadTrafficVideos();
-            
-            // Refresh setiap 60 detik
             setInterval(loadTrafficVideos, 60000);
         });
         
@@ -575,7 +559,6 @@
                 
                 trafficData = data || [];
                 
-                // Jika tabel kosong, buat default 5 pos
                 if (trafficData.length === 0) {
                     await initializeTrafficPosts();
                     return;
@@ -583,13 +566,6 @@
                 
                 renderVideoGrid();
                 updateLastUpdated();
-                
-                // Proses embed Instagram
-                setTimeout(() => {
-                    if (window.instgrm) {
-                        window.instgrm.Embeds.process();
-                    }
-                }, 500);
                 
             } catch (error) {
                 console.error('❌ Gagal memuat video:', error);
@@ -620,6 +596,29 @@
             }
         }
         
+        // ====== EKSTRAK ID VIDEO DARI URL INSTAGRAM ======
+        function extractInstagramId(url) {
+            if (!url) return null;
+            
+            // Regex untuk berbagai format URL Instagram
+            const patterns = [
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/tv\/([a-zA-Z0-9_-]+)/,
+                /\/p\/([a-zA-Z0-9_-]+)/,
+                /\/reel\/([a-zA-Z0-9_-]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            
+            return null;
+        }
+        
         // ====== RENDER GRID VIDEO ======
         function renderVideoGrid() {
             const container = document.getElementById('videoGridContainer');
@@ -633,33 +632,37 @@
             
             trafficData.forEach(post => {
                 const hasUrl = post.instagram_url && post.instagram_url.trim() !== '';
+                const videoId = hasUrl ? extractInstagramId(post.instagram_url) : null;
                 const updateTime = formatUpdateTime(post.updated_at);
                 
                 html += `
                     <div class="video-card">
                         <h3 class="card-title">
-                            <i class="fas fa-traffic-light" style="color: #2563eb; margin-right: 8px;"></i>
+                            <i class="fas fa-traffic-light"></i>
                             ${escapeHtml(post.nama_pos)}
                         </h3>
                         <span class="update-time-badge">
                             <i class="far fa-clock"></i> ${updateTime}
                         </span>
                         
-                        <div class="instagram-embed-container">
-                            ${hasUrl ? `
-                                <blockquote class="instagram-media" 
-                                    data-instgrm-permalink="${escapeHtml(post.instagram_url)}" 
-                                    data-instgrm-version="14"
-                                    data-instgrm-captioned="false">
-                                </blockquote>
-                            ` : `
-                                <div class="empty-video">
-                                    <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
-                                    <p style="font-size: 16px;">Belum ada video untuk pos ini</p>
-                                    <small style="color: #999;">Admin akan segera mengunggah</small>
-                                </div>
-                            `}
-                        </div>
+                        ${hasUrl && videoId ? `
+                            <div class="instagram-video-container">
+                                <iframe 
+                                    src="https://www.instagram.com/p/${videoId}/embed/?hidecaption=true"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    allowtransparency="true"
+                                    allowfullscreen="true"
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        ` : `
+                            <div class="empty-video">
+                                <i class="fab fa-instagram"></i>
+                                <p>Belum ada video</p>
+                                <small>Admin akan segera mengunggah</small>
+                            </div>
+                        `}
                     </div>
                 `;
             });
@@ -679,8 +682,7 @@
                     month: '2-digit',
                     day: '2-digit',
                     hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
+                    minute: '2-digit'
                 });
             } catch {
                 return 'Belum update';
@@ -692,13 +694,7 @@
             const info = document.getElementById('lastUpdatedInfo');
             const now = new Date().toLocaleString('id-ID', { 
                 timeZone: 'Asia/Jakarta', 
-                hour12: false,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                hour12: false
             });
             info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
         }
@@ -707,8 +703,8 @@
         function showErrorMessage(message) {
             const container = document.getElementById('videoGridContainer');
             container.innerHTML = `
-                <div class="error-message" style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ef4444;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
                     <p>${escapeHtml(message)}</p>
                 </div>
             `;
