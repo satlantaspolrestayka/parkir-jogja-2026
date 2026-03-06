@@ -245,73 +245,52 @@
             text-align: center;
         }
         
-        /* ====== HEADER UTAMA ====== */
+        /* ====== HEADER UTAMA SESUAI GAMBAR ====== */
         .main-header { 
-            position: relative;
+            background: linear-gradient(135deg, var(--navy-900), #1e3a8a);
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            aspect-ratio: 3556 / 1535;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            overflow: hidden;
-            isolation: isolate;
-            background: transparent;
-        }
-        
-        .ramadan-bg-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            mix-blend-mode: multiply;
-            opacity: 1;
-            z-index: 0;
-            pointer-events: none;
+            padding: 40px 20px 30px;
         }
         
         .main-header h1 { 
-            position: relative;
-            z-index: 1;
-            font-size: clamp(26px, 5vw, 34px); 
+            font-size: clamp(22px, 5vw, 28px); 
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
-            margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
-        .title-sub {
-            position: relative;
-            z-index: 1;
-            font-size: clamp(18px, 3vw, 22px);
+        .main-header .subtitle {
+            font-size: clamp(16px, 4vw, 20px);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             opacity: 0.95;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
-        .operation-badge {
-            position: relative;
-            z-index: 1;
+        .main-header .badge {
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
+            margin-bottom: 10px;
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
-            letter-spacing: 0.5px;
-            transition: var(--transition-base);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        /* GAMBAR LAYANAN POLISI - UKURAN SEDIKIT LEBIH BESAR DARI TULISAN "POLRESTA" */
+        .layanan-img {
+            height: 18px;  /* 14px (tulisan Polresta) + 4px = 18px */
+            width: auto;
+            margin: 5px 0 10px;
+            display: inline-block;
+            filter: brightness(0) invert(1); /* Membuat gambar putih */
         }
         
         /* ====== LOADING OVERLAY ====== */
@@ -362,7 +341,7 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* ====== POP-UP CALL CENTER 110 - TOMBOL X DI BAWAH ====== */
+        /* ====== POP-UP CALL CENTER 110 ====== */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -410,7 +389,6 @@
             }
         }
         
-        /* TOMBOL X DI BAWAH CARD (DI LUAR) */
         .popup-close {
             font-size: 28px;
             color: white;
@@ -433,7 +411,6 @@
             background: var(--danger-700);
         }
         
-        /* TEKS MERAH SEMUA */
         .popup-title {
             font-size: clamp(28px, 6vw, 36px);
             font-weight: 800;
@@ -487,7 +464,7 @@
             width: 100%;
         }
         
-        /* ====== MOBILE COMPACT HEADER ====== */
+        /* ====== MOBILE COMPACT HEADER - TANPA ICON ====== */
         .compact-header {
             background: white;
             padding: 20px 15px;
@@ -512,12 +489,7 @@
             border-color: var(--primary-500);
         }
         
-        .total-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: block;
-        }
-        
+        /* ICON DIHAPUS - hanya angka */
         .total-number {
             font-size: clamp(36px, 10vw, 48px);
             font-weight: 900;
@@ -557,12 +529,7 @@
             box-shadow: var(--shadow-medium);
         }
         
-        .tab-icon {
-            font-size: clamp(24px, 6vw, 28px);
-            margin-bottom: 10px;
-            display: block;
-        }
-        
+        /* ICON DIHAPUS - hanya angka */
         .tab-number {
             font-size: clamp(24px, 6vw, 32px);
             font-weight: 800;
@@ -578,15 +545,12 @@
             letter-spacing: 1px;
         }
         
-        .tab-bus .tab-icon { color: var(--danger-600); }
         .tab-bus .tab-number { color: var(--danger-600); }
         .tab-bus { border-top: 4px solid var(--danger-600); }
         
-        .tab-mobil .tab-icon { color: var(--primary-600); }
         .tab-mobil .tab-number { color: var(--primary-600); }
         .tab-mobil { border-top: 4px solid var(--primary-600); }
         
-        .tab-motor .tab-icon { color: var(--success-600); }
         .tab-motor .tab-number { color: var(--success-600); }
         .tab-motor { border-top: 4px solid var(--success-600); }
         
@@ -610,14 +574,14 @@
             transition: var(--transition-base);
             min-width: 250px;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
             color: white;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
         
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
         }
         
         .action-btn:active {
@@ -978,7 +942,7 @@
         .footer-call {
             font-size: 16px;
             margin: 0 0 10px 0;
-            opacity: 0.9;
+            opacity: 0.95;
             letter-spacing: 0.5px;
             font-weight: 500;
         }
@@ -1068,7 +1032,7 @@
             }
             
             .main-header {
-                padding: 60px 40px;
+                padding: 50px 40px 40px;
             }
             
             .popup-card {
@@ -1078,22 +1042,20 @@
         
         @media (max-width: 768px) {
             .main-header {
-                padding: 50px 20px;
+                padding: 40px 20px 30px;
             }
             
             .main-header h1 {
                 font-size: 22px;
-                margin-bottom: 10px;
             }
             
-            .title-sub {
+            .subtitle {
                 font-size: 16px;
-                margin-bottom: 15px;
             }
             
-            .operation-badge {
-                padding: 8px 20px;
-                font-size: 13px;
+            .badge {
+                padding: 6px 16px;
+                font-size: 12px;
             }
             
             .menu-toggle {
@@ -1117,15 +1079,14 @@
         
         @media (max-width: 640px) {
             .main-header {
-                padding: 40px 15px;
+                padding: 35px 15px 25px;
             }
             
             .main-header h1 {
                 font-size: 20px;
-                line-height: 1.3;
             }
             
-            .title-sub {
+            .subtitle {
                 font-size: 15px;
             }
             
@@ -1147,12 +1108,6 @@
                 text-align: left;
                 padding: 16px 15px;
                 gap: 20px;
-            }
-            
-            .tab-icon {
-                margin-bottom: 0;
-                font-size: 24px;
-                flex-shrink: 0;
             }
             
             .tab-number {
@@ -1183,20 +1138,20 @@
         
         @media (max-width: 375px) {
             .main-header {
-                padding: 35px 12px;
+                padding: 30px 12px 20px;
             }
             
             .main-header h1 {
                 font-size: 18px;
             }
             
-            .title-sub {
+            .subtitle {
                 font-size: 14px;
             }
             
-            .operation-badge {
-                padding: 6px 16px;
-                font-size: 12px;
+            .badge {
+                padding: 5px 12px;
+                font-size: 11px;
             }
             
             .menu-toggle {
@@ -1228,16 +1183,14 @@
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
-    <!-- POP-UP CALL CENTER 110 - TOMBOL X DI BAWAH -->
+    <!-- POP-UP CALL CENTER 110 -->
     <div class="popup-overlay active" id="popupCallCenter">
         <div class="popup-card">
-            <!-- TEKS MERAH SEMUA -->
             <div class="popup-title">LAYANAN POLISI</div>
             <div class="popup-subtitle">CALL CENTER</div>
             <div class="popup-number">110</div>
-            <div class="popup-motto">MELINDUNGI MENGAYOMI MELAYANI</div>
+            <div class="popup-motto">MELINDUNGI-MENGAYOMI-MELAYANI</div>
         </div>
-        <!-- TOMBOL X DI BAWAH CARD (DI LUAR) -->
         <div class="popup-close" id="popupClose">
             <i class="fas fa-times"></i>
         </div>
@@ -1277,35 +1230,36 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA -->
+        <!-- HEADER UTAMA SESUAI GAMBAR -->
         <div class="main-header">
-            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img" onerror="this.style.display='none'">
             <h1>INFORMASI TEMPAT PARKIR</h1>
-            <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+            <div class="subtitle">DI WILAYAH KOTA YOGYAKARTA</div>
+            <div class="badge">Satlantas Polresta Yogyakarta</div>
+            
+            <!-- GAMBAR LAYANAN POLISI (sudah di upload) -->
+            <img src="layanan.png" 
+                 alt="Layanan Polisi" 
+                 class="layanan-img"
+                 onerror="this.style.display='none'">
         </div>
         
-        <!-- MOBILE COMPACT HEADER -->
+        <!-- MOBILE COMPACT HEADER - TANPA ICON -->
         <div class="compact-header">
             <div class="total-locations">
-                <div class="total-icon">📍</div>
                 <div class="total-number" id="totalLocations">16</div>
                 <div class="total-label">LOKASI PARKIR</div>
             </div>
             
             <div class="capacity-tabs">
                 <div class="capacity-tab tab-bus">
-                    <div class="tab-icon">🚌</div>
                     <div class="tab-number" id="totalBus">0</div>
                     <div class="tab-label">BUS TERSEDIA</div>
                 </div>
                 <div class="capacity-tab tab-mobil">
-                    <div class="tab-icon">🚗</div>
                     <div class="tab-number" id="totalMobil">0</div>
                     <div class="tab-label">MOBIL TERSEDIA</div>
                 </div>
                 <div class="capacity-tab tab-motor">
-                    <div class="tab-icon">🏍️</div>
                     <div class="tab-number" id="totalMotor">0</div>
                     <div class="tab-label">MOTOR TERSEDIA</div>
                 </div>
@@ -1315,7 +1269,7 @@
         <!-- ACTIONS SECTION -->
         <div class="actions-section">
             <button class="action-btn" onclick="cariParkirTerdekat()" id="btnCari">
-                <i class="fas fa-location-dot"></i> CARI PARKIR TERDEKAT
+                <i class=></i> CARI PARKIR TERDEKAT
             </button>
         </div>
         
@@ -1346,7 +1300,7 @@
             
             <!-- CALL CENTER - TULISAN SEDERHANA -->
             <div class="footer-call">
-                <i class=></i> Call Center - 110
+                <i class="fas fa-phone-alt"></i> CALL CENTER - 110
             </div>
             
             <div class="social-links">
