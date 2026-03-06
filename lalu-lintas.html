@@ -284,7 +284,7 @@
         .instagram-video-container {
             position: relative;
             width: 100%;
-            aspect-ratio: 9 / 16; /* Rasio Instagram vertical video */
+            aspect-ratio: 9 / 16;
             max-width: 100%;
             margin: 10px 0;
             border-radius: 12px;
@@ -455,7 +455,7 @@
         
         <!-- SECTION VIDEO -->
         <section class="traffic-videos" id="trafficSection">
-            <h2 class="section-title">Pantauan Arus Lalu Lintas</h2>
+            <h2 class="section-title">Pantauan Arus Lalu Lintas (6 Pos)</h2>
             
             <div id="videoGridContainer" class="video-grid">
                 <div class="loading-video">
@@ -573,14 +573,15 @@
             }
         }
         
-        // ====== INITIALIZE TRAFFIC POSTS ======
+        // ====== INITIALIZE TRAFFIC POSTS (SEKARANG 6 KONTAINER) ======
         async function initializeTrafficPosts() {
             const defaultPosts = [
                 { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
                 { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
                 { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
                 { id: 4, nama_pos: 'Pospam Titik Nol KM', instagram_url: null },
-                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null }
+                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null },
+                { id: 6, nama_pos: 'Pospam Kamseltibcar Lantas', instagram_url: null } // KONTAINER BARU
             ];
             
             try {
@@ -589,24 +590,20 @@
                         .from('traffic_posts')
                         .insert([post]);
                 }
-                console.log('✅ Default traffic posts created');
+                console.log('✅ 6 default traffic posts created');
                 loadTrafficVideos();
             } catch (error) {
                 console.error('❌ Gagal inisialisasi traffic posts:', error);
             }
         }
         
-        // ====== EKSTRAK ID VIDEO DARI URL INSTAGRAM ======
+        // ====== EKSTRAK ID VIDEO ======
         function extractInstagramId(url) {
             if (!url) return null;
             
-            // Regex untuk berbagai format URL Instagram
             const patterns = [
                 /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
-                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
-                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/tv\/([a-zA-Z0-9_-]+)/,
-                /\/p\/([a-zA-Z0-9_-]+)/,
-                /\/reel\/([a-zA-Z0-9_-]+)/
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/
             ];
             
             for (const pattern of patterns) {
@@ -699,17 +696,6 @@
             info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
         }
         
-        // ====== SHOW ERROR MESSAGE ======
-        function showErrorMessage(message) {
-            const container = document.getElementById('videoGridContainer');
-            container.innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>${escapeHtml(message)}</p>
-                </div>
-            `;
-        }
-        
         // ====== ESCAPE HTML ======
         function escapeHtml(unsafe) {
             if (!unsafe) return '';
@@ -719,6 +705,16 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
+        }
+        
+        function showErrorMessage(message) {
+            const container = document.getElementById('videoGridContainer');
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${escapeHtml(message)}</p>
+                </div>
+            `;
         }
     </script>
 </body>
