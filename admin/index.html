@@ -696,7 +696,7 @@
             const item = parkirData.find(d => d.id === id);
             if (!item) return;
             
-            const maxBus = item.max_bus || 100;
+            const maxBus = item.max_bus || 0;
             const maxMobil = item.max_mobil || 200;
             const maxMotor = item.max_motor || 150;
             
