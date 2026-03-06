@@ -25,6 +25,7 @@
             --navy: #0f1b3d;
             --navy-light: #1e293b;
             --orange: #ff9800;
+            --gold: #ffd700;
             --gray-50: #f8fafc;
             --gray-100: #f1f5f9;
             --gray-200: #e2e8f0;
@@ -52,7 +53,7 @@
             color: white;
             padding: 30px 40px;
             text-align: center;
-            border-bottom: 5px solid #ffd700;
+            border-bottom: 5px solid var(--gold);
             box-shadow: var(--shadow-lg);
         }
         
@@ -69,7 +70,7 @@
         
         .admin-badge {
             display: inline-block;
-            background: #ffd700;
+            background: var(--gold);
             color: var(--navy);
             padding: 8px 24px;
             border-radius: 30px;
@@ -258,7 +259,7 @@
             font-style: italic;
         }
         
-        /* ====== KARTU TRAFFIC (DENGAN EDIT JUDUL) ====== */
+        /* ====== KARTU TRAFFIC ====== */
         .card-traffic {
             background: white;
             border-radius: 16px;
@@ -301,7 +302,7 @@
             flex: 1;
         }
         
-        /* INPUT UNTUK JUDUL (FITUR BARU) */
+        /* INPUT UNTUK JUDUL */
         .judul-input-group {
             margin-bottom: 20px;
         }
@@ -397,7 +398,7 @@
             gap: 15px;
             max-width: 400px;
             animation: slideIn 0.3s ease-out;
-            border-left: 5px solid #ffd700;
+            border-left: 5px solid var(--gold);
         }
         
         .notification.success { background: var(--success); border-left-color: #059669; }
@@ -464,11 +465,11 @@
             </div>
         </div>
         
-        <!-- ===== SEKSI 2: MANAJEMEN VIDEO LALU LINTAS ===== -->
+        <!-- ===== SEKSI 2: MANAJEMEN VIDEO LALU LINTAS (6 KONTAINER) ===== -->
         <div class="section-divider">
             <div class="section-divider-line"></div>
             <div class="section-divider-text">
-                <i class="fas fa-traffic-light"></i> Video Lalu Lintas Instagram
+                <i class="fas fa-traffic-light"></i> Video Lalu Lintas Instagram (6 Pos)
             </div>
             <div class="section-divider-line"></div>
         </div>
@@ -553,39 +554,38 @@
         }
         
         // ====== INISIALISASI DATA PARKIR ======
-       async function initParkirData() {
-    const offlineData = [
-        {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0, koordinat:"-7.8017074,110.3681792"},
-        {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:0, mobil:0, motor:0, max_bus:60, max_mobil:80, max_motor:100, koordinat:"-7.8014685,110.3562862"},
-        {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:250, koordinat:"-7.800385,110.368361"},
-        {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:0, motor:0, max_bus:30, max_mobil:50, max_motor:0, koordinat:"-7.8018505,110.3632816"},
-        {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:20, max_motor:382, koordinat:"-7.7973211,110.3641841"},
-        {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:0, mobil:0, motor:0, max_bus:100, max_mobil:50, max_motor:0, koordinat:"-7.787088,110.366706"},
-        {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:0, mobil:0, motor:0, max_bus:20, max_mobil:50, max_motor:0, koordinat:"-7.7897929,110.3706896"},
-        {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:115, max_motor:250, koordinat:"-7.7992907,110.3663957"},
-        {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:125, max_motor:0, koordinat:"-7.7978843,110.3673653"},
-        {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:0, mobil:0, motor:0, max_bus:25, max_mobil:80, max_motor:0, koordinat:"-7.8002542,110.3560535"},
-        {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:0, mobil:0, motor:0, max_bus:82, max_mobil:100, max_motor:300, koordinat:"-7.8037595,110.3968204"},
-        {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:100, max_motor:200, koordinat:"-7.7920043,110.3611007"},
-        {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:200, koordinat:"-7.7832641,110.3683152"},
-        {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:0, mobil:0, motor:0, max_bus:130, max_mobil:300, max_motor:0, koordinat:"-7.7883952,110.36693"},
-        {id:15, nama:"MCDONALD'S SUDIRMAN", alamat:"JL JEND. SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:50, max_motor:150, koordinat:"-7.7833485,110.3719082"}
-    ];
-    
-    try {
-        for (const item of offlineData) {
-            await supabaseClient
-                .from('parkir_lokasi')
-                .insert([item]);
+        async function initParkirData() {
+            const offlineData = [
+                {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0, koordinat:"-7.8017074,110.3681792"},
+                {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:0, mobil:0, motor:0, max_bus:60, max_mobil:80, max_motor:100, koordinat:"-7.8014685,110.3562862"},
+                {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:250, koordinat:"-7.800385,110.368361"},
+                {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:0, motor:0, max_bus:30, max_mobil:50, max_motor:0, koordinat:"-7.8018505,110.3632816"},
+                {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:20, max_motor:382, koordinat:"-7.7973211,110.3641841"},
+                {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:0, mobil:0, motor:0, max_bus:100, max_mobil:50, max_motor:0, koordinat:"-7.787088,110.366706"},
+                {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:0, mobil:0, motor:0, max_bus:20, max_mobil:50, max_motor:0, koordinat:"-7.7897929,110.3706896"},
+                {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:115, max_motor:250, koordinat:"-7.7992907,110.3663957"},
+                {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:125, max_motor:0, koordinat:"-7.7978843,110.3673653"},
+                {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:0, mobil:0, motor:0, max_bus:25, max_mobil:80, max_motor:0, koordinat:"-7.8002542,110.3560535"},
+                {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:0, mobil:0, motor:0, max_bus:82, max_mobil:100, max_motor:300, koordinat:"-7.8037595,110.3968204"},
+                {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:100, max_motor:200, koordinat:"-7.7920043,110.3611007"},
+                {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:200, koordinat:"-7.7832641,110.3683152"},
+                {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:0, mobil:0, motor:0, max_bus:130, max_mobil:300, max_motor:0, koordinat:"-7.7883952,110.36693"}
+            ];
+            
+            try {
+                for (const item of offlineData) {
+                    await supabaseClient
+                        .from('parkir_lokasi')
+                        .insert([item]);
+                }
+                showNotification('✅ Data parkir default berhasil dibuat', 'success');
+                loadParkirData();
+            } catch (error) {
+                console.error('❌ Gagal inisialisasi parkir:', error);
+                parkirData = offlineData;
+                renderParkirGrid();
+            }
         }
-        showNotification('✅ Data parkir default berhasil dibuat', 'success');
-        loadParkirData();
-    } catch (error) {
-        console.error('❌ Gagal inisialisasi parkir:', error);
-        parkirData = offlineData;
-        renderParkirGrid();
-    }
-}
         
         // ====== RENDER GRID PARKIR ======
         function renderParkirGrid() {
@@ -766,14 +766,15 @@
             }
         }
         
-        // ====== INIT TRAFFIC POSTS ======
+        // ====== INIT TRAFFIC POSTS (SEKARANG 6 KONTAINER) ======
         async function initTrafficPosts() {
             const defaultPosts = [
                 { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
                 { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
                 { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
                 { id: 4, nama_pos: 'Pospam Titik Nol KM', instagram_url: null },
-                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null }
+                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null },
+                { id: 6, nama_pos: 'Pospam Kamseltibcar Lantas', instagram_url: null } // KONTAINER BARU
             ];
             
             try {
@@ -782,14 +783,14 @@
                         .from('traffic_posts')
                         .insert([post]);
                 }
-                showNotification('✅ Data pos lalu lintas dibuat', 'success');
+                showNotification('✅ 6 data pos lalu lintas dibuat', 'success');
                 loadTrafficData();
             } catch (error) {
                 console.error('❌ Gagal init traffic:', error);
             }
         }
         
-        // ====== RENDER TRAFFIC GRID (DENGAN INPUT JUDUL) ======
+        // ====== RENDER TRAFFIC GRID ======
         function renderTrafficGrid() {
             const container = document.getElementById('traffic-grid-container');
             if (!trafficData.length) {
@@ -808,7 +809,7 @@
                             <div class="traffic-title">Kontainer #${item.id}</div>
                         </div>
                         
-                        <!-- INPUT JUDUL KONTAINER (FITUR BARU) -->
+                        <!-- INPUT JUDUL KONTAINER -->
                         <div class="judul-input-group">
                             <label><i class="fas fa-heading"></i> Judul Kontainer:</label>
                             <input type="text" 
@@ -848,7 +849,7 @@
             container.innerHTML = html;
         }
         
-        // ====== UPDATE TRAFFIC (JUDUL + LINK) ======
+        // ====== UPDATE TRAFFIC ======
         async function updateTraffic(id) {
             const judulInput = document.getElementById(`judul-${id}`);
             const linkInput = document.getElementById(`traffic-${id}`);
@@ -878,11 +879,10 @@
                 
                 showNotification(`✅ Kontainer #${id} berhasil diperbarui!`, 'success');
                 
-                // Update preview
                 const preview = document.getElementById(`preview-${id}`);
                 if (preview) preview.textContent = newUrl || 'Belum ada link';
                 
-                loadTrafficData(); // refresh
+                loadTrafficData();
                 
             } catch (error) {
                 console.error('❌ Update traffic error:', error);
