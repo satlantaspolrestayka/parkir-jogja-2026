@@ -356,28 +356,26 @@
             text-align: center;
         }
         
-        /* ====== HEADER UTAMA - FINAL VERSION DENGAN JARAK PROFESIONAL ====== */
+        /* ====== HEADER UTAMA ====== */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            min-height: auto;  /* Hapus min-height agar fleksibel */
+            min-height: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* PADDING: Area 1 & 2 - judul ke ujung atas, badge ke ujung bawah */
-            padding: 15px 20px;  /* 15px atas & bawah, 20px kiri & kanan */
+            padding: 15px 20px;
             overflow: hidden;
             isolation: isolate;
             background: transparent;
-            /* Area 3 - jarak header ke statistik */
-            margin-bottom: 25px;  /* DIPERLEBAR 25px */
+            margin-bottom: 25px;
         }
         
-        /* BACKGROUND RAMADHAN - ZOOM 120% AGAR MEMENUHI LAYAR */
+        /* BACKGROUND RAMADHAN - ZOOM 120% */
         .ramadan-bg-img {
             position: absolute;
             top: -10%;
@@ -391,7 +389,7 @@
             pointer-events: none;
         }
         
-        /* SEMUA JARAK ANTAR ELEMEN DISAMAKAN 5px */
+        /* JARAK HEADER 5px KONSISTEN */
         .main-header h1 { 
             position: relative;
             z-index: 1;
@@ -399,7 +397,7 @@
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
-            margin-bottom: 5px;  /* Judul ke subtitle: 5px */
+            margin-bottom: 5px;
             margin-top: 0;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
@@ -409,20 +407,96 @@
             z-index: 1;
             font-size: clamp(16px, 3vw, 20px);
             font-weight: 600;
-            margin-bottom: 5px;  /* Subtitle ke gambar: 5px */
+            margin-bottom: 5px;
             opacity: 0.95;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
-        /* GAMBAR LAYANAN - FILTER DIHAPUS */
-        .layanan-img {
+        /* ====== LAYANAN CONTAINER - MENGGANTIKAN GAMBAR ====== */
+        .layanan-container {
             position: relative;
             z-index: 1;
-            width: 80px;
-            height: auto;
-            margin: 0 auto 5px;  /* Gambar ke badge: 5px (margin-bottom) */
-            display: block;
-            /* FILTER DIHAPUS - gambar tampil warna asli */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            margin: 5px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .layanan-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+            line-height: 1.4;
+            text-transform: uppercase;
+        }
+        
+        .layanan-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 1px;
+            line-height: 1.4;
+            text-transform: uppercase;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .layanan-subtitle::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .number-boxes {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0 8px;
+        }
+        
+        .red-box {
+            background: #dc2626;
+            width: 50px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+        
+        .layanan-motto {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
         
         .operation-badge {
@@ -438,7 +512,7 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
-            margin-bottom: 0;  /* Badge tidak perlu margin (sudah diatur padding header) */
+            margin-bottom: 0;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
@@ -527,7 +601,6 @@
             border-color: var(--primary-500);
         }
         
-        /* ICON DIHAPUS - HANYA ANGKA */
         .total-number {
             font-size: 48px;
             font-weight: 900;
@@ -567,7 +640,6 @@
             box-shadow: var(--shadow-medium);
         }
         
-        /* ICON DI TAB DIHAPUS - HANYA ANGKA */
         .tab-number {
             font-size: 28px;
             font-weight: 800;
@@ -942,7 +1014,7 @@
             color: var(--primary-700);
         }
         
-        /* ====== FOOTER ====== */
+        /* ====== FOOTER - TANPA ICON, FONT SAMA ====== */
         .footer { 
             text-align: center; 
             padding: 30px 20px 20px; 
@@ -953,49 +1025,46 @@
         }
         
         .footer-logo {
-            font-size: clamp(20px, 5vw, 24px);
+            font-size: 20px;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: white;
             letter-spacing: 0.5px;
         }
         
         .footer p {
-            margin: 8px 0;
+            font-size: 16px;
+            margin: 0 0 10px 0;
             opacity: 0.95;
             font-weight: 500;
         }
         
         .footer-call {
-            font-size: 16px;
-            margin: 0 0 10px 0;
-            opacity: 0.95;
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
-        
-        .footer-call i {
-            margin-right: 5px;
-            color: var(--danger-500);
+            font-size: 16px;        /* SAMA DENGAN .footer p */
+            margin: 0 0 10px 0;      /* SAMA DENGAN .footer p */
+            opacity: 0.95;           /* SAMA DENGAN .footer p */
+            font-weight: 500;        /* SAMA DENGAN .footer p */
+            letter-spacing: normal;  /* SAMA DENGAN .footer p */
+            /* ICON TELEPON DIHAPUS */
         }
         
         .social-links {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin: 25px 0;
+            margin: 0 0 10px 0;
         }
         
         .social-link {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             transition: var(--transition-base);
             text-decoration: none;
         }
@@ -1006,9 +1075,9 @@
         }
         
         .footer-copyright {
-            margin-top: 20px;
-            font-size: clamp(12px, 2.5vw, 13px);
+            font-size: 12px;
             opacity: 0.9;
+            margin: 0;
         }
         
         /* NOTIFICATION */
@@ -1054,7 +1123,7 @@
             }
             
             .main-header {
-                padding: 20px 40px;  /* Sedikit lebih besar di desktop */
+                padding: 20px 40px;
                 margin-bottom: 30px;
             }
         }
@@ -1073,11 +1142,6 @@
                 font-size: 16px;
             }
             
-            .operation-badge {
-                padding: 8px 20px;
-                font-size: 13px;
-            }
-            
             .menu-toggle {
                 width: 44px;
                 height: 44px;
@@ -1094,6 +1158,24 @@
                 width: 50px;
                 height: 50px;
                 font-size: 24px;
+            }
+            
+            /* RESPONSIVE LAYANAN */
+            .header-row {
+                gap: 10px;
+            }
+            
+            .layanan-title {
+                font-size: 16px;
+            }
+            
+            .layanan-subtitle {
+                font-size: 14px;
+                padding-left: 10px;
+            }
+            
+            .layanan-subtitle::before {
+                height: 16px;
             }
         }
         
@@ -1155,6 +1237,41 @@
                 height: 48px;
                 font-size: 22px;
             }
+            
+            /* RESPONSIVE LAYANAN MOBILE */
+            .header-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+            
+            .layanan-subtitle::before {
+                display: none;
+            }
+            
+            .layanan-title {
+                font-size: 15px;
+            }
+            
+            .layanan-subtitle {
+                font-size: 13px;
+                padding-left: 0;
+            }
+            
+            .red-box {
+                width: 40px;
+                height: 48px;
+                font-size: 28px;
+                border-radius: 10px;
+            }
+            
+            .number-boxes {
+                gap: 6px;
+            }
+            
+            .layanan-motto {
+                font-size: 10px;
+                white-space: normal;
+            }
         }
         
         @media (max-width: 375px) {
@@ -1193,6 +1310,12 @@
             
             .footer p, .footer-call {
                 font-size: 13px;
+            }
+            
+            .red-box {
+                width: 35px;
+                height: 42px;
+                font-size: 24px;
             }
         }
     </style>
@@ -1252,18 +1375,27 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA - FINAL VERSION DENGAN JARAK PROFESIONAL -->
+        <!-- HEADER UTAMA - DENGAN LAYANAN HTML/CSS -->
         <div class="main-header">
-            <!-- RAMADHAN.PNG - ZOOM 120% AGAR MEMENUHI LAYAR -->
+            <!-- RAMADHAN.PNG - ZOOM 120% -->
             <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img" onerror="this.style.display='none'">
             
             <h1>INFORMASI TEMPAT PARKIR</h1>
             <div class="title-sub">DI WILAYAH KOTA YOGYAKARTA</div>
             
-            <!-- GAMBAR LAYANAN.PNG - FILTER DIHAPUS -->
-            <img src="https://raw.githubusercontent.com/satlantaspolrestayka/parkir-jogja-2026/main/layanan.png" 
-                 alt="Layanan Polisi" 
-                 class="layanan-img">
+            <!-- LAYANAN CONTAINER - MENGGANTIKAN GAMBAR -->
+            <div class="layanan-container">
+                <div class="header-row">
+                    <span class="layanan-title">LAYANAN POLISI</span>
+                    <span class="layanan-subtitle">CALL CENTER</span>
+                </div>
+                <div class="number-boxes">
+                    <div class="red-box">1</div>
+                    <div class="red-box">1</div>
+                    <div class="red-box">0</div>
+                </div>
+                <div class="layanan-motto">MELINDUNGI - MENGAYOMI - MELAYANI</div>
+            </div>
             
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
@@ -1271,26 +1403,22 @@
         <!-- MOBILE COMPACT HEADER - ICON DIHAPUS -->
         <div class="compact-header">
             <div class="total-locations">
-                <!-- ICON TOTAL LOKASI DIHAPUS -->
                 <div class="total-number" id="totalLocations">16</div>
                 <div class="total-label">LOKASI PARKIR</div>
             </div>
             
             <div class="capacity-tabs">
                 <div class="capacity-tab tab-bus">
-                    <!-- ICON BUS DIHAPUS -->
                     <div class="tab-number" id="totalBus">55</div>
                     <div class="tab-label">BUS TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-mobil">
-                    <!-- ICON MOBIL DIHAPUS -->
                     <div class="tab-number" id="totalMobil">140</div>
                     <div class="tab-label">MOBIL TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-motor">
-                    <!-- ICON MOTOR DIHAPUS -->
                     <div class="tab-number" id="totalMotor">208</div>
                     <div class="tab-label">MOTOR TERSEDIA</div>
                 </div>
@@ -1324,14 +1452,12 @@
             </div>
         </div>
         
-        <!-- FOOTER -->
+        <!-- FOOTER - TANPA ICON, FONT SAMA -->
         <div class="footer">
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
             <p>Polri Untuk Masyarakat</p>
             
-            <div class="footer-call">
-                <i class="fas fa-phone-alt"></i> CALL CENTER - 110
-            </div>
+            <div class="footer-call">CALL CENTER - 110</div>
             
             <div class="social-links">
                 <a href="https://www.instagram.com/satlantasjogja" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
@@ -1372,17 +1498,14 @@
             const popup = document.getElementById('popupCallCenter');
             const closeBtn = document.getElementById('popupClose');
             
-            // Pop-up aktif
             popup.classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // Tombol close
             closeBtn.addEventListener('click', () => {
                 popup.classList.remove('active');
                 document.body.style.overflow = '';
             });
             
-            // Klik di luar pop-up
             popup.addEventListener('click', (e) => {
                 if (e.target === popup) {
                     popup.classList.remove('active');
@@ -1390,7 +1513,6 @@
                 }
             });
             
-            // Escape key
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && popup.classList.contains('active')) {
                     popup.classList.remove('active');
