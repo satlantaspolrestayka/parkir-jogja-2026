@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="Sistem Informasi Parkir Kota Yogyakarta - Dikelola oleh Satlantas Polresta Yogyakarta">
     <meta name="theme-color" content="#0f1b3d">
@@ -41,6 +41,7 @@
             --gray-300: #cbd5e1;
             --gray-400: #94a3b8;
             --gray-500: #64748b;
+            --gray-600: #475569;
             --gray-700: #334155;
             --gray-800: #1e293b;
             --gray-900: #0f172a;
@@ -78,7 +79,7 @@
         
         /* ====== MENU NAVIGASI ====== */
         .menu-toggle {
-            position: absolute;
+            position: fixed;
             top: 20px;
             left: 20px;
             background: var(--primary-600);
@@ -243,14 +244,14 @@
             text-align: center;
         }
         
-        /* ====== HEADER UTAMA - TANPA GRADIEN ====== */
+        /* ====== HEADER UTAMA ====== */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            aspect-ratio: 3556 / 1535;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -258,40 +259,27 @@
             padding: 60px 20px;
             overflow: hidden;
             isolation: isolate;
-        }
-        
-        .ramadan-bg-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            mix-blend-mode: multiply;
-            opacity: 1;
-            z-index: 0;
-            pointer-events: none;
+            background: linear-gradient(135deg, var(--navy-900), #1E3A8A);
         }
         
         .main-header h1 { 
             position: relative;
             z-index: 1;
-            font-size: clamp(26px, 5vw, 34px); 
+            font-size: clamp(22px, 5vw, 34px); 
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
-            margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
         .title-sub {
             position: relative;
             z-index: 1;
-            font-size: clamp(18px, 3vw, 22px);
+            font-size: clamp(16px, 3vw, 20px);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             opacity: 0.95;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
         .operation-badge {
@@ -300,20 +288,13 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
-            transition: var(--transition-base);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        .operation-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
         }
         
         /* ====== LOADING OVERLAY ====== */
@@ -385,127 +366,101 @@
         .total-locations {
             text-align: center;
             margin-bottom: 20px;
-            padding: 20px 15px;
-            background: var(--gray-50);
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             border-radius: 12px;
-            border: 2px solid var(--gray-300);
+            color: white;
             box-shadow: var(--shadow-soft);
-            transition: var(--transition-base);
-            cursor: pointer;
-        }
-        
-        .total-locations:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-500);
         }
         
         .total-icon {
             font-size: 32px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: block;
         }
         
         .total-number {
-            font-size: clamp(36px, 10vw, 48px);
+            font-size: clamp(32px, 8vw, 42px);
             font-weight: 900;
-            color: var(--primary-600);
             line-height: 1;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .total-label {
-            font-size: clamp(13px, 3vw, 14px);
-            color: var(--gray-600);
+            font-size: clamp(12px, 3vw, 14px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
+            opacity: 0.9;
         }
         
         .capacity-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
         }
         
         .capacity-tab {
-            flex: 1;
             background: var(--gray-50);
-            border-radius: 12px;
-            padding: 18px 10px;
+            border-radius: 10px;
+            padding: 12px 5px;
             text-align: center;
             box-shadow: var(--shadow-soft);
-            border: 2px solid var(--gray-300);
-            transition: var(--transition-base);
-            cursor: pointer;
-        }
-        
-        .capacity-tab:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--gray-200);
         }
         
         .tab-icon {
-            font-size: clamp(24px, 6vw, 28px);
-            margin-bottom: 10px;
+            font-size: 20px;
+            margin-bottom: 4px;
             display: block;
         }
         
         .tab-number {
-            font-size: clamp(24px, 6vw, 32px);
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 5px;
-            line-height: 1;
+            margin-bottom: 2px;
+            line-height: 1.2;
         }
         
         .tab-label {
-            font-size: clamp(11px, 2.5vw, 13px);
+            font-size: 11px;
             color: var(--gray-600);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 600;
         }
         
-        .tab-bus .tab-icon { color: var(--danger-600); }
-        .tab-bus .tab-number { color: var(--danger-600); }
-        .tab-bus { border-top: 4px solid var(--danger-600); }
-        
-        .tab-mobil .tab-icon { color: var(--primary-600); }
-        .tab-mobil .tab-number { color: var(--primary-600); }
-        .tab-mobil { border-top: 4px solid var(--primary-600); }
-        
-        .tab-motor .tab-icon { color: var(--success-600); }
-        .tab-motor .tab-number { color: var(--success-600); }
-        .tab-motor { border-top: 4px solid var(--success-600); }
+        .tab-bus .tab-icon, .tab-bus .tab-number { color: var(--danger-600); }
+        .tab-mobil .tab-icon, .tab-mobil .tab-number { color: var(--primary-600); }
+        .tab-motor .tab-icon, .tab-motor .tab-number { color: var(--success-600); }
         
         /* ACTIONS SECTION */
         .actions-section {
-            padding: 0 15px 25px;
-            margin-top: 20px;
+            padding: 0 15px 20px;
+            margin-top: 15px;
             text-align: center;
         }
         
         .action-btn {
-            padding: 16px 30px;
+            padding: 14px 20px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             transition: var(--transition-base);
-            min-width: 250px;
+            width: 100%;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
             color: white;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
         
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
         }
         
         .action-btn:active {
@@ -515,7 +470,7 @@
         .action-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
-            transform: none !important;
+            transform: none;
         }
         
         /* MAIN CONTENT */
@@ -525,93 +480,61 @@
         }
         
         .section-title {
-            font-size: clamp(18px, 5vw, 22px);
+            font-size: 18px;
             font-weight: 800;
             color: var(--gray-900);
-            margin: 0 0 25px 0;
-            padding: 25px 0 20px;
+            margin: 0 0 15px 0;
+            padding: 15px 0 10px;
             border-bottom: 3px solid var(--primary-600);
             display: flex;
             align-items: center;
-            gap: 12px;
-            line-height: 1.3;
-            position: relative;
+            gap: 10px;
         }
         
-        .section-title::before {
-            content: '';
-            display: block;
-            width: 6px;
-            height: 24px;
-            background: var(--primary-600);
-            border-radius: 3px;
+        .section-title i {
+            color: var(--primary-600);
+            font-size: 20px;
         }
         
-        /* LOKASI GRID */
-        .lokasi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-            align-items: stretch;
-        }
-        
-        .lokasi-item { 
-            background: white; 
-            border-radius: 12px; 
-            padding: 22px 20px; 
-            transition: var(--transition-base);
-            border: 2px solid var(--gray-300);
-            box-shadow: var(--shadow-card);
-            position: relative;
-            overflow: hidden;
+        /* LOKASI LIST - TAMPILAN BARU (HANYA NAMA & ALAMAT) */
+        .lokasi-list {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            gap: 10px;
         }
         
-        .lokasi-item:hover { 
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-deep);
+        .lokasi-item {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--gray-200);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-base);
+            overflow: hidden;
+        }
+        
+        .lokasi-item:hover {
             border-color: var(--primary-500);
+            box-shadow: var(--shadow-medium);
         }
         
         .lokasi-item.closest {
             border-color: var(--success-600);
-            background: var(--gray-50);
-            animation: pulseBorder 2s infinite;
-            opacity: 1 !important;
-            z-index: 1;
-            position: relative;
+            background: #f0fdf4;
         }
         
-        @keyframes pulseBorder {
-            0%, 100% { border-color: var(--success-600); }
-            50% { border-color: #34d399; }
-        }
-        
-        .card-header {
+        .lokasi-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #f1f5f9;
+            align-items: center;
+            padding: 16px 15px;
+            cursor: pointer;
+            gap: 12px;
         }
         
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-            line-height: 1.3;
-            flex: 1;
-            padding-right: 10px;
-        }
-        
-        .card-id {
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        .lokasi-nomor {
+            background: var(--primary-600);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -621,55 +544,79 @@
             flex-shrink: 0;
         }
         
-        .card-address {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
+        .lokasi-info {
+            flex: 1;
         }
         
-        .card-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-            padding-top: 10px;
-        }
-        
-        .lokasi-jarak {
-            margin: 16px 0;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            color: #059669;
-            font-weight: 600;
-            font-size: 14px;
+        .lokasi-nama {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .lokasi-jarak-loading {
-            color: var(--gray-400);
-            background: linear-gradient(90deg, var(--gray-50), var(--gray-100), var(--gray-50));
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-color: var(--gray-300);
+        .closest-badge {
+            background: var(--success-600);
+            color: white;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
         }
         
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .lokasi-alamat {
+            font-size: 13px;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .lokasi-alamat i {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .lokasi-arrow {
+            color: var(--gray-400);
+            font-size: 18px;
+            transition: var(--transition-base);
+            flex-shrink: 0;
+        }
+        
+        .lokasi-item.expanded .lokasi-arrow {
+            transform: rotate(180deg);
+            color: var(--primary-600);
+        }
+        
+        /* DETAIL KAPASITAS - MUNCUL SAAT DI EXPAND */
+        .lokasi-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: var(--gray-50);
+            border-top: 1px solid transparent;
+        }
+        
+        .lokasi-item.expanded .lokasi-detail {
+            max-height: 500px;
+            border-top-color: var(--gray-200);
+        }
+        
+        .detail-content {
+            padding: 20px 15px;
         }
         
         .kapasitas-display {
-            background: #f8fafc;
+            background: white;
             border-radius: 10px;
-            padding: 16px;
-            margin: 12px 0;
-            border: 1px solid #e2e8f0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--gray-200);
         }
         
         .kapasitas-header {
@@ -681,22 +628,22 @@
         
         .kapasitas-title {
             font-weight: 600;
-            color: #475569;
+            color: var(--gray-700);
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 15px;
+            font-size: 14px;
         }
         
         .kapasitas-numbers {
             font-weight: 700;
-            color: #1e40af;
-            font-size: 16px;
+            color: var(--primary-700);
+            font-size: 15px;
         }
         
         .visual-bar-container {
             height: 8px;
-            background: #e2e8f0;
+            background: var(--gray-200);
             border-radius: 4px;
             overflow: hidden;
             margin: 10px 0;
@@ -711,12 +658,12 @@
         .status-badge {
             display: inline-flex;
             align-items: center;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            gap: 6px;
-            margin-top: 8px;
+            gap: 5px;
+            margin-top: 5px;
         }
         
         .status-high { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
@@ -724,40 +671,103 @@
         .status-low { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
         .status-full { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         
-        .btn-route { 
+        .lokasi-jarak {
+            margin: 15px 0;
+            padding: 12px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            color: #0369a1;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0284c7;
+        }
+        
+        .lokasi-jarak-loading {
+            background: linear-gradient(90deg, #f1f5f9, #e2e8f0, #f1f5f9);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            color: var(--gray-500);
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* TOMBOL RUTE YANG LEBIH FLEKSIBEL */
+        .btn-route-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-route-primary {
             width: 100%;
-            padding: 14px 16px; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: clamp(14px, 3.5vw, 15px); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 700;
-            min-height: 46px;
-            transition: var(--transition-base);
-            border: 2px solid transparent;
-            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-            color: #ffffff !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-base);
         }
         
-        .btn-route:hover {
+        .btn-route-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-            color: #ffffff !important;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
         
-        .btn-route:active {
+        .btn-route-primary:active {
             transform: translateY(0);
-            color: #ffffff !important;
         }
         
+        .btn-route-options {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-route-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            background: white;
+            color: var(--gray-700);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-base);
+        }
+        
+        .btn-route-option:hover {
+            background: var(--gray-50);
+            border-color: var(--primary-500);
+            color: var(--primary-700);
+        }
+        
+        .btn-route-option i {
+            font-size: 16px;
+        }
+        
+        /* FOOTER */
         .footer { 
             text-align: center; 
-            padding: 30px 20px; 
+            padding: 25px 20px; 
             color: white; 
             background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
             line-height: 1.6;
@@ -765,36 +775,30 @@
         }
         
         .footer-logo {
-            font-size: clamp(20px, 5vw, 24px);
+            font-size: 18px;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: white;
             letter-spacing: 0.5px;
-        }
-        
-        .footer p {
-            margin: 8px 0;
-            opacity: 0.95;
-            font-weight: 500;
         }
         
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin: 25px 0;
+            gap: 15px;
+            margin: 20px 0;
         }
         
         .social-link {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             transition: var(--transition-base);
             text-decoration: none;
         }
@@ -802,27 +806,14 @@
         .social-link:hover {
             transform: translateY(-3px);
             background: var(--primary-600);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        
-        .social-link.instagram:hover {
-            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-        }
-        
-        .social-link.facebook:hover {
-            background: #1877F2;
-        }
-        
-        .social-link.twitter:hover {
-            background: #1DA1F2;
         }
         
         .footer-copyright {
-            margin-top: 20px;
-            font-size: clamp(12px, 2.5vw, 13px);
+            font-size: 12px;
             opacity: 0.9;
         }
         
+        /* NOTIFICATION */
         .realtime-notification {
             position: fixed;
             top: 20px;
@@ -854,64 +845,77 @@
             animation: slideOutRight 0.3s ease-out forwards;
         }
         
+        /* RESPONSIVE */
         @media (min-width: 768px) {
             .compact-header { display: none; }
-            .actions-section, .main-content { padding: 0 50px 30px; }
+            .actions-section, .main-content { padding: 0 30px 30px; }
             .menu-sidebar { width: 380px; }
-            .main-header { padding: 60px 40px; }
+            .main-header { padding: 50px 30px; min-height: 280px; }
+            .main-header h1 { font-size: 32px; }
+            .title-sub { font-size: 20px; }
         }
         
-        @media (max-width: 768px) {
-            .main-header { padding: 50px 20px; }
-            .main-header h1 { font-size: 22px; margin-bottom: 10px; }
-            .title-sub { font-size: 16px; margin-bottom: 15px; }
-            .operation-badge { padding: 8px 20px; font-size: 13px; }
-            .menu-toggle { width: 44px; height: 44px; font-size: 20px; top: 15px; left: 15px; }
-        }
-        
-        @media (max-width: 640px) {
-            .main-header { padding: 40px 15px; }
-            .main-header h1 { font-size: 20px; line-height: 1.3; }
+        @media (max-width: 480px) {
+            .btn-route-options {
+                flex-direction: column;
+            }
+            
+            .menu-toggle {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                top: 15px;
+                left: 15px;
+            }
+            
+            .main-header {
+                padding: 40px 15px;
+                min-height: 220px;
+            }
+            
+            .main-header h1 { font-size: 20px; }
             .title-sub { font-size: 15px; }
-            .menu-toggle { width: 42px; height: 42px; top: 12px; left: 12px; }
-            .lokasi-grid { grid-template-columns: 1fr; gap: 16px; padding: 0 12px; }
-            .lokasi-item { padding: 16px; margin: 0 8px; }
-            .action-btn { width: 100%; min-width: unset; }
-            .btn-route { font-size: 14px; padding: 12px 14px; }
-        }
-        
-        @media (max-width: 375px) {
-            .main-header { padding: 35px 12px; }
-            .main-header h1 { font-size: 18px; }
-            .title-sub { font-size: 14px; }
             .operation-badge { padding: 6px 16px; font-size: 12px; }
-            .menu-toggle { width: 40px; height: 40px; top: 10px; left: 10px; }
-            .capacity-tabs { flex-direction: column; gap: 10px; }
-            .capacity-tab { display: flex; align-items: center; text-align: left; padding: 16px 15px; gap: 20px; }
-            .tab-icon { margin-bottom: 0; font-size: 24px; flex-shrink: 0; }
-            .tab-number { margin-bottom: 0; margin-right: auto; font-size: 24px; }
-            .menu-sidebar { width: 100%; max-width: 320px; }
         }
         
-        @media (max-width: 400px) {
-            .lokasi-grid { grid-template-columns: 1fr; gap: 15px; }
-            .lokasi-item { margin: 0 5px; padding: 15px; }
+        @media (max-width: 360px) {
+            .lokasi-header {
+                padding: 12px 10px;
+            }
+            
+            .lokasi-nama {
+                font-size: 15px;
+            }
+            
+            .lokasi-alamat {
+                font-size: 12px;
+            }
+            
+            .lokasi-nomor {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- LOADING OVERLAY -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Mendeteksi lokasi Anda...</div>
+        <div class="loading-text">Memuat data...</div>
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
+    <!-- MENU TOGGLE BUTTON -->
     <div class="menu-toggle" id="menuToggle">
         <i class="fas fa-bars"></i>
     </div>
 
+    <!-- MENU OVERLAY -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
+    <!-- MENU SIDEBAR -->
     <div class="menu-sidebar" id="menuSidebar">
         <div class="menu-header">
             <div class="menu-title">Menu Navigasi</div>
@@ -923,7 +927,7 @@
         <div class="menu-items">
             <a href="index.html" class="menu-item active">
                 <div class="menu-item-icon"><i class="fas fa-parking"></i></div>
-                <div class="menu-item-text">Informasi Tempat Parkir</div>
+                <div class="menu-item-text">Informasi Parkir</div>
             </a>
             <a href="lalu-lintas.html" class="menu-item">
                 <div class="menu-item-icon"><i class="fas fa-traffic-light"></i></div>
@@ -937,13 +941,14 @@
     </div>
 
     <div class="container">
+        <!-- HEADER UTAMA -->
         <div class="main-header">
-            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
-            <h1 class="title-main">INFORMASI TEMPAT PARKIR</h1>
-            <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+            <h1>PARKIR YOGYAKARTA</h1>
+            <h2 class="title-sub">Sistem Informasi Parkir Kota Yogyakarta</h2>
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
         
+        <!-- MOBILE COMPACT HEADER -->
         <div class="compact-header">
             <div class="total-locations">
                 <div class="total-icon">📍</div>
@@ -954,48 +959,56 @@
             <div class="capacity-tabs">
                 <div class="capacity-tab tab-bus">
                     <div class="tab-icon">🚌</div>
-                    <div class="tab-number" id="totalBus">454</div>
-                    <div class="tab-label">BUS TERSEDIA</div>
+                    <div class="tab-number" id="totalBus">0</div>
+                    <div class="tab-label">BUS</div>
                 </div>
                 <div class="capacity-tab tab-mobil">
                     <div class="tab-icon">🚗</div>
-                    <div class="tab-number" id="totalMobil">1,690</div>
-                    <div class="tab-label">MOBIL TERSEDIA</div>
+                    <div class="tab-number" id="totalMobil">0</div>
+                    <div class="tab-label">MOBIL</div>
                 </div>
                 <div class="capacity-tab tab-motor">
                     <div class="tab-icon">🏍️</div>
-                    <div class="tab-number" id="totalMotor">1,682</div>
-                    <div class="tab-label">MOTOR TERSEDIA</div>
+                    <div class="tab-number" id="totalMotor">0</div>
+                    <div class="tab-label">MOTOR</div>
                 </div>
             </div>
         </div>
         
+        <!-- ACTIONS SECTION -->
         <div class="actions-section">
             <button class="action-btn" onclick="cariParkirTerdekat()" id="btnCari">
-                <span>📍</span> CARI PARKIR TERDEKAT
+                <i class="fas fa-location-dot"></i> CARI PARKIR TERDEKAT
             </button>
         </div>
         
+        <!-- MAIN CONTENT -->
         <div class="main-content">
-            <div class="section-title">DAFTAR LOKASI PARKIR</div>
-            <div class="lokasi-grid" id="lokasiList">
+            <div class="section-title">
+                <i class="fas fa-list"></i> DAFTAR LOKASI PARKIR
+            </div>
+            
+            <div class="lokasi-list" id="lokasiList">
+                <!-- Data akan dimuat dari JavaScript -->
                 <div class="lokasi-item">
-                    <div class="card-header">
-                        <div class="card-title">Memuat data...</div>
-                        <div class="card-id">⏳</div>
+                    <div class="lokasi-header">
+                        <div class="lokasi-nomor">⏳</div>
+                        <div class="lokasi-info">
+                            <div class="lokasi-nama">Memuat data...</div>
+                            <div class="lokasi-alamat">Harap tunggu sebentar</div>
+                        </div>
                     </div>
-                    <div class="card-address">Harap tunggu sebentar</div>
                 </div>
             </div>
         </div>
         
+        <!-- FOOTER -->
         <div class="footer">
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
-            <p>Polri Untuk Masyarakat</p>
             <div class="social-links">
-                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" target="_blank" class="social-link instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" class="social-link facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://x.com/jogjazebra" target="_blank" class="social-link twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/satlantasjogja" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/jogjazebra" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>
             </div>
             <p class="footer-copyright">© 2026 - Sistem Informasi Parkir Kota Yogyakarta</p>
         </div>
@@ -1007,20 +1020,24 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
         
         // ====== STATE MANAGEMENT ======
-        window.appState = {
+        const appState = {
             data: [],
             userPosition: null,
             distances: new Map(),
-            isOnline: navigator.onLine,
             originalOrder: [],
-            isSortedByDistance: false
+            isSortedByDistance: false,
+            expandedId: null
         };
         
         let supabaseClient = null;
-        let supabaseChannel = null;
-        let scrollHandlerActive = true;
         
-        // ====== MENU MANAGEMENT ======
+        // ====== INISIALISASI ======
+        async function initApp() {
+            initMenu();
+            await initSupabase();
+        }
+        
+        // ====== MENU ======
         function initMenu() {
             const menuToggle = document.getElementById('menuToggle');
             const menuOverlay = document.getElementById('menuOverlay');
@@ -1033,568 +1050,82 @@
                 document.body.style.overflow = 'hidden';
             });
             
-            menuOverlay.addEventListener('click', () => {
-                menuSidebar.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            menuClose.addEventListener('click', () => {
-                menuSidebar.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+            menuOverlay.addEventListener('click', closeMenu);
+            menuClose.addEventListener('click', closeMenu);
             
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    menuSidebar.classList.remove('active');
-                    menuOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
+                if (e.key === 'Escape') closeMenu();
             });
             
-            setupScrollHandler();
-        }
-        
-        function setupScrollHandler() {
-            let lastScrollTop = 0;
-            const menuToggle = document.getElementById('menuToggle');
-            
-            window.addEventListener('scroll', function() {
-                if (!scrollHandlerActive) return;
-                
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (scrollTop > 100) {
-                    menuToggle.classList.add('scrolled');
-                } else {
-                    menuToggle.classList.remove('scrolled');
-                }
-                
-                lastScrollTop = scrollTop;
-            }, false);
-        }
-        
-        async function initSupabase() {
-            try {
-                if (!window.supabase) {
-                    throw new Error('Supabase library gagal dimuat');
-                }
-                
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-                    auth: { persistSession: false }
-                });
-                
-                console.log('✅ Supabase initialized');
-                
-                await loadDataFromSupabase();
-                setupRealtimeUpdates();
-                
-                return true;
-                
-            } catch (error) {
-                console.error('❌ Init failed:', error);
-                loadOfflineData();
-                return false;
+            function closeMenu() {
+                menuSidebar.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
         }
         
-        async function loadDataFromSupabase() {
+        // ====== SUPABASE ======
+        async function initSupabase() {
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                await loadData();
+                setupRealtime();
+            } catch (error) {
+                console.error('Supabase error:', error);
+                loadOfflineData();
+            }
+        }
+        
+        async function loadData() {
             showLoading('Memuat data parkir...');
             
             try {
                 const { data, error } = await supabaseClient
                     .from('parkir_lokasi')
                     .select('*')
-                    .order('id', { ascending: true });
+                    .order('id');
                 
                 if (error) throw error;
                 
-                console.log(`✅ Loaded ${data.length} locations`);
-                
-                const processedData = data.map(item => ({
+                appState.data = data.map(item => ({
                     id: item.id,
                     nama: item.nama || 'Unknown',
                     alamat: item.alamat || '',
                     bus: Number(item.bus) || 0,
                     mobil: Number(item.mobil) || 0,
                     motor: Number(item.motor) || 0,
-                    // PERBAIKAN: Nilai 0 tetap dipertahankan, tidak diganti default
-                    max_bus: item.max_bus !== null && item.max_bus !== undefined ? Number(item.max_bus) : 100,
-                    max_mobil: item.max_mobil !== null && item.max_mobil !== undefined ? Number(item.max_mobil) : 200,
-                    max_motor: item.max_motor !== null && item.max_motor !== undefined ? Number(item.max_motor) : 150,
-                    koordinat: item.koordinat || '-7.7973211,110.3641841',
+                    max_bus: item.max_bus !== null ? Number(item.max_bus) : 0,
+                    max_mobil: item.max_mobil !== null ? Number(item.max_mobil) : 0,
+                    max_motor: item.max_motor !== null ? Number(item.max_motor) : 0,
+                    koordinat: item.koordinat || '',
                     updated_at: item.updated_at
                 }));
                 
-                window.appState.data = processedData;
-                window.appState.originalOrder = [...processedData];
-                window.appState.isSortedByDistance = false;
-                
-                renderLokasi();
-                updateTotalCounters();
-                
-                return processedData;
+                appState.originalOrder = [...appState.data];
+                renderList();
+                updateCounters();
                 
             } catch (error) {
-                console.error('❌ Error loading data:', error);
-                throw error;
-                
+                console.error('Load error:', error);
+                loadOfflineData();
             } finally {
                 hideLoading();
             }
         }
         
-        function setupRealtimeUpdates() {
-            if (!supabaseClient) return;
-            
-            supabaseChannel = supabaseClient
-                .channel('parkir-updates')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'parkir_lokasi'
-                    },
-                    (payload) => {
-                        console.log(`🔄 Update: ${payload.new?.nama}`);
-                        loadDataFromSupabase();
-                        showNotification(`🔄 ${payload.new?.nama} diperbarui`);
-                    }
+        function setupRealtime() {
+            supabaseClient
+                .channel('parkir-changes')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'parkir_lokasi' },
+                    () => loadData()
                 )
                 .subscribe();
         }
         
-        async function cariParkirTerdekat() {
-            const btn = document.getElementById('btnCari');
-            const originalText = btn.innerHTML;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<span>📍</span> MENGHITUNG...';
-            
-            try {
-                await getLocation();
-                await calculateAllDistances();
-                
-                const sorted = [...window.appState.data].sort((a, b) => {
-                    const distA = window.appState.distances.get(a.id) ?? Infinity;
-                    const distB = window.appState.distances.get(b.id) ?? Infinity;
-                    return distA - distB;
-                });
-                
-                window.appState.data = sorted;
-                window.appState.isSortedByDistance = true;
-                
-                renderLokasi();
-                setTimeout(highlightClosestParking, 50);
-                showNotification('📍 Parkir terdekat ditemukan!');
-                
-            } catch (error) {
-                console.error('Error finding nearest parking:', error);
-                
-                let message = 'Gagal mendapatkan lokasi.';
-                if (error.code === 1) {
-                    message = 'Izinkan akses lokasi di pengaturan browser.';
-                } else if (error.code === 2) {
-                    message = 'GPS tidak tersedia.';
-                } else if (error.code === 3) {
-                    message = 'Waktu habis, coba lagi.';
-                }
-                
-                showNotification(`❌ ${message}`);
-                
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-        
-        function getLocation() {
-            return new Promise((resolve, reject) => {
-                if (window.appState.userPosition) {
-                    resolve(window.appState.userPosition);
-                    return;
-                }
-                
-                if (!navigator.geolocation) {
-                    reject(new Error('Browser tidak mendukung GPS'));
-                    return;
-                }
-                
-                showLoading('Mendeteksi lokasi Anda...');
-                
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        window.appState.userPosition = {
-                            lat: pos.coords.latitude,
-                            lng: pos.coords.longitude
-                        };
-                        hideLoading();
-                        resolve(window.appState.userPosition);
-                    },
-                    (err) => {
-                        hideLoading();
-                        reject(err);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 8000,
-                        maximumAge: 0
-                    }
-                );
-            });
-        }
-        
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-        
-        function formatDistance(km) {
-            if (km < 1) {
-                return `${Math.round(km * 1000)} meter`;
-            } else {
-                return `${km.toFixed(1)} km`;
-            }
-        }
-        
-        async function calculateAllDistances() {
-            if (!window.appState.userPosition || !window.appState.data.length) {
-                console.warn('Cannot calculate distances: missing position or data');
-                return;
-            }
-            
-            showLoading('Menghitung jarak...');
-            
-            const newDistances = new Map();
-            const { lat: userLat, lng: userLng } = window.appState.userPosition;
-            
-            window.appState.data.forEach((lokasi) => {
-                try {
-                    const coords = lokasi.koordinat.split(',').map(Number);
-                    if (coords.length === 2 && !coords.some(isNaN)) {
-                        const distance = calculateDistance(
-                            userLat,
-                            userLng,
-                            coords[0],
-                            coords[1]
-                        );
-                        newDistances.set(lokasi.id, distance);
-                    } else {
-                        newDistances.set(lokasi.id, null);
-                    }
-                } catch (error) {
-                    console.error(`Error calculating distance for ${lokasi.nama}:`, error);
-                    newDistances.set(lokasi.id, null);
-                }
-            });
-            
-            window.appState.distances = newDistances;
-            hideLoading();
-        }
-        
-        // ====== FUNGSI RUTE KE SINI - YANG DIPERBAIKI (HANYA SATU) ======
-        function ruteKeLokasi(koordinat, nama) {
-            showLoading('Membuka aplikasi peta...');
-            
-            if (!koordinat || koordinat === 'undefined' || koordinat === 'null') {
-                hideLoading();
-                showNotification('❌ Koordinat tidak tersedia untuk lokasi ini');
-                return;
-            }
-            
-            koordinat = koordinat.trim();
-            
-            function openMap(userLat, userLng) {
-                hideLoading();
-                
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                const isAndroid = /Android/.test(navigator.userAgent);
-                
-                if (userLat && userLng) {
-                    if (isIOS) {
-                        const appleMapsUrl = `maps://?saddr=${userLat},${userLng}&daddr=${koordinat}&dirflg=d`;
-                        window.location.href = appleMapsUrl;
-                        setTimeout(() => {
-                            if (document.hasFocus()) {
-                                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
-                                window.open(googleMapsUrl, '_blank');
-                            }
-                        }, 800);
-                    } else if (isAndroid) {
-                        try {
-                            window.location.href = `google.navigation:q=${koordinat}&mode=d`;
-                            setTimeout(() => {
-                                if (document.hasFocus()) {
-                                    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
-                                    window.open(googleMapsUrl, '_blank');
-                                }
-                            }, 800);
-                        } catch (e) {
-                            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
-                            window.open(googleMapsUrl, '_blank');
-                        }
-                    } else {
-                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${koordinat}&travelmode=driving`;
-                        window.open(googleMapsUrl, '_blank');
-                    }
-                } else {
-                    if (isIOS) {
-                        window.location.href = `maps://?q=${koordinat}&z=16`;
-                    } else {
-                        window.open(`https://maps.google.com/?q=${koordinat}`, '_blank');
-                    }
-                }
-            }
-            
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        openMap(pos.coords.latitude, pos.coords.longitude);
-                    },
-                    (error) => {
-                        console.log('Gagal dapat lokasi user, buka peta tanpa rute');
-                        openMap();
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    }
-                );
-            } else {
-                openMap();
-            }
-        }
-        
-        function renderLokasi() {
-            const container = document.getElementById('lokasiList');
-            if (!container || !window.appState.data.length) {
-                container.innerHTML = '<div class="lokasi-item"><div class="card-header"><div class="card-title">Tidak ada data</div></div></div>';
-                return;
-            }
-            
-            let html = '';
-            
-            window.appState.data.forEach((lokasi, index) => {
-                const distance = window.appState.distances.get(lokasi.id);
-                const distanceText = distance !== undefined && distance !== null ? 
-                    `📏 ${formatDistance(distance)} dari lokasi Anda` : 
-                    '📏 Jarak tidak tersedia';
-                const distanceClass = distance !== undefined && distance !== null ? '' : 'lokasi-jarak-loading';
-                
-                const busAvailable = Math.max(0, lokasi.max_bus - lokasi.bus);
-                const mobilAvailable = Math.max(0, lokasi.max_mobil - lokasi.mobil);
-                const motorAvailable = Math.max(0, lokasi.max_motor - lokasi.motor);
-                
-                const busStatus = calculateStatus(busAvailable, lokasi.max_bus);
-                const mobilStatus = calculateStatus(mobilAvailable, lokasi.max_mobil);
-                const motorStatus = calculateStatus(motorAvailable, lokasi.max_motor);
-                
-                const busConfig = getStatusConfig(busStatus);
-                const mobilConfig = getStatusConfig(mobilStatus);
-                const motorConfig = getStatusConfig(motorStatus);
-                
-                const busAvailablePercentage = lokasi.max_bus > 0 ? (busAvailable / lokasi.max_bus) * 100 : 0;
-                const mobilAvailablePercentage = lokasi.max_mobil > 0 ? (mobilAvailable / lokasi.max_mobil) * 100 : 0;
-                const motorAvailablePercentage = lokasi.max_motor > 0 ? (motorAvailable / lokasi.max_motor) * 100 : 0;
-                
-                const busAvailablePercent = Math.round(busAvailablePercentage);
-                const mobilAvailablePercent = Math.round(mobilAvailablePercentage);
-                const motorAvailablePercent = Math.round(motorAvailablePercentage);
-                
-                let cardId;
-                if (window.appState.isSortedByDistance) {
-                    cardId = index + 1;
-                } else {
-                    cardId = lokasi.id;
-                }
-                
-                const isClosest = window.appState.isSortedByDistance && index === 0;
-                const closestClass = isClosest ? 'closest' : '';
-                
-                html += `
-                    <div class="lokasi-item ${closestClass}" data-id="${lokasi.id}" data-index="${index}">
-                        <div class="card-header">
-                            <div class="card-title">${lokasi.nama}</div>
-                            <div class="card-id">${cardId}</div>
-                        </div>
-                        
-                        <div class="card-address">
-                            <span>📍</span>
-                            <span>${lokasi.alamat}</span>
-                        </div>
-                        
-                        <div class="kapasitas-display">
-                            <div class="kapasitas-header">
-                                <div class="kapasitas-title">
-                                    <span>🚌</span>
-                                    <span>BUS TERSEDIA</span>
-                                </div>
-                                <div class="kapasitas-numbers">${busAvailable}/${lokasi.max_bus}</div>
-                            </div>
-                            <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${busAvailablePercentage}%; background-color: ${busConfig.color};"></div>
-                            </div>
-                            <div class="status-badge status-${busStatus}">
-                                <span>${busConfig.icon}</span>
-                                <span>${busAvailablePercent}% ${busConfig.text}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="kapasitas-display">
-                            <div class="kapasitas-header">
-                                <div class="kapasitas-title">
-                                    <span>🚗</span>
-                                    <span>MOBIL TERSEDIA</span>
-                                </div>
-                                <div class="kapasitas-numbers">${mobilAvailable}/${lokasi.max_mobil}</div>
-                            </div>
-                            <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${mobilAvailablePercentage}%; background-color: ${mobilConfig.color};"></div>
-                            </div>
-                            <div class="status-badge status-${mobilStatus}">
-                                <span>${mobilConfig.icon}</span>
-                                <span>${mobilAvailablePercent}% ${mobilConfig.text}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="kapasitas-display">
-                            <div class="kapasitas-header">
-                                <div class="kapasitas-title">
-                                    <span>🏍️</span>
-                                    <span>MOTOR TERSEDIA</span>
-                                </div>
-                                <div class="kapasitas-numbers">${motorAvailable}/${lokasi.max_motor}</div>
-                            </div>
-                            <div class="visual-bar-container">
-                                <div class="visual-bar" style="width: ${motorAvailablePercentage}%; background-color: ${motorConfig.color};"></div>
-                            </div>
-                            <div class="status-badge status-${motorStatus}">
-                                <span>${motorConfig.icon}</span>
-                                <span>${motorAvailablePercent}% ${motorConfig.text}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="lokasi-jarak ${distanceClass}">
-                            ${distanceText}
-                        </div>
-                        
-                        <div class="card-actions">
-                            <button class="btn-route" onclick="ruteKeLokasi('${lokasi.koordinat}', '${lokasi.nama}')" aria-label="Rute ke ${lokasi.nama}">
-                                Rute ke Sini
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            
-            if (window.appState.isSortedByDistance) {
-                setTimeout(() => {
-                    const firstItem = container.querySelector('.lokasi-item');
-                    if (firstItem) {
-                        firstItem.style.opacity = '1';
-                        firstItem.style.visibility = 'visible';
-                    }
-                }, 10);
-            }
-        }
-        
-        function highlightClosestParking() {
-            document.querySelectorAll('.lokasi-item').forEach(item => {
-                item.classList.remove('closest');
-            });
-            
-            const firstItem = document.querySelector('.lokasi-item');
-            if (firstItem) {
-                firstItem.classList.add('closest');
-                firstItem.style.opacity = '1';
-                firstItem.style.visibility = 'visible';
-                firstItem.style.zIndex = '1';
-            }
-        }
-        
-        function updateTotalCounters() {
-            if (!window.appState.data.length) return;
-            
-            const totals = window.appState.data.reduce((acc, lokasi) => {
-                return {
-                    bus: acc.bus + Math.max(0, lokasi.max_bus - lokasi.bus),
-                    mobil: acc.mobil + Math.max(0, lokasi.max_mobil - lokasi.mobil),
-                    motor: acc.motor + Math.max(0, lokasi.max_motor - lokasi.motor)
-                };
-            }, { bus: 0, mobil: 0, motor: 0 });
-            
-            document.getElementById('totalLocations').textContent = window.appState.data.length;
-            document.getElementById('totalBus').textContent = totals.bus.toLocaleString();
-            document.getElementById('totalMobil').textContent = totals.mobil.toLocaleString();
-            document.getElementById('totalMotor').textContent = totals.motor.toLocaleString();
-        }
-        
-        function calculateStatus(available, max) {
-            if (max === 0 || available <= 0) return 'full';
-            const availablePercentage = (available / max) * 100;
-            if (availablePercentage >= 70) return 'high';
-            if (availablePercentage >= 30) return 'medium';
-            if (availablePercentage > 0) return 'low';
-            return 'full';
-        }
-        
-        function getStatusConfig(status) {
-            const configs = {
-                'high': { color: '#10b981', icon: '✅', text: 'tersedia' },
-                'medium': { color: '#f59e0b', icon: '⚠️', text: 'tersedia' },
-                'low': { color: '#ef4444', icon: '🚨', text: 'tersedia' },
-                'full': { color: '#6b7280', icon: '⛔', text: 'penuh' }
-            };
-            return configs[status] || configs['full'];
-        }
-        
-        function showLoading(message) {
-            const overlay = document.getElementById('loadingOverlay');
-            if (overlay) {
-                const text = overlay.querySelector('.loading-text');
-                if (text && message) {
-                    text.textContent = message;
-                }
-                overlay.classList.add('active');
-            }
-        }
-        
-        function hideLoading() {
-            const overlay = document.getElementById('loadingOverlay');
-            if (overlay) {
-                overlay.classList.remove('active');
-            }
-        }
-        
-        function showNotification(message) {
-            const existing = document.querySelector('.realtime-notification');
-            if (existing) existing.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = 'realtime-notification';
-            notification.innerHTML = `<div>${message}</div>`;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('hiding');
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-        
+        // ====== DATA OFFLINE (dengan McDonald's) ======
         function loadOfflineData() {
-            const offlineData = [
+            appState.data = [
                 {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0, koordinat:"-7.8017074,110.3681792"},
                 {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:0, mobil:0, motor:0, max_bus:60, max_mobil:80, max_motor:100, koordinat:"-7.8014685,110.3562862"},
                 {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:250, koordinat:"-7.800385,110.368361"},
@@ -1611,39 +1142,390 @@
                 {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:0, mobil:0, motor:0, max_bus:130, max_mobil:300, max_motor:0, koordinat:"-7.7883952,110.36693"},
                 {id:15, nama:"MCDONALD'S SUDIRMAN", alamat:"JL JEND. SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:50, max_motor:150, koordinat:"-7.7833485,110.3719082"}
             ];
-            
-            window.appState.data = offlineData;
-            window.appState.originalOrder = [...offlineData];
-            window.appState.isSortedByDistance = false;
-            
-            renderLokasi();
-            updateTotalCounters();
-            
-            console.log('📡 Offline data loaded (with McDonald\'s)');
+            appState.originalOrder = [...appState.data];
+            renderList();
+            updateCounters();
             showNotification('📡 Mode offline aktif');
         }
         
-        async function initApp() {
-            initMenu();
-            const success = await initSupabase();
-            if (success) {
-                console.log('🚀 Aplikasi Parkir Jogja siap!');
+        // ====== RENDER LIST (HANYA NAMA & ALAMAT) ======
+        function renderList() {
+            const container = document.getElementById('lokasiList');
+            if (!container) return;
+            
+            if (!appState.data.length) {
+                container.innerHTML = '<div class="lokasi-item"><div class="lokasi-header"><div class="lokasi-info">Tidak ada data</div></div></div>';
+                return;
             }
+            
+            let html = '';
+            appState.data.forEach((item, index) => {
+                const distance = appState.distances.get(item.id);
+                const isExpanded = appState.expandedId === item.id;
+                const isClosest = appState.isSortedByDistance && index === 0;
+                const cardId = appState.isSortedByDistance ? index + 1 : item.id;
+                
+                const busAvailable = Math.max(0, item.max_bus - item.bus);
+                const mobilAvailable = Math.max(0, item.max_mobil - item.mobil);
+                const motorAvailable = Math.max(0, item.max_motor - item.motor);
+                
+                const busStatus = getStatus(busAvailable, item.max_bus);
+                const mobilStatus = getStatus(mobilAvailable, item.max_mobil);
+                const motorStatus = getStatus(motorAvailable, item.max_motor);
+                
+                const busColor = getStatusColor(busStatus);
+                const mobilColor = getStatusColor(mobilStatus);
+                const motorColor = getStatusColor(motorStatus);
+                
+                const busPercent = item.max_bus > 0 ? Math.round((busAvailable / item.max_bus) * 100) : 0;
+                const mobilPercent = item.max_mobil > 0 ? Math.round((mobilAvailable / item.max_mobil) * 100) : 0;
+                const motorPercent = item.max_motor > 0 ? Math.round((motorAvailable / item.max_motor) * 100) : 0;
+                
+                const distanceText = distance ? formatDistance(distance) : null;
+                
+                html += `
+                    <div class="lokasi-item ${isExpanded ? 'expanded' : ''} ${isClosest ? 'closest' : ''}" data-id="${item.id}">
+                        <div class="lokasi-header" onclick="toggleDetail(${item.id})">
+                            <div class="lokasi-nomor">${cardId}</div>
+                            <div class="lokasi-info">
+                                <div class="lokasi-nama">
+                                    ${item.nama}
+                                    ${isClosest ? '<span class="closest-badge"><i class="fas fa-location-dot"></i> TERDEKAT</span>' : ''}
+                                </div>
+                                <div class="lokasi-alamat">
+                                    <i class="fas fa-map-pin"></i> ${item.alamat}
+                                </div>
+                            </div>
+                            <div class="lokasi-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="lokasi-detail">
+                            <div class="detail-content">
+                                ${distanceText ? `
+                                    <div class="lokasi-jarak">
+                                        <i class="fas fa-route"></i> ${distanceText} dari lokasi Anda
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="kapasitas-display">
+                                    <div class="kapasitas-header">
+                                        <div class="kapasitas-title"><i class="fas fa-bus"></i> BUS</div>
+                                        <div class="kapasitas-numbers">${busAvailable}/${item.max_bus}</div>
+                                    </div>
+                                    <div class="visual-bar-container">
+                                        <div class="visual-bar" style="width: ${busPercent}%; background: ${busColor};"></div>
+                                    </div>
+                                    <div class="status-badge status-${busStatus}">
+                                        ${getStatusIcon(busStatus)} ${busPercent}% ${getStatusText(busStatus)}
+                                    </div>
+                                </div>
+                                
+                                <div class="kapasitas-display">
+                                    <div class="kapasitas-header">
+                                        <div class="kapasitas-title"><i class="fas fa-car"></i> MOBIL</div>
+                                        <div class="kapasitas-numbers">${mobilAvailable}/${item.max_mobil}</div>
+                                    </div>
+                                    <div class="visual-bar-container">
+                                        <div class="visual-bar" style="width: ${mobilPercent}%; background: ${mobilColor};"></div>
+                                    </div>
+                                    <div class="status-badge status-${mobilStatus}">
+                                        ${getStatusIcon(mobilStatus)} ${mobilPercent}% ${getStatusText(mobilStatus)}
+                                    </div>
+                                </div>
+                                
+                                <div class="kapasitas-display">
+                                    <div class="kapasitas-header">
+                                        <div class="kapasitas-title"><i class="fas fa-motorcycle"></i> MOTOR</div>
+                                        <div class="kapasitas-numbers">${motorAvailable}/${item.max_motor}</div>
+                                    </div>
+                                    <div class="visual-bar-container">
+                                        <div class="visual-bar" style="width: ${motorPercent}%; background: ${motorColor};"></div>
+                                    </div>
+                                    <div class="status-badge status-${motorStatus}">
+                                        ${getStatusIcon(motorStatus)} ${motorPercent}% ${getStatusText(motorStatus)}
+                                    </div>
+                                </div>
+                                
+                                <!-- TOMBOL RUTE DENGAN 3 PILIHAN -->
+                                <div class="btn-route-container">
+                                    <button class="btn-route-primary" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${item.nama}', 'auto')">
+                                        <i class="fas fa-directions"></i> RUTE KE SINI
+                                    </button>
+                                    <div class="btn-route-options">
+                                        <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${item.nama}', 'google')">
+                                            <i class="fab fa-google"></i> Google Maps
+                                        </button>
+                                        <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${item.nama}', 'waze')">
+                                            <i class="fas fa-location-dot"></i> Waze
+                                        </button>
+                                        <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${item.nama}', 'apple')">
+                                            <i class="fas fa-map"></i> Apple Maps
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
         }
         
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (!window.supabase) {
-                await new Promise((resolve) => {
-                    const checkSupabase = setInterval(() => {
-                        if (window.supabase) {
-                            clearInterval(checkSupabase);
-                            resolve();
-                        }
-                    }, 100);
-                });
+        // ====== TOGGLE DETAIL ======
+        window.toggleDetail = function(id) {
+            if (appState.expandedId === id) {
+                appState.expandedId = null;
+            } else {
+                appState.expandedId = id;
             }
-            await initApp();
-        });
+            renderList();
+        };
+        
+        // ====== FUNGSI RUTE (FLEKSIBEL) ======
+        window.bukaRute = function(koordinat, nama, pilihan) {
+            if (!koordinat) {
+                showNotification('❌ Koordinat tidak tersedia');
+                return;
+            }
+            
+            koordinat = koordinat.trim();
+            const encodedNama = encodeURIComponent(nama);
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            let url = '';
+            
+            if (pilihan === 'google' || (pilihan === 'auto' && !isIOS)) {
+                // Google Maps
+                if (appState.userPosition) {
+                    url = `https://www.google.com/maps/dir/?api=1&origin=${appState.userPosition.lat},${appState.userPosition.lng}&destination=${koordinat}&travelmode=driving`;
+                } else {
+                    url = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                }
+                window.open(url, '_blank');
+                
+            } else if (pilihan === 'waze') {
+                // Waze
+                url = `https://waze.com/ul?q=${koordinat}&navigate=yes`;
+                window.open(url, '_blank');
+                
+            } else if (pilihan === 'apple' || (pilihan === 'auto' && isIOS)) {
+                // Apple Maps
+                if (appState.userPosition) {
+                    url = `maps://?saddr=${appState.userPosition.lat},${appState.userPosition.lng}&daddr=${koordinat}`;
+                } else {
+                    url = `maps://?q=${koordinat}`;
+                }
+                
+                // Coba buka Apple Maps
+                window.location.href = url;
+                
+                // Fallback ke Google Maps jika gagal
+                setTimeout(() => {
+                    if (document.hasFocus()) {
+                        const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                        window.open(fallbackUrl, '_blank');
+                    }
+                }, 800);
+                return;
+            }
+            
+            showNotification(`🗺️ Membuka ${pilihan === 'auto' ? 'peta' : pilihan}...`);
+        };
+        
+        // ====== CARI PARKIR TERDEKAT ======
+        window.cariParkirTerdekat = async function() {
+            const btn = document.getElementById('btnCari');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> MENCARI...';
+            
+            try {
+                await getLocation();
+                hitungSemuaJarak();
+                
+                const sorted = [...appState.data].sort((a, b) => {
+                    const da = appState.distances.get(a.id) || Infinity;
+                    const db = appState.distances.get(b.id) || Infinity;
+                    return da - db;
+                });
+                
+                appState.data = sorted;
+                appState.isSortedByDistance = true;
+                appState.expandedId = sorted[0]?.id || null;
+                
+                renderList();
+                showNotification('📍 Parkir terdekat ditemukan!');
+                
+            } catch (error) {
+                showNotification('❌ Gagal mendapatkan lokasi');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-location-dot"></i> CARI PARKIR TERDEKAT';
+            }
+        };
+        
+        // ====== GET LOCATION ======
+        function getLocation() {
+            return new Promise((resolve, reject) => {
+                if (appState.userPosition) {
+                    resolve(appState.userPosition);
+                    return;
+                }
+                
+                if (!navigator.geolocation) {
+                    reject('Geolocation tidak didukung');
+                    return;
+                }
+                
+                showLoading('Mendeteksi lokasi...');
+                
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        appState.userPosition = {
+                            lat: pos.coords.latitude,
+                            lng: pos.coords.longitude
+                        };
+                        hideLoading();
+                        resolve(appState.userPosition);
+                    },
+                    (err) => {
+                        hideLoading();
+                        reject(err);
+                    },
+                    { enableHighAccuracy: true, timeout: 8000 }
+                );
+            });
+        }
+        
+        // ====== HITUNG JARAK ======
+        function hitungSemuaJarak() {
+            if (!appState.userPosition || !appState.data.length) return;
+            
+            const { lat: userLat, lng: userLng } = appState.userPosition;
+            const newDistances = new Map();
+            
+            appState.data.forEach(item => {
+                if (!item.koordinat) {
+                    newDistances.set(item.id, null);
+                    return;
+                }
+                
+                try {
+                    const [lat, lng] = item.koordinat.split(',').map(Number);
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        const jarak = hitungJarak(userLat, userLng, lat, lng);
+                        newDistances.set(item.id, jarak);
+                    } else {
+                        newDistances.set(item.id, null);
+                    }
+                } catch {
+                    newDistances.set(item.id, null);
+                }
+            });
+            
+            appState.distances = newDistances;
+        }
+        
+        function hitungJarak(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        function formatDistance(km) {
+            if (km < 1) return `${Math.round(km * 1000)} meter`;
+            return `${km.toFixed(1)} km`;
+        }
+        
+        // ====== STATUS HELPERS ======
+        function getStatus(available, max) {
+            if (max === 0) return 'full';
+            const persen = (available / max) * 100;
+            if (persen >= 70) return 'high';
+            if (persen >= 30) return 'medium';
+            if (persen > 0) return 'low';
+            return 'full';
+        }
+        
+        function getStatusColor(status) {
+            return {
+                'high': '#10b981',
+                'medium': '#f59e0b',
+                'low': '#ef4444',
+                'full': '#6b7280'
+            }[status];
+        }
+        
+        function getStatusIcon(status) {
+            return {
+                'high': '✅',
+                'medium': '⚠️',
+                'low': '🚨',
+                'full': '⛔'
+            }[status];
+        }
+        
+        function getStatusText(status) {
+            return {
+                'high': 'Tersedia',
+                'medium': 'Tersedia',
+                'low': 'Tersedia',
+                'full': 'Penuh'
+            }[status];
+        }
+        
+        // ====== COUNTERS ======
+        function updateCounters() {
+            const totals = appState.data.reduce((acc, item) => ({
+                bus: acc.bus + Math.max(0, item.max_bus - item.bus),
+                mobil: acc.mobil + Math.max(0, item.max_mobil - item.mobil),
+                motor: acc.motor + Math.max(0, item.max_motor - item.motor)
+            }), { bus: 0, mobil: 0, motor: 0 });
+            
+            document.getElementById('totalLocations').textContent = appState.data.length;
+            document.getElementById('totalBus').textContent = totals.bus;
+            document.getElementById('totalMobil').textContent = totals.mobil;
+            document.getElementById('totalMotor').textContent = totals.motor;
+        }
+        
+        // ====== LOADING & NOTIFICATION ======
+        function showLoading(msg) {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = overlay.querySelector('.loading-text');
+            if (text && msg) text.textContent = msg;
+            overlay.classList.add('active');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+        
+        function showNotification(msg) {
+            const existing = document.querySelector('.realtime-notification');
+            if (existing) existing.remove();
+            
+            const notif = document.createElement('div');
+            notif.className = 'realtime-notification';
+            notif.innerHTML = `<div>${msg}</div>`;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.classList.add('hiding');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+        
+        // ====== START ======
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
