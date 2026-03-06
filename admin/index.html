@@ -597,7 +597,7 @@
             
             let html = '';
             parkirData.forEach((item, index) => {
-                const busTersedia = Math.max(0, (item.max_bus || 100) - (item.bus || 0));
+                const busTersedia = Math.max(0, (item.max_bus || 0) - (item.bus || 0));
                 const mobilTersedia = Math.max(0, (item.max_mobil || 200) - (item.mobil || 0));
                 const motorTersedia = Math.max(0, (item.max_motor || 150) - (item.motor || 0));
                 
