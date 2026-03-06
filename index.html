@@ -363,8 +363,8 @@
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            /* FIX: Hapus aspect-ratio, ganti dengan min-height */
-            min-height: 280px;
+            /* FIX 1: Hapus aspect-ratio, ganti min-height */
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -372,7 +372,8 @@
             padding: 40px 20px;
             overflow: hidden;
             isolation: isolate;
-            background: linear-gradient(135deg, var(--navy-900), #1e3a8a);
+            /* FIX 2: Kembalikan ke transparent, hilangkan gradien */
+            background: transparent;
         }
         
         .ramadan-bg-img {
@@ -409,7 +410,7 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
-        /* GAMBAR LAYANAN.PNG - PAKAI URL GITHUB */
+        /* GAMBAR LAYANAN.PNG - URL GITHUB YANG BENAR */
         .layanan-img {
             position: relative;
             z-index: 1;
@@ -433,8 +434,8 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
-            /* FIX: Tambah jarak ke bawah */
-            margin-bottom: 30px;
+            /* FIX 3: Kurangi jarak jadi 15px */
+            margin-bottom: 15px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
@@ -501,7 +502,8 @@
         /* ====== MOBILE COMPACT HEADER - ICON DIHAPUS ====== */
         .compact-header {
             background: white;
-            padding: 25px 15px 20px;  /* FIX: Tambah padding atas */
+            /* FIX 4: Kurangi padding atas jadi 15px */
+            padding: 15px 15px 20px;
             border-bottom: 2px solid var(--gray-200);
         }
         
@@ -1050,14 +1052,14 @@
             }
             
             .main-header {
-                min-height: 300px;
+                min-height: 280px;
                 padding: 50px 40px;
             }
         }
         
         @media (max-width: 768px) {
             .main-header {
-                min-height: 250px;
+                min-height: 220px;
                 padding: 40px 20px;
             }
             
@@ -1072,7 +1074,7 @@
             .operation-badge {
                 padding: 8px 20px;
                 font-size: 13px;
-                margin-bottom: 25px;
+                margin-bottom: 12px;
             }
             
             .menu-toggle {
@@ -1096,7 +1098,7 @@
         
         @media (max-width: 640px) {
             .main-header {
-                min-height: 220px;
+                min-height: 200px;
                 padding: 35px 15px;
             }
             
@@ -1156,7 +1158,7 @@
         
         @media (max-width: 375px) {
             .main-header {
-                min-height: 200px;
+                min-height: 180px;
                 padding: 30px 12px;
             }
             
@@ -1171,7 +1173,7 @@
             .operation-badge {
                 padding: 6px 16px;
                 font-size: 12px;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
             }
             
             .menu-toggle {
@@ -1258,7 +1260,7 @@
             <h1>INFORMASI TEMPAT PARKIR</h1>
             <div class="title-sub">DI WILAYAH KOTA YOGYAKARTA</div>
             
-            <!-- GAMBAR LAYANAN.PNG - PAKAI URL GITHUB (PASTI MUNCUL) -->
+            <!-- GAMBAR LAYANAN.PNG - URL GITHUB YANG BENAR -->
             <img src="https://raw.githubusercontent.com/satlantaspolrestayka/parkir-jogja-2026/main/layanan.png" 
                  alt="Layanan Polisi" 
                  class="layanan-img"
@@ -1879,4 +1881,4 @@
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-</html>
+    </html>
