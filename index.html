@@ -30,6 +30,7 @@
             --success-700: #047857;
             --danger-500: #ef4444;
             --danger-600: #dc2626;
+            --danger-700: #b91c1c;
             --warning-500: #f59e0b;
             --warning-600: #d97706;
             --navy-900: #0f1b3d;
@@ -244,7 +245,7 @@
             text-align: center;
         }
         
-        /* ====== HEADER UTAMA - DENGAN GAMBAR RAMADHAN ====== */
+        /* ====== HEADER UTAMA ====== */
         .main-header { 
             position: relative;
             color: white; 
@@ -296,6 +297,17 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
+        /* GAMBAR LAYANAN.PNG - RATA TENGAH, UKURAN 75px */
+        .layanan-img {
+            position: relative;
+            z-index: 1;
+            width: 75px;
+            height: auto;
+            margin: 5px auto;
+            display: block;
+            filter: brightness(0) invert(1);
+        }
+        
         .operation-badge {
             position: relative;
             z-index: 1;
@@ -311,16 +323,6 @@
             letter-spacing: 0.5px;
             transition: var(--transition-base);
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        /* GAMBAR LAYANAN POLISI (DITAMBAHKAN) */
-        .layanan-img {
-            position: relative;
-            z-index: 1;
-            height: 18px;
-            width: auto;
-            margin-top: 5px;
-            filter: brightness(0) invert(1);
         }
         
         /* ====== LOADING OVERLAY ====== */
@@ -383,7 +385,7 @@
             width: 100%;
         }
         
-        /* ====== MOBILE COMPACT HEADER ====== */
+        /* ====== MOBILE COMPACT HEADER - ICON DIHAPUS ====== */
         .compact-header {
             background: white;
             padding: 20px 15px;
@@ -408,7 +410,7 @@
             border-color: var(--primary-500);
         }
         
-        /* ICON DIHAPUS - SESUAI PERMINTAAN */
+        /* ICON DIHAPUS - HANYA ANGKA */
         .total-number {
             font-size: clamp(36px, 10vw, 48px);
             font-weight: 900;
@@ -448,7 +450,7 @@
             box-shadow: var(--shadow-medium);
         }
         
-        /* ICON DI TAB DIHAPUS - SESUAI PERMINTAAN */
+        /* ICON DI TAB DIHAPUS - HANYA ANGKA */
         .tab-number {
             font-size: clamp(24px, 6vw, 32px);
             font-weight: 800;
@@ -493,14 +495,14 @@
             transition: var(--transition-base);
             min-width: 250px;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            background: linear-gradient(135deg, var(--success-600), var(--success-700));
             color: white;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
         
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
         }
         
         .action-btn:active {
@@ -658,7 +660,6 @@
             padding: 20px 15px;
         }
         
-        /* KAPASITAS CARD - DIGABUNG */
         .kapasitas-card {
             background: white;
             border-radius: 12px;
@@ -721,7 +722,6 @@
         .kapasitas-item.mobil .value { color: var(--primary-600); }
         .kapasitas-item.motor .value { color: var(--success-600); }
         
-        /* STATUS INDICATOR */
         .status-indicator {
             display: flex;
             align-items: center;
@@ -758,11 +758,6 @@
             border-left: 4px solid #0284c7;
         }
         
-        .lokasi-jarak i {
-            font-size: 16px;
-        }
-        
-        /* TOMBOL RUTE */
         .btn-route-container {
             display: flex;
             flex-direction: column;
@@ -795,10 +790,6 @@
             box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
         
-        .btn-route-primary:active {
-            transform: translateY(0);
-        }
-        
         .btn-route-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -827,10 +818,6 @@
             background: var(--gray-50);
             border-color: var(--primary-500);
             color: var(--primary-700);
-        }
-        
-        .btn-route-option i {
-            font-size: 14px;
         }
         
         /* ====== FOOTER ====== */
@@ -923,11 +910,6 @@
         @keyframes slideInRight {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
         }
         
         .realtime-notification.hiding {
@@ -1102,18 +1084,19 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA - DENGAN GAMBAR RAMADHAN DAN GAMBAR LAYANAN -->
+        <!-- HEADER UTAMA DENGAN GAMBAR LAYANAN.PNG -->
         <div class="main-header">
             <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img" onerror="this.style.display='none'">
             <h1>INFORMASI TEMPAT PARKIR</h1>
             <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
-            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
             
-            <!-- GAMBAR LAYANAN POLISI DITAMBAHKAN DI SINI -->
+            <!-- GAMBAR LAYANAN.PNG - RATA TENGAH, UKURAN 75px -->
             <img src="layanan.png" alt="Layanan Polisi" class="layanan-img" onerror="this.style.display='none'">
+            
+            <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
         
-        <!-- MOBILE COMPACT HEADER - ICON SUDAH DIHAPUS -->
+        <!-- MOBILE COMPACT HEADER - ICON DIHAPUS -->
         <div class="compact-header">
             <div class="total-locations">
                 <!-- ICON TOTAL LOKASI DIHAPUS -->
@@ -1174,7 +1157,6 @@
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
             <p>Polri Untuk Masyarakat</p>
             
-            <!-- CALL CENTER DI FOOTER -->
             <div class="footer-call">
                 <i class="fas fa-phone-alt"></i> CALL CENTER - 110
             </div>
@@ -1693,4 +1675,4 @@
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-    </html>
+</html>
