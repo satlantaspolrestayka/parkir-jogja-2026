@@ -258,7 +258,7 @@
             font-style: italic;
         }
         
-        /* ====== KARTU TRAFFIC ====== */
+        /* ====== KARTU TRAFFIC (DENGAN EDIT JUDUL) ====== */
         .card-traffic {
             background: white;
             border-radius: 16px;
@@ -301,6 +301,36 @@
             flex: 1;
         }
         
+        /* INPUT UNTUK JUDUL (FITUR BARU) */
+        .judul-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .judul-input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+        }
+        
+        .judul-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ffe0b2;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            background: #fffaf2;
+            transition: var(--transition);
+        }
+        
+        .judul-input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+            background: white;
+        }
+        
+        /* INPUT UNTUK LINK VIDEO */
         .traffic-input {
             width: 100%;
             padding: 12px 16px;
@@ -419,12 +449,12 @@
     </header>
     
     <div class="admin-container">
-        <!-- ===== SEKSI 1: MANAJEMEN PARKIR (INPUT KAPASITAS TERSEDIA) ===== -->
+        <!-- ===== SEKSI 1: MANAJEMEN PARKIR ===== -->
         <h2 style="color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
             <i class="fas fa-parking"></i> Manajemen Parkir – Input Kapasitas Tersedia
         </h2>
         <p style="color: #475569; margin-bottom: 30px; padding: 12px 18px; background: #e6f7e6; border-radius: 8px; border-left: 5px solid #10b981;">
-            <i class="fas fa-info-circle"></i> <strong>Petunjuk:</strong> Isi jumlah <strong>SLOT KOSONG (TERSEDIA)</strong> untuk masing-masing kendaraan. Sistem akan otomatis menghitung dan menyimpan jumlah terisi.
+            <i class="fas fa-info-circle"></i> <strong>Petunjuk:</strong> Isi jumlah <strong>SLOT KOSONG (TERSEDIA)</strong> untuk masing-masing kendaraan.
         </p>
         
         <div id="parkir-grid-container" class="grid-parkir">
@@ -508,7 +538,6 @@
                 
                 parkirData = data || [];
                 
-                // Jika data kosong, gunakan offline data (inisialisasi)
                 if (parkirData.length === 0) {
                     await initParkirData();
                     return;
@@ -519,12 +548,11 @@
             } catch (error) {
                 console.error('❌ Error load parkir:', error);
                 showNotification('Gagal memuat data parkir', 'error');
-                // Fallback ke offline data
                 loadOfflineParkirData();
             }
         }
         
-        // ====== INISIALISASI DATA PARKIR (JIKA KOSONG) ======
+        // ====== INISIALISASI DATA PARKIR ======
         async function initParkirData() {
             const offlineData = [
                 {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0, koordinat:"-7.8017074,110.3681792"},
@@ -541,7 +569,7 @@
                 {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:100, max_motor:200, koordinat:"-7.7920043,110.3611007"},
                 {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:200, koordinat:"-7.7832641,110.3683152"},
                 {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:0, mobil:0, motor:0, max_bus:130, max_mobil:300, max_motor:0, koordinat:"-7.7883952,110.36693"}
-        ];
+            ];
             
             try {
                 for (const item of offlineData) {
@@ -558,7 +586,7 @@
             }
         }
         
-        // ====== RENDER GRID PARKIR (INPUT KAPASITAS TERSEDIA) ======
+        // ====== RENDER GRID PARKIR ======
         function renderParkirGrid() {
             const container = document.getElementById('parkir-grid-container');
             if (!parkirData.length) {
@@ -568,7 +596,6 @@
             
             let html = '';
             parkirData.forEach((item, index) => {
-                // Hitung kapasitas tersedia dari data terisi
                 const busTersedia = Math.max(0, (item.max_bus || 100) - (item.bus || 0));
                 const mobilTersedia = Math.max(0, (item.max_mobil || 200) - (item.mobil || 0));
                 const motorTersedia = Math.max(0, (item.max_motor || 150) - (item.motor || 0));
@@ -645,16 +672,7 @@
                         </button>
                         
                         <div class="update-time">
-                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID', { 
-                                timeZone: 'Asia/Jakarta', 
-                                hour12: false,
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit'
-                            }) : 'Belum update'}
+                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum update'}
                         </div>
                     </div>
                 `;
@@ -672,7 +690,7 @@
             return value;
         }
         
-        // ====== UPDATE PARKIR (KONVERSI TERSEDIA → TERISI) ======
+        // ====== UPDATE PARKIR ======
         async function updateParkir(id) {
             const item = parkirData.find(d => d.id === id);
             if (!item) return;
@@ -685,7 +703,6 @@
             const mobilTersedia = validateTersedia(document.getElementById(`mobil-${id}`), maxMobil);
             const motorTersedia = validateTersedia(document.getElementById(`motor-${id}`), maxMotor);
             
-            // Konversi ke jumlah terisi
             const busTerisi = maxBus - busTersedia;
             const mobilTerisi = maxMobil - mobilTersedia;
             const motorTerisi = maxMotor - motorTersedia;
@@ -708,12 +725,12 @@
                 
                 if (error) throw error;
                 
-                showNotification(`✅ ${item.nama} berhasil diupdate! Tersedia: Bus ${busTersedia}, Mobil ${mobilTersedia}, Motor ${motorTersedia}`, 'success');
-                loadParkirData(); // refresh
+                showNotification(`✅ ${item.nama} berhasil diupdate!`, 'success');
+                loadParkirData();
                 
             } catch (error) {
                 console.error('❌ Update error:', error);
-                showNotification(`❌ Gagal update ${item.nama}: ${error.message}`, 'error');
+                showNotification(`❌ Gagal update: ${error.message}`, 'error');
                 btn.disabled = false;
                 btn.innerHTML = original;
             }
@@ -771,7 +788,7 @@
             }
         }
         
-        // ====== RENDER TRAFFIC GRID ======
+        // ====== RENDER TRAFFIC GRID (DENGAN INPUT JUDUL) ======
         function renderTrafficGrid() {
             const container = document.getElementById('traffic-grid-container');
             if (!trafficData.length) {
@@ -787,12 +804,23 @@
                             <div class="traffic-icon">
                                 <i class="fab fa-instagram"></i>
                             </div>
-                            <div class="traffic-title">${item.nama_pos}</div>
+                            <div class="traffic-title">Kontainer #${item.id}</div>
                         </div>
                         
+                        <!-- INPUT JUDUL KONTAINER (FITUR BARU) -->
+                        <div class="judul-input-group">
+                            <label><i class="fas fa-heading"></i> Judul Kontainer:</label>
+                            <input type="text" 
+                                   class="judul-input" 
+                                   id="judul-${item.id}" 
+                                   value="${escapeHtml(item.nama_pos)}" 
+                                   placeholder="Masukkan judul kontainer...">
+                        </div>
+                        
+                        <!-- INPUT LINK VIDEO -->
                         <div style="margin-bottom: 15px;">
                             <label style="display:block; font-weight:600; margin-bottom:8px; color:#444;">
-                                <i class="fas fa-link"></i> Link Video Instagram
+                                <i class="fas fa-link"></i> Link Video Instagram:
                             </label>
                             <input type="url" 
                                    class="traffic-input" 
@@ -807,20 +835,11 @@
                         </div>
                         
                         <button class="btn-traffic" onclick="updateTraffic(${item.id})">
-                            <i class="fas fa-video"></i> UPDATE LINK
+                            <i class="fas fa-save"></i> SIMPAN PERUBAHAN
                         </button>
                         
                         <div class="update-time">
-                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID', { 
-                                timeZone: 'Asia/Jakarta', 
-                                hour12: false,
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit'
-                            }) : 'Belum update'}
+                            <i class="far fa-clock"></i> Terakhir: ${item.updated_at ? new Date(item.updated_at).toLocaleString('id-ID') : 'Belum update'}
                         </div>
                     </div>
                 `;
@@ -828,13 +847,16 @@
             container.innerHTML = html;
         }
         
-        // ====== UPDATE TRAFFIC ======
+        // ====== UPDATE TRAFFIC (JUDUL + LINK) ======
         async function updateTraffic(id) {
-            const input = document.getElementById(`traffic-${id}`);
+            const judulInput = document.getElementById(`judul-${id}`);
+            const linkInput = document.getElementById(`traffic-${id}`);
             const post = trafficData.find(d => d.id === id);
+            
             if (!post) return;
             
-            const newUrl = input.value.trim() || null;
+            const newJudul = judulInput.value.trim() || post.nama_pos;
+            const newUrl = linkInput.value.trim() || null;
             
             const btn = document.querySelector(`[onclick="updateTraffic(${id})"]`);
             const original = btn.innerHTML;
@@ -845,6 +867,7 @@
                 const { error } = await supabaseClient
                     .from('traffic_posts')
                     .update({
+                        nama_pos: newJudul,
                         instagram_url: newUrl,
                         updated_at: new Date().toISOString()
                     })
@@ -852,8 +875,9 @@
                 
                 if (error) throw error;
                 
-                showNotification(`✅ Link video ${post.nama_pos} diperbarui!`, 'success');
+                showNotification(`✅ Kontainer #${id} berhasil diperbarui!`, 'success');
                 
+                // Update preview
                 const preview = document.getElementById(`preview-${id}`);
                 if (preview) preview.textContent = newUrl || 'Belum ada link';
                 
@@ -870,24 +894,23 @@
         // ====== OFFLINE FALLBACK ======
         function loadOfflineParkirData() {
             const offline = [
-                {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0, koordinat:"-7.8017074,110.3681792"},
-                {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:0, mobil:0, motor:0, max_bus:60, max_mobil:80, max_motor:100, koordinat:"-7.8014685,110.3562862"},
-                {id:3, nama:"SRI WEDANI", alamat:"JL SRI WEDANI", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:250, koordinat:"-7.800385,110.368361"},
-                {id:4, nama:"SPRAGA", alamat:"JL KHA DAHLAN", bus:0, mobil:0, motor:0, max_bus:30, max_mobil:50, max_motor:0, koordinat:"-7.8018505,110.3632816"},
-                {id:5, nama:"RAMAI MALL", alamat:"JL BESKALAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:20, max_motor:382, koordinat:"-7.7973211,110.3641841"},
-                {id:6, nama:"GRAND ZURI", alamat:"JL MARGO UTOMO", bus:0, mobil:0, motor:0, max_bus:100, max_mobil:50, max_motor:0, koordinat:"-7.787088,110.366706"},
-                {id:7, nama:"EX MENARA CAFE", alamat:"JL ABU BAKAR ALI", bus:0, mobil:0, motor:0, max_bus:20, max_mobil:50, max_motor:0, koordinat:"-7.7897929,110.3706896"},
-                {id:8, nama:"MALIOBORO II", alamat:"JL PABRINGAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:115, max_motor:250, koordinat:"-7.7992907,110.3663957"},
-                {id:9, nama:"MALIOBORO III", alamat:"JL KETANDAN 7", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:125, max_motor:0, koordinat:"-7.7978843,110.3673653"},
-                {id:10, nama:"UTARA CAVINTON", alamat:"JL LETJEND SUPRAPTO", bus:0, mobil:0, motor:0, max_bus:25, max_mobil:80, max_motor:0, koordinat:"-7.8002542,110.3560535"},
-                {id:11, nama:"GEMBIRA LOKA", alamat:"JL KEBUN RAYA", bus:0, mobil:0, motor:0, max_bus:82, max_mobil:100, max_motor:300, koordinat:"-7.8037595,110.3968204"},
-                {id:12, nama:"KAWULA ALIT", alamat:"JL GANDEKAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:100, max_motor:200, koordinat:"-7.7920043,110.3611007"},
-                {id:13, nama:"PARKIRAN KOMANDO", alamat:"JL SUDIRMAN", bus:0, mobil:0, motor:0, max_bus:0, max_mobil:60, max_motor:200, koordinat:"-7.7832641,110.3683152"},
-                {id:14, nama:"EKS TRIO", alamat:"JL MARGOUTOMO", bus:0, mobil:0, motor:0, max_bus:130, max_mobil:300, max_motor:0, koordinat:"-7.7883952,110.36693"}
+                {id:1, nama:"SENOPATI", alamat:"JL P. SENOPATI", bus:0, mobil:0, motor:0, max_bus:62, max_mobil:200, max_motor:0},
+                {id:2, nama:"NGABEAN", alamat:"JL W. HASYIM", bus:0, mobil:0, motor:0, max_bus:60, max_mobil:80, max_motor:100}
             ];
             parkirData = offline;
             renderParkirGrid();
-            showNotification('📡 Mode offline aktif (data terbatas)', 'info');
+            showNotification('📡 Mode offline aktif (data terbatas)', 'warning');
+        }
+        
+        // ====== ESCAPE HTML ======
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
         
         // ====== NOTIFIKASI ======
