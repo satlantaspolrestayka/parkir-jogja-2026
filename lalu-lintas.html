@@ -10,9 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Lalu Lintas Jogja">
     <title>Informasi Lalu Lintas Yogyakarta 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Instagram Embed Script -->
-    <script async src="//www.instagram.com/embed.js"></script>
-    <!-- Supabase Client untuk publik (read only) -->
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ====== CSS VARIABLES & RESET ====== */
@@ -28,8 +26,11 @@
             --gray-200: #e2e8f0;
             --gray-500: #64748b;
             --gray-800: #1e293b;
+            --error-500: #ef4444;
+            --warning-500: #f59e0b;
             --shadow-card: 0 6px 20px rgba(15, 27, 61, 0.1);
             --shadow-deep: 0 10px 25px rgba(15, 27, 61, 0.15);
+            --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.5);
             --transition-base: 0.25s ease;
         }
         
@@ -46,7 +47,25 @@
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* ====== MENU NAVIGASI (SIDEBAR) ====== */
+        /* Skip Link untuk Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-600);
+            color: white;
+            padding: 8px 16px;
+            z-index: 10000;
+            text-decoration: none;
+            border-radius: 0 0 8px 0;
+            font-weight: 600;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* ====== MENU NAVIGASI ====== */
         .menu-toggle {
             position: fixed;
             top: 20px;
@@ -66,7 +85,13 @@
             transition: var(--transition-base);
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
+        
         .menu-toggle:hover { transform: scale(1.05); background: var(--primary-700); }
+        .menu-toggle:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
         .menu-toggle.scrolled { background: rgba(37, 99, 235, 0.9); backdrop-filter: blur(10px); }
         
         .menu-overlay {
@@ -101,6 +126,10 @@
             font-size: 20px; cursor: pointer; transition: var(--transition-base);
         }
         .menu-close:hover { background: var(--primary-600); transform: rotate(90deg); }
+        .menu-close:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
         
         .menu-items { display: flex; flex-direction: column; gap: 10px; }
         .menu-item {
@@ -110,6 +139,10 @@
             transition: var(--transition-base); border: 2px solid transparent;
         }
         .menu-item:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(5px); }
+        .menu-item:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
         .menu-item.active {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(16, 185, 129, 0.3));
             border-color: rgba(255, 255, 255, 0.2);
@@ -130,14 +163,14 @@
             color: rgba(255, 255, 255, 0.7); font-size: 13px; text-align: center;
         }
         
-        /* ====== HEADER UTAMA - IDENTIK DENGAN INDEX.HTML ====== */
+        /* ====== HEADER UTAMA ====== */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
+            aspect-ratio: 3556 / 1535;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -147,43 +180,57 @@
             isolation: isolate;
         }
         
-        .ramadan-bg-img {
+        .header-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            mix-blend-mode: multiply; /* membuat background putih transparan */
-            opacity: 1;
+            background: linear-gradient(135deg, rgba(15,27,61,0.7) 0%, rgba(30,58,138,0.5) 100%);
             z-index: 0;
             pointer-events: none;
         }
         
-        .main-header h1 { 
+        picture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .ramadan-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+        
+        .main-header h1, 
+        .title-sub, 
+        .operation-badge {
             position: relative;
             z-index: 1;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+        }
+        
+        .main-header h1 { 
             font-size: clamp(26px, 5vw, 34px); 
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
             margin-bottom: 15px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
         
         .title-sub {
-            position: relative;
-            z-index: 1;
             font-size: clamp(18px, 3vw, 22px);
             font-weight: 600;
             margin-bottom: 20px;
             opacity: 0.95;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
         .operation-badge {
-            position: relative;
-            z-index: 1;
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
@@ -195,7 +242,6 @@
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
             transition: var(--transition-base);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .operation-badge:hover {
@@ -235,6 +281,44 @@
             font-size: 18px;
         }
         
+        .refresh-controls {
+            text-align: center;
+            margin: -30px 0 40px;
+        }
+        
+        .refresh-btn {
+            background: white;
+            border: 2px solid var(--primary-600);
+            color: var(--primary-600);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .refresh-btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
+        .refresh-btn i {
+            transition: transform 0.5s ease;
+        }
+        
+        .refresh-btn:hover i {
+            transform: rotate(180deg);
+        }
+        
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -252,7 +336,6 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
         }
         
         .video-card:hover {
@@ -271,34 +354,9 @@
             padding-bottom: 12px;
         }
         
-        .instagram-embed-container {
-            width: 100%;
-            margin: 15px 0 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 400px;
-        }
-        
-        .instagram-embed-container iframe,
-        .instagram-embed-container blockquote {
-            max-width: 100% !important;
-            width: 100% !important;
-            min-width: auto !important;
-            border-radius: 12px;
-        }
-        
-        .empty-video {
-            width: 100%;
-            padding: 40px 20px;
-            background: var(--gray-100);
-            border-radius: 12px;
-            color: var(--gray-500);
-            font-style: italic;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
+        .card-title i {
+            color: var(--primary-500);
+            margin-right: 8px;
         }
         
         .update-time-badge {
@@ -309,7 +367,158 @@
             border-radius: 30px;
             font-size: 12px;
             font-weight: 600;
-            margin: 10px 0 5px;
+            margin: 10px 0 15px;
+        }
+        
+        /* ====== INSTAGRAM EMBED CUSTOM ====== */
+        .instagram-embed-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 125%; /* Aspect ratio untuk Instagram */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #fafafa;
+            margin: 10px 0;
+        }
+        
+        .instagram-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .instagram-embed-container.loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .empty-video {
+            width: 100%;
+            padding: 60px 20px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            color: var(--gray-500);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: auto;
+        }
+        
+        .empty-video i {
+            font-size: 48px;
+            opacity: 0.5;
+        }
+        
+        .empty-video p {
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .empty-video small {
+            color: #999;
+        }
+        
+        .empty-video a {
+            color: var(--primary-600);
+            text-decoration: underline;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        /* ====== LOADING & ERROR STATES ====== */
+        .loading-video {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 60px;
+            color: var(--gray-500);
+        }
+        
+        .spinner {
+            border: 5px solid #e8eaf6;
+            border-top: 5px solid var(--primary-500);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .error-message {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 60px;
+            color: var(--error-500);
+            background: #FEF2F2;
+            border-radius: 12px;
+        }
+        
+        .error-message i {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .retry-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .retry-btn:hover {
+            background: var(--primary-700);
+            transform: translateY(-2px);
+        }
+        
+        .retry-btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
+        .warning-message {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin: 20px auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
         }
         
         /* ====== FOOTER ====== */
@@ -353,6 +562,11 @@
             background: var(--primary-600);
         }
         
+        .social-link:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
         .social-link.instagram:hover {
             background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
         }
@@ -364,25 +578,6 @@
             font-size: clamp(12px, 2.5vw, 13px);
             opacity: 0.9;
         }
-        
-        /* ====== LOADING ====== */
-        .loading-video {
-            text-align: center;
-            padding: 60px;
-            color: var(--gray-500);
-        }
-        
-        .spinner {
-            border: 5px solid #e8eaf6;
-            border-top: 5px solid var(--primary-500);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
@@ -397,6 +592,7 @@
             .main-header { padding: 40px 15px; }
             .main-header h1 { font-size: 20px; }
             .title-sub { font-size: 15px; }
+            .section-title { font-size: 28px; }
         }
         
         @media (max-width: 375px) {
@@ -409,31 +605,47 @@
     </style>
 </head>
 <body>
+    <!-- Skip Link untuk Accessibility -->
+    <a href="#main-content" class="skip-link">Langsung ke konten utama</a>
+
     <!-- MENU TOGGLE & SIDEBAR -->
-    <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
-    <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-sidebar" id="menuSidebar">
+    <div class="menu-toggle" id="menuToggle" role="button" aria-label="Buka menu navigasi" tabindex="0">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+    </div>
+    <div class="menu-overlay" id="menuOverlay" role="presentation"></div>
+    <div class="menu-sidebar" id="menuSidebar" role="navigation" aria-label="Menu navigasi utama">
         <div class="menu-header">
             <div class="menu-title">Menu Navigasi</div>
-            <div class="menu-close" id="menuClose"><i class="fas fa-times"></i></div>
+            <div class="menu-close" id="menuClose" role="button" aria-label="Tutup menu" tabindex="0">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </div>
         </div>
         <div class="menu-items">
             <a href="index.html" class="menu-item">
-                <div class="menu-item-icon"><i class="fas fa-parking"></i></div>
+                <div class="menu-item-icon"><i class="fas fa-parking" aria-hidden="true"></i></div>
                 <div class="menu-item-text">Informasi Tempat Parkir</div>
             </a>
-            <a href="lalu-lintas.html" class="menu-item active">
-                <div class="menu-item-icon"><i class="fas fa-traffic-light"></i></div>
+            <a href="lalu-lintas.html" class="menu-item active" aria-current="page">
+                <div class="menu-item-icon"><i class="fas fa-traffic-light" aria-hidden="true"></i></div>
                 <div class="menu-item-text">Informasi Lalu Lintas</div>
             </a>
         </div>
         <div class="menu-footer">© 2026 Satlantas Polresta Yogyakarta</div>
     </div>
 
-    <div class="container">
-        <!-- HEADER UTAMA - IDENTIK DENGAN INDEX.HTML, MENGGUNAKAN RAMADHAN.PNG -->
-        <div class="main-header">
-            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
+    <div class="container" id="main-content" role="main">
+        <!-- HEADER UTAMA -->
+        <div class="main-header" role="banner" aria-label="Header Informasi Lalu Lintas">
+            <picture>
+                <source srcset="ramadhan.webp" type="image/webp">
+                <source srcset="ramadhan.png" type="image/png">
+                <img src="ramadhan.png" 
+                     alt="Background Ramadan - Selamat Menunaikan Ibadah Puasa" 
+                     class="ramadan-bg-img"
+                     loading="eager"
+                     onerror="this.style.display='none'">
+            </picture>
+            <div class="header-overlay" aria-hidden="true"></div>
             
             <h1 class="title-main">INFORMASI LALU LINTAS</h1>
             <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
@@ -441,45 +653,92 @@
         </div>
         
         <!-- SECTION VIDEO -->
-        <section class="traffic-videos" id="trafficSection">
-            <h2 class="section-title">Pantauan Arus Lalu Lintas</h2>
+        <section class="traffic-videos" id="trafficSection" aria-labelledby="traffic-title">
+            <h2 id="traffic-title" class="section-title">Pantauan Arus Lalu Lintas</h2>
             <p class="section-subtitle">Update Real-Time</p>
-            <div id="videoGridContainer" class="video-grid">
-                <div class="loading-video">
-                    <div class="spinner"></div>
+            
+            <!-- Tombol Refresh Manual -->
+            <div class="refresh-controls">
+                <button id="manualRefresh" class="refresh-btn" aria-label="Perbarui data video">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    <span>Perbarui Data</span>
+                </button>
+            </div>
+            
+            <!-- Container Video Grid -->
+            <div id="videoGridContainer" class="video-grid" role="region" aria-label="Daftar video lalu lintas">
+                <div class="loading-video" role="status">
+                    <div class="spinner" aria-label="Loading"></div>
                     <p>Memuat video dari Instagram...</p>
                 </div>
             </div>
-            <div id="lastUpdatedInfo" style="text-align: center; margin-top: 40px; color: var(--gray-500); font-size: 14px;">
-                <i class="fas fa-sync-alt"></i> Memuat data...
+            
+            <!-- Info Terakhir Update -->
+            <div id="lastUpdatedInfo" class="warning-message" style="justify-content: center; margin-top: 40px;" role="status">
+                <i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>
+                <span>Memuat data...</span>
             </div>
         </section>
         
         <!-- FOOTER -->
-        <div class="footer">
+        <footer class="footer" role="contentinfo">
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
             <p>Polri Untuk Masyarakat</p>
             <div class="social-links">
-                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" target="_blank" class="social-link instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" class="social-link facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://x.com/jogjazebra" target="_blank" class="social-link twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" target="_blank" rel="noopener noreferrer" class="social-link instagram" aria-label="Instagram Satlantas Jogja">
+                    <i class="fab fa-instagram" aria-hidden="true"></i>
+                </a>
+                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" rel="noopener noreferrer" class="social-link facebook" aria-label="Facebook Satlantas Jogja">
+                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                </a>
+                <a href="https://x.com/jogjazebra" target="_blank" rel="noopener noreferrer" class="social-link twitter" aria-label="Twitter Satlantas Jogja">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
             </div>
             <p class="footer-copyright">© 2026 - Informasi Lalu Lintas Kota Yogyakarta</p>
-        </div>
+        </footer>
     </div>
 
     <script>
-        // ====== KONFIGURASI SUPABASE ======
-        const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
+        // ====== KONFIGURASI ======
+        const CONFIG = {
+            SUPABASE_URL: 'https://ocjzmoyxcehxwbghbecx.supabase.co',
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA',
+            RETRY_ATTEMPTS: 3,
+            RETRY_DELAY: 2000,
+            REFRESH_INTERVAL: 120000, // 2 menit
+            CACHE_DURATION: 300000 // 5 menit cache
+        };
         
         let supabaseClient;
-        let trafficData = [];
+        let cachedData = null;
+        let lastFetchTime = 0;
+        let refreshInterval;
         
+        // ====== INITIALIZATION ======
         document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
-            await initSupabase();
-            setInterval(loadTrafficVideos, 60000); // refresh setiap 60 detik
+            const success = await initSupabaseWithRetry();
+            
+            if (success) {
+                await loadTrafficVideos();
+                
+                // Auto refresh setiap 2 menit
+                refreshInterval = setInterval(() => {
+                    loadTrafficVideos(true);
+                }, CONFIG.REFRESH_INTERVAL);
+            }
+            
+            // Manual refresh button
+            document.getElementById('manualRefresh').addEventListener('click', () => {
+                const btn = document.getElementById('manualRefresh');
+                btn.disabled = true;
+                btn.querySelector('i').style.animation = 'spin 1s linear infinite';
+                loadTrafficVideos(true).finally(() => {
+                    btn.disabled = false;
+                    btn.querySelector('i').style.animation = '';
+                });
+            });
         });
         
         // ====== MENU SIDEBAR ======
@@ -489,21 +748,42 @@
             const sidebar = document.getElementById('menuSidebar');
             const close = document.getElementById('menuClose');
             
-            toggle.addEventListener('click', () => {
+            const openMenu = () => {
                 sidebar.classList.add('active');
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-            });
+                toggle.setAttribute('aria-expanded', 'true');
+            };
             
             const closeMenu = () => {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                toggle.setAttribute('aria-expanded', 'false');
             };
+            
+            toggle.addEventListener('click', openMenu);
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openMenu();
+                }
+            });
             
             overlay.addEventListener('click', closeMenu);
             close.addEventListener('click', closeMenu);
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+            close.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    closeMenu();
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => { 
+                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
             
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 100) toggle.classList.add('scrolled');
@@ -511,36 +791,64 @@
             });
         }
         
-        // ====== INIT SUPABASE ======
-        async function initSupabase() {
-            try {
-                if (!window.supabase) {
-                    console.error('Supabase library not loaded');
-                    return false;
+        // ====== SUPABASE INIT WITH RETRY ======
+        async function initSupabaseWithRetry(attempts = CONFIG.RETRY_ATTEMPTS) {
+            for (let i = 0; i < attempts; i++) {
+                try {
+                    if (!window.supabase) {
+                        throw new Error('Supabase library not loaded');
+                    }
+                    
+                    supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
+                        auth: { persistSession: false },
+                        global: {
+                            fetch: (...args) => {
+                                return Promise.race([
+                                    fetch(...args),
+                                    new Promise((_, reject) => 
+                                        setTimeout(() => reject(new Error('Request timeout')), 10000)
+                                    )
+                                ]);
+                            }
+                        }
+                    });
+                    
+                    // Test connection
+                    const { error } = await supabaseClient
+                        .from('traffic_posts')
+                        .select('count', { count: 'exact', head: true });
+                        
+                    if (error) throw error;
+                    
+                    console.log('✅ Supabase initialized');
+                    return true;
+                    
+                } catch (error) {
+                    console.error(`❌ Attempt ${i + 1} failed:`, error);
+                    if (i < attempts - 1) {
+                        await new Promise(resolve => setTimeout(resolve, CONFIG.RETRY_DELAY));
+                    }
                 }
-                
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-                    auth: { persistSession: false }
-                });
-                
-                console.log('✅ Supabase initialized for traffic');
-                await loadTrafficVideos();
-                return true;
-            } catch (error) {
-                console.error('❌ Failed to init Supabase:', error);
-                document.getElementById('videoGridContainer').innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ef4444;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                        <p>Gagal terhubung ke server.</p>
-                    </div>
-                `;
-                return false;
             }
+            
+            showErrorMessage('Gagal terhubung ke server setelah beberapa percobaan');
+            return false;
         }
         
-        // ====== LOAD DATA TRAFFIC ======
-        async function loadTrafficVideos() {
+        // ====== LOAD TRAFFIC VIDEOS ======
+        async function loadTrafficVideos(force = false) {
+            const now = Date.now();
+            
+            // Gunakan cache jika masih valid dan tidak force refresh
+            if (!force && cachedData && (now - lastFetchTime) < CONFIG.CACHE_DURATION) {
+                renderVideoGrid(cachedData);
+                updateLastUpdated('cache');
+                return;
+            }
+            
             try {
+                showLoadingState();
+                
                 const { data, error } = await supabaseClient
                     .from('traffic_posts')
                     .select('*')
@@ -548,36 +856,31 @@
                 
                 if (error) throw error;
                 
-                trafficData = data || [];
+                cachedData = data || [];
+                lastFetchTime = now;
                 
-                // Jika tabel kosong, buat default 5 pos
-                if (trafficData.length === 0) {
+                if (cachedData.length === 0) {
                     await initializeTrafficPosts();
                     return;
                 }
                 
-                renderVideoGrid();
+                renderVideoGrid(cachedData);
                 updateLastUpdated();
-                
-                // Proses embed Instagram
-                setTimeout(() => {
-                    if (window.instgrm) {
-                        window.instgrm.Embeds.process();
-                    }
-                }, 500);
                 
             } catch (error) {
                 console.error('❌ Gagal memuat video:', error);
-                document.getElementById('videoGridContainer').innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #ef4444;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                        <p>Gagal memuat data. Silakan muat ulang halaman.</p>
-                    </div>
-                `;
+                
+                // Jika ada cached data, tampilkan dengan warning
+                if (cachedData) {
+                    renderVideoGrid(cachedData);
+                    showWarningMessage('Menampilkan data tersimpan. Koneksi ke server bermasalah.');
+                } else {
+                    showErrorMessage('Gagal memuat data. Silakan muat ulang halaman.');
+                }
             }
         }
         
-        // ====== INITIALIZE TRAFFIC POSTS (jika belum ada) ======
+        // ====== INITIALIZE TRAFFIC POSTS ======
         async function initializeTrafficPosts() {
             const defaultPosts = [
                 { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
@@ -594,71 +897,203 @@
                         .insert([post]);
                 }
                 console.log('✅ Default traffic posts created');
-                loadTrafficVideos(); // reload
+                loadTrafficVideos(true);
             } catch (error) {
                 console.error('❌ Gagal inisialisasi traffic posts:', error);
             }
         }
         
-        // ====== RENDER GRID VIDEO ======
-        function renderVideoGrid() {
+        // ====== RENDER VIDEO GRID ======
+        function renderVideoGrid(data) {
             const container = document.getElementById('videoGridContainer');
             
-            if (!trafficData.length) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">Belum ada data pos lalu lintas.</div>';
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="empty-video" style="grid-column: 1/-1;">Belum ada data pos lalu lintas.</div>';
                 return;
             }
             
             let html = '';
             
-            trafficData.forEach(post => {
-                const hasUrl = post.instagram_url && post.instagram_url.trim() !== '';
-                const updateTime = post.updated_at 
-                    ? new Date(post.updated_at).toLocaleString('id-ID', { 
-                        timeZone: 'Asia/Jakarta', 
-                        hour12: false,
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    }) 
-                    : 'Belum update';
+            data.forEach(post => {
+                const updateTime = formatUpdateTime(post.updated_at);
                 
                 html += `
                     <div class="video-card">
                         <h3 class="card-title">
-                            <i class="fas fa-traffic-light" style="color: #2563eb; margin-right: 8px;"></i>
-                            ${post.nama_pos}
+                            <i class="fas fa-traffic-light" aria-hidden="true"></i>
+                            ${escapeHtml(post.nama_pos)}
                         </h3>
                         <span class="update-time-badge">
-                            <i class="far fa-clock"></i> ${updateTime}
+                            <i class="far fa-clock" aria-hidden="true"></i>
+                            <span>${updateTime}</span>
                         </span>
                         
-                        <div class="instagram-embed-container">
-                            ${hasUrl ? `
-                                <blockquote class="instagram-media" 
-                                    data-instgrm-permalink="${post.instagram_url}" 
-                                    data-instgrm-version="14">
-                                </blockquote>
-                            ` : `
-                                <div class="empty-video">
-                                    <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
-                                    <p style="font-size: 16px;">Belum ada video untuk pos ini</p>
-                                    <small style="color: #999;">Admin akan segera mengunggah</small>
-                                </div>
-                            `}
+                        <div class="instagram-embed-container" data-url="${escapeHtml(post.instagram_url || '')}">
+                            <!-- Akan diisi oleh JavaScript -->
                         </div>
                     </div>
                 `;
             });
             
             container.innerHTML = html;
+            
+            // Initialize semua embed
+            document.querySelectorAll('.instagram-embed-container').forEach(container => {
+                const url = container.dataset.url;
+                if (url && url.trim() !== '') {
+                    container.classList.add('loading');
+                    createInstagramEmbed(container, url);
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-video">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                            <p>Belum ada video untuk pos ini</p>
+                            <small>Admin akan segera mengunggah</small>
+                        </div>
+                    `;
+                }
+            });
         }
         
-        // ====== UPDATE TIMESTAMP ======
-        function updateLastUpdated() {
+        // ====== CREATE INSTAGRAM EMBED (IFRAME METHOD) ======
+        function createInstagramEmbed(container, url) {
+            // Ekstrak ID dari URL Instagram
+            const videoId = extractInstagramId(url);
+            
+            if (!videoId) {
+                container.classList.remove('loading');
+                container.innerHTML = `
+                    <div class="empty-video">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                        <p>URL Instagram tidak valid</p>
+                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+                            Buka di Instagram
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Buat iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.instagram.com/p/${videoId}/embed/captioned/?hidecaption=true`;
+            iframe.title = 'Instagram Video';
+            iframe.loading = 'lazy';
+            iframe.allow = 'fullscreen';
+            
+            // Handle iframe load
+            iframe.onload = () => {
+                container.classList.remove('loading');
+            };
+            
+            // Handle iframe error
+            iframe.onerror = () => {
+                container.classList.remove('loading');
+                container.innerHTML = `
+                    <div class="empty-video">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                        <p>Gagal memuat video</p>
+                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+                            Buka di Instagram
+                        </a>
+                    </div>
+                `;
+            };
+            
+            container.innerHTML = '';
+            container.appendChild(iframe);
+        }
+        
+        // ====== EXTRACT INSTAGRAM ID ======
+        function extractInstagramId(url) {
+            if (!url) return null;
+            
+            // Regex untuk berbagai format URL Instagram
+            const patterns = [
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/tv\/([a-zA-Z0-9_-]+)/,
+                /\/p\/([a-zA-Z0-9_-]+)/,
+                /\/reel\/([a-zA-Z0-9_-]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            
+            return null;
+        }
+        
+        // ====== HELPER FUNCTIONS ======
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function formatUpdateTime(timestamp) {
+            if (!timestamp) return 'Belum update';
+            
+            try {
+                const date = new Date(timestamp);
+                return date.toLocaleString('id-ID', { 
+                    timeZone: 'Asia/Jakarta', 
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return 'Belum update';
+            }
+        }
+        
+        function showLoadingState() {
+            const container = document.getElementById('videoGridContainer');
+            container.innerHTML = `
+                <div class="loading-video" role="status">
+                    <div class="spinner" aria-label="Loading"></div>
+                    <p>Memuat video dari Instagram...</p>
+                </div>
+            `;
+        }
+        
+        function showErrorMessage(message) {
+            const container = document.getElementById('videoGridContainer');
+            container.innerHTML = `
+                <div class="error-message" role="alert">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <p>${escapeHtml(message)}</p>
+                    <button onclick="location.reload()" class="retry-btn">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Muat Ulang Halaman
+                    </button>
+                </div>
+            `;
+            
+            const info = document.getElementById('lastUpdatedInfo');
+            info.innerHTML = `
+                <i class="fas fa-exclamation-circle" style="color: var(--error-500);"></i>
+                ${escapeHtml(message)}
+            `;
+        }
+        
+        function showWarningMessage(message) {
+            const info = document.getElementById('lastUpdatedInfo');
+            info.innerHTML = `
+                <i class="fas fa-exclamation-circle" style="color: var(--warning-500);"></i>
+                ${escapeHtml(message)}
+            `;
+        }
+        
+        function updateLastUpdated(source = 'server') {
             const info = document.getElementById('lastUpdatedInfo');
             const now = new Date().toLocaleString('id-ID', { 
                 timeZone: 'Asia/Jakarta', 
@@ -670,8 +1105,23 @@
                 minute: '2-digit',
                 second: '2-digit'
             });
-            info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
+            
+            const icon = source === 'cache' ? 'fa-database' : 'fa-check-circle';
+            const color = source === 'cache' ? 'var(--warning-500)' : 'var(--success-500)';
+            const text = source === 'cache' ? 'Data tersimpan' : 'Terakhir diperbarui';
+            
+            info.innerHTML = `
+                <i class="fas ${icon}" style="color: ${color};"></i>
+                ${text}: ${now}
+            `;
         }
+        
+        // Cleanup interval on page unload
+        window.addEventListener('beforeunload', () => {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
     </script>
 </body>
 </html>
