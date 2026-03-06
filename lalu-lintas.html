@@ -226,46 +226,6 @@
             text-align: center;
         }
         
-        .section-subtitle {
-            color: var(--gray-500);
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 18px;
-        }
-        
-        .refresh-controls {
-            text-align: center;
-            margin: -30px 0 40px;
-        }
-        
-        .refresh-btn {
-            background: white;
-            border: 2px solid var(--primary-600);
-            color: var(--primary-600);
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-base);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
-        .refresh-btn:hover {
-            background: var(--primary-600);
-            color: white;
-        }
-        
-        .refresh-btn i {
-            transition: transform 0.5s ease;
-        }
-        
-        .refresh-btn:hover i {
-            transform: rotate(180deg);
-        }
-        
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -570,41 +530,6 @@
             border-radius: 12px;
         }
         
-        .error-message i {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .retry-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: var(--primary-600);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: var(--transition-base);
-        }
-        
-        .retry-btn:hover {
-            background: var(--primary-700);
-            transform: translateY(-2px);
-        }
-        
-        .warning-message {
-            background: #FEF3C7;
-            color: #92400E;
-            padding: 12px 24px;
-            border-radius: 8px;
-            margin: 20px auto;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
         /* ====== FOOTER ====== */
         .footer {
             text-align: center;
@@ -671,16 +596,6 @@
                 height: 48px;
                 font-size: 18px;
             }
-            
-            .overlay-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-            
-            .control-group {
-                padding: 3px 8px;
-            }
         }
     </style>
 </head>
@@ -719,22 +634,14 @@
         <!-- SECTION VIDEO -->
         <section class="traffic-videos" id="trafficSection">
             <h2 class="section-title">Pantauan Arus Lalu Lintas</h2>
-            <p class="section-subtitle">Update Real-Time</p>
-            
-            <!-- Tombol Refresh Manual -->
-            <div class="refresh-controls">
-                <button id="manualRefresh" class="refresh-btn">
-                    <i class="fas fa-sync-alt"></i>
-                    <span>Perbarui Data</span>
-                </button>
-            </div>
             
             <div id="videoGridContainer" class="video-grid">
                 <div class="loading-video">
                     <div class="spinner"></div>
-                    <p>Memuat video dari Instagram...</p>
+                    <p>Memuat video...</p>
                 </div>
             </div>
+            
             <div id="lastUpdatedInfo" style="text-align: center; margin-top: 40px; color: var(--gray-500); font-size: 14px;">
                 <i class="fas fa-sync-alt"></i> Memuat data...
             </div>
@@ -758,40 +665,23 @@
         const CONFIG = {
             SUPABASE_URL: 'https://ocjzmoyxcehxwbghbecx.supabase.co',
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA',
-            RETRY_ATTEMPTS: 3,
-            RETRY_DELAY: 2000,
-            REFRESH_INTERVAL: 120000,
-            CACHE_DURATION: 300000
+            REFRESH_INTERVAL: 60000
         };
         
         let supabaseClient;
         let cachedData = null;
         let lastFetchTime = 0;
         let refreshInterval;
-        
-        // Variabel untuk video yang sedang diputar
         let currentlyPlayingVideo = null;
         
         document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
-            const success = await initSupabaseWithRetry();
+            await initSupabase();
+            await loadTrafficVideos();
             
-            if (success) {
-                await loadTrafficVideos();
-                refreshInterval = setInterval(() => {
-                    loadTrafficVideos(true);
-                }, CONFIG.REFRESH_INTERVAL);
-            }
-            
-            document.getElementById('manualRefresh').addEventListener('click', () => {
-                const btn = document.getElementById('manualRefresh');
-                btn.disabled = true;
-                btn.querySelector('i').style.animation = 'spin 1s linear infinite';
-                loadTrafficVideos(true).finally(() => {
-                    btn.disabled = false;
-                    btn.querySelector('i').style.animation = '';
-                });
-            });
+            refreshInterval = setInterval(() => {
+                loadTrafficVideos(true);
+            }, CONFIG.REFRESH_INTERVAL);
         });
         
         // ====== MENU SIDEBAR ======
@@ -824,49 +714,29 @@
         }
         
         // ====== SUPABASE INIT ======
-        async function initSupabaseWithRetry(attempts = CONFIG.RETRY_ATTEMPTS) {
-            for (let i = 0; i < attempts; i++) {
-                try {
-                    if (!window.supabase) throw new Error('Supabase library not loaded');
+        async function initSupabase() {
+            try {
+                supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
+                    auth: { persistSession: false }
+                });
+                
+                const { error } = await supabaseClient
+                    .from('traffic_posts')
+                    .select('count', { count: 'exact', head: true });
                     
-                    supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
-                        auth: { persistSession: false }
-                    });
-                    
-                    const { error } = await supabaseClient
-                        .from('traffic_posts')
-                        .select('count', { count: 'exact', head: true });
-                        
-                    if (error) throw error;
-                    
-                    console.log('✅ Supabase initialized');
-                    return true;
-                    
-                } catch (error) {
-                    console.error(`❌ Attempt ${i + 1} failed:`, error);
-                    if (i < attempts - 1) {
-                        await new Promise(resolve => setTimeout(resolve, CONFIG.RETRY_DELAY));
-                    }
-                }
+                if (error) throw error;
+                
+                console.log('✅ Supabase initialized');
+                return true;
+            } catch (error) {
+                console.error('❌ Supabase init failed:', error);
+                return false;
             }
-            
-            showErrorMessage('Gagal terhubung ke server');
-            return false;
         }
         
         // ====== LOAD TRAFFIC VIDEOS ======
         async function loadTrafficVideos(force = false) {
-            const now = Date.now();
-            
-            if (!force && cachedData && (now - lastFetchTime) < CONFIG.CACHE_DURATION) {
-                renderVideoGrid(cachedData);
-                updateLastUpdated('cache');
-                return;
-            }
-            
             try {
-                showLoadingState();
-                
                 const { data, error } = await supabaseClient
                     .from('traffic_posts')
                     .select('*')
@@ -875,45 +745,12 @@
                 if (error) throw error;
                 
                 cachedData = data || [];
-                lastFetchTime = now;
-                
-                if (cachedData.length === 0) {
-                    await initializeTrafficPosts();
-                    return;
-                }
-                
                 renderVideoGrid(cachedData);
                 updateLastUpdated();
                 
             } catch (error) {
                 console.error('❌ Gagal memuat video:', error);
-                if (cachedData) {
-                    renderVideoGrid(cachedData);
-                    showWarningMessage('Menampilkan data tersimpan');
-                } else {
-                    showErrorMessage('Gagal memuat data');
-                }
-            }
-        }
-        
-        // ====== INITIALIZE TRAFFIC POSTS ======
-        async function initializeTrafficPosts() {
-            const defaultPosts = [
-                { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
-                { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
-                { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
-                { id: 4, nama_pos: 'Pospam Titik Nol KM', instagram_url: null },
-                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null }
-            ];
-            
-            try {
-                for (const post of defaultPosts) {
-                    await supabaseClient.from('traffic_posts').insert([post]);
-                }
-                console.log('✅ Default traffic posts created');
-                loadTrafficVideos(true);
-            } catch (error) {
-                console.error('❌ Gagal inisialisasi:', error);
+                showErrorMessage();
             }
         }
         
@@ -937,7 +774,7 @@
                     <div class="video-card" data-video-id="${post.id}">
                         <h3 class="card-title">
                             <i class="fas fa-traffic-light"></i>
-                            ${escapeHtml(post.nama_pos)}
+                            ${escapeHtml(post.nama_pos)} <!-- JUDUL DARI DATABASE (BISA DIEDIT ADMIN) -->
                         </h3>
                         <span class="update-time-badge">
                             <i class="far fa-clock"></i> ${updateTime}
@@ -959,7 +796,7 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Center Play/Pause Button (Besar) -->
+                                    <!-- Center Play/Pause Button -->
                                     <div class="overlay-center">
                                         <button class="overlay-btn play-pause-overlay play-pause-btn" data-video-id="${post.id}" data-container-id="${videoId}-container" title="Play/Pause">
                                             <i class="fas fa-play"></i>
@@ -1008,7 +845,6 @@
                             `}
                         </div>
                         
-                        <!-- Status di luar video (kecil) -->
                         ${hasVideo ? `
                             <div style="display: flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 12px; color: var(--gray-500);">
                                 <i class="fas fa-circle" id="${videoId}-status-icon" style="color: #f59e0b;"></i>
@@ -1025,12 +861,11 @@
             document.querySelectorAll('.instagram-embed-container.has-video').forEach(container => {
                 const url = container.dataset.url;
                 if (url && url.trim() !== '') {
-                    container.classList.add('loading');
                     createInstagramEmbed(container, url);
                 }
             });
             
-            // Initialize semua fitur
+            // Initialize semua fitur video
             initVideoControls();
             initFullscreen();
             initVolumeControl();
@@ -1044,7 +879,6 @@
             const videoId = extractInstagramId(url);
             
             if (!videoId) {
-                container.classList.remove('loading');
                 container.innerHTML = `
                     <div class="empty-video">
                         <i class="fab fa-instagram"></i>
@@ -1069,22 +903,10 @@
             
             iframe.onload = () => {
                 container.classList.remove('loading');
-                // Tambahkan event listener untuk progress
                 setupProgressTracking(iframe, container.id);
             };
             
-            iframe.onerror = () => {
-                container.classList.remove('loading');
-                container.innerHTML = `
-                    <div class="empty-video">
-                        <i class="fab fa-instagram"></i>
-                        <p>Gagal memuat video</p>
-                        <a href="${escapeHtml(url)}" target="_blank">Buka di Instagram</a>
-                    </div>
-                `;
-            };
-            
-            // Hapus overlay yang sudah ada, simpan untuk ditambahkan kembali
+            // Simpan overlay yang sudah ada
             const overlay = container.querySelector('.video-overlay');
             container.innerHTML = '';
             container.appendChild(iframe);
@@ -1100,20 +922,17 @@
             const patterns = [
                 /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
                 /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
-                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/tv\/([a-zA-Z0-9_-]+)/,
-                /\/p\/([a-zA-Z0-9_-]+)/,
-                /\/reel\/([a-zA-Z0-9_-]+)/
+                /\/p\/([a-zA-Z0-9_-]+)/
             ];
             
             for (const pattern of patterns) {
                 const match = url.match(pattern);
                 if (match && match[1]) return match[1];
             }
-            
             return null;
         }
         
-        // ====== VIDEO CONTROLS (PLAY/PAUSE) ======
+        // ====== VIDEO CONTROLS ======
         function initVideoControls() {
             document.querySelectorAll('.play-pause-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
@@ -1130,12 +949,10 @@
                     const isPlaying = this.classList.contains('playing');
                     
                     if (isPlaying) {
-                        // PAUSE
                         pauseVideo(iframe);
                         updateVideoStatus(videoId, 'paused');
                         currentlyPlayingVideo = null;
                     } else {
-                        // PAUSE video lain
                         if (currentlyPlayingVideo && currentlyPlayingVideo !== videoId) {
                             const prevCard = document.querySelector(`[data-video-id="${currentlyPlayingVideo}"]`);
                             if (prevCard) {
@@ -1148,7 +965,6 @@
                             }
                         }
                         
-                        // PLAY
                         playVideo(iframe);
                         updateVideoStatus(videoId, 'playing');
                         currentlyPlayingVideo = videoId;
@@ -1185,8 +1001,8 @@
         
         function updateVideoStatus(videoId, status) {
             const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
-            const statusIcon = document.getElementById(`${videoId}-status-icon`);
-            const statusText = document.getElementById(`${videoId}-status-text`);
+            const statusIcon = document.getElementById(`video-${videoId}-status-icon`);
+            const statusText = document.getElementById(`video-${videoId}-status-text`);
             
             if (playPauseBtn) {
                 const icon = playPauseBtn.querySelector('i');
@@ -1315,7 +1131,7 @@
                 container.addEventListener('click', function(e) {
                     e.stopPropagation();
                     
-                    const videoId = this.id.replace('-progress-container', '');
+                    const videoId = this.id.replace('-progress-container', '').replace('video-', '');
                     const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
                     const iframe = videoCard.querySelector('iframe');
                     
@@ -1325,8 +1141,8 @@
                         const width = rect.width;
                         const percentage = (clickX / width) * 100;
                         
-                        const progressBar = document.getElementById(`${videoId}-progress-bar`);
-                        progressBar.style.width = percentage + '%';
+                        const progressBar = document.getElementById(`${this.id.replace('-container', '')}-progress-bar`);
+                        if (progressBar) progressBar.style.width = percentage + '%';
                         
                         try {
                             iframe.contentWindow.postMessage({
@@ -1340,14 +1156,14 @@
         }
         
         function setupProgressTracking(iframe, containerId) {
-            const videoId = containerId.replace('-container', '');
-            const progressBar = document.getElementById(`${videoId}-progress-bar`);
-            const timeDisplay = document.getElementById(`${videoId}-time`);
+            const videoId = containerId.replace('-container', '').replace('video-', '');
+            const progressBar = document.getElementById(`video-${videoId}-progress-bar`);
+            const timeDisplay = document.getElementById(`video-${videoId}-time`);
             
             if (!progressBar || !timeDisplay) return;
             
             let currentTime = 0;
-            let duration = 60; // Asumsi durasi 60 detik
+            let duration = 60;
             
             setInterval(() => {
                 const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
@@ -1383,59 +1199,26 @@
             if (!timestamp) return 'Belum update';
             try {
                 const date = new Date(timestamp);
-                return date.toLocaleString('id-ID', { 
-                    timeZone: 'Asia/Jakarta', 
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                return date.toLocaleString('id-ID');
             } catch {
                 return 'Belum update';
             }
         }
         
-        function showLoadingState() {
-            const container = document.getElementById('videoGridContainer');
-            container.innerHTML = `
-                <div class="loading-video">
-                    <div class="spinner"></div>
-                    <p>Memuat video...</p>
-                </div>
-            `;
+        function updateLastUpdated() {
+            const info = document.getElementById('lastUpdatedInfo');
+            const now = new Date().toLocaleString('id-ID');
+            info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
         }
         
-        function showErrorMessage(message) {
+        function showErrorMessage() {
             const container = document.getElementById('videoGridContainer');
             container.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <p>${escapeHtml(message)}</p>
-                    <button onclick="location.reload()" class="retry-btn">
-                        <i class="fas fa-redo"></i> Muat Ulang
-                    </button>
+                    <p>Gagal memuat data. Silakan muat ulang halaman.</p>
                 </div>
             `;
-        }
-        
-        function showWarningMessage(message) {
-            const info = document.getElementById('lastUpdatedInfo');
-            info.innerHTML = `<i class="fas fa-exclamation-circle" style="color: #f59e0b;"></i> ${escapeHtml(message)}`;
-        }
-        
-        function updateLastUpdated(source = 'server') {
-            const info = document.getElementById('lastUpdatedInfo');
-            const now = new Date().toLocaleString('id-ID', { 
-                timeZone: 'Asia/Jakarta', 
-                hour12: false
-            });
-            
-            const icon = source === 'cache' ? 'fa-database' : 'fa-check-circle';
-            const color = source === 'cache' ? '#f59e0b' : '#10b981';
-            const text = source === 'cache' ? 'Data tersimpan' : 'Terakhir diperbarui';
-            
-            info.innerHTML = `<i class="fas ${icon}" style="color: ${color};"></i> ${text}: ${now}`;
         }
         
         window.addEventListener('beforeunload', () => {
