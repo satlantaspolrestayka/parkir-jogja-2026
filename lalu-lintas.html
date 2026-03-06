@@ -10,9 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Lalu Lintas Jogja">
     <title>Informasi Lalu Lintas Yogyakarta 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Instagram Embed Script -->
-    <script async src="//www.instagram.com/embed.js"></script>
-    <!-- Supabase Client untuk publik (read only) -->
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ====== CSS VARIABLES & RESET ====== */
@@ -46,7 +44,7 @@
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* ====== MENU NAVIGASI (SIDEBAR) ====== */
+        /* ====== MENU NAVIGASI ====== */
         .menu-toggle {
             position: fixed;
             top: 20px;
@@ -130,14 +128,14 @@
             color: rgba(255, 255, 255, 0.7); font-size: 13px; text-align: center;
         }
         
-        /* ====== HEADER UTAMA - PERSIS SEPERTI AWAL ====== */
+        /* ====== HEADER UTAMA ====== */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
+            aspect-ratio: 3556 / 1535;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -154,7 +152,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            mix-blend-mode: multiply; /* membuat background putih transparan */
+            mix-blend-mode: multiply;
             opacity: 1;
             z-index: 0;
             pointer-events: none;
@@ -301,11 +299,14 @@
             width: 100%;
             border-bottom: 2px solid var(--gray-200);
             padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .card-title i {
             color: var(--primary-500);
-            margin-right: 8px;
         }
         
         .update-time-badge {
@@ -323,11 +324,11 @@
         .instagram-embed-container {
             position: relative;
             width: 100%;
-            padding-bottom: 125%; /* Aspect ratio untuk Instagram */
+            padding-bottom: 125%;
             height: 0;
             overflow: hidden;
             border-radius: 12px;
-            background: #fafafa;
+            background: #000;
             margin: 10px 0;
         }
         
@@ -338,26 +339,180 @@
             width: 100%;
             height: 100%;
             border: none;
-            background: white;
+            background: #000;
+            pointer-events: auto;
+            z-index: 1;
         }
         
-        .instagram-embed-container.loading::before {
-            content: '';
+        /* ====== VIDEO CONTROLS OVERLAY (DI DALAM VIDEO) ====== */
+        .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 12px;
-            z-index: 1;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.7) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
         }
         
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .instagram-embed-container:hover .video-overlay,
+        .instagram-embed-container:focus-within .video-overlay {
+            opacity: 1;
+        }
+        
+        .overlay-top {
+            display: flex;
+            justify-content: flex-end;
+            pointer-events: auto;
+        }
+        
+        .overlay-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+        }
+        
+        .overlay-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: auto;
+        }
+        
+        .overlay-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            pointer-events: auto;
+        }
+        
+        .overlay-btn:hover {
+            transform: scale(1.1);
+            background: white;
+            color: var(--primary-600);
+        }
+        
+        .overlay-btn.playing {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .play-pause-overlay {
+            width: 64px;
+            height: 64px;
+            font-size: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 5px 12px;
+            border-radius: 30px;
+            pointer-events: auto;
+        }
+        
+        .control-group button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-group button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .control-group button.active {
+            color: var(--primary-500);
+        }
+        
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .speed-select {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .speed-select option {
+            background: #333;
+            color: white;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            pointer-events: auto;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-500);
+            border-radius: 2px;
+            width: 0%;
+            position: relative;
+        }
+        
+        .time-display {
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
         
         .empty-video {
@@ -370,11 +525,6 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: auto;
         }
         
         .empty-video i {
@@ -389,13 +539,6 @@
         
         .empty-video small {
             color: #999;
-        }
-        
-        .empty-video a {
-            color: var(--primary-600);
-            text-decoration: underline;
-            margin-top: 10px;
-            display: inline-block;
         }
         
         /* ====== LOADING & ERROR STATES ====== */
@@ -522,21 +665,22 @@
             .menu-toggle { width: 44px; height: 44px; top: 15px; left: 15px; }
             .traffic-videos { padding: 40px 20px; }
             .video-grid { grid-template-columns: 1fr; }
-        }
-        
-        @media (max-width: 640px) {
-            .main-header { padding: 40px 15px; }
-            .main-header h1 { font-size: 20px; }
-            .title-sub { font-size: 15px; }
-            .section-title { font-size: 28px; }
-        }
-        
-        @media (max-width: 375px) {
-            .main-header { padding: 35px 12px; }
-            .main-header h1 { font-size: 18px; }
-            .title-sub { font-size: 14px; }
-            .operation-badge { padding: 8px 16px; font-size: 12px; }
-            .menu-sidebar { width: 100%; max-width: 320px; }
+            
+            .play-pause-overlay {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+            
+            .overlay-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+            
+            .control-group {
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
@@ -563,7 +707,7 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA - PERSIS SEPERTI AWAL YANG ANDA KIRIM -->
+        <!-- HEADER UTAMA -->
         <div class="main-header">
             <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
             
@@ -616,8 +760,8 @@
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA',
             RETRY_ATTEMPTS: 3,
             RETRY_DELAY: 2000,
-            REFRESH_INTERVAL: 120000, // 2 menit
-            CACHE_DURATION: 300000 // 5 menit cache
+            REFRESH_INTERVAL: 120000,
+            CACHE_DURATION: 300000
         };
         
         let supabaseClient;
@@ -625,20 +769,20 @@
         let lastFetchTime = 0;
         let refreshInterval;
         
+        // Variabel untuk video yang sedang diputar
+        let currentlyPlayingVideo = null;
+        
         document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
             const success = await initSupabaseWithRetry();
             
             if (success) {
                 await loadTrafficVideos();
-                
-                // Auto refresh setiap 2 menit
                 refreshInterval = setInterval(() => {
                     loadTrafficVideos(true);
                 }, CONFIG.REFRESH_INTERVAL);
             }
             
-            // Manual refresh button
             document.getElementById('manualRefresh').addEventListener('click', () => {
                 const btn = document.getElementById('manualRefresh');
                 btn.disabled = true;
@@ -679,19 +823,16 @@
             });
         }
         
-        // ====== SUPABASE INIT WITH RETRY ======
+        // ====== SUPABASE INIT ======
         async function initSupabaseWithRetry(attempts = CONFIG.RETRY_ATTEMPTS) {
             for (let i = 0; i < attempts; i++) {
                 try {
-                    if (!window.supabase) {
-                        throw new Error('Supabase library not loaded');
-                    }
+                    if (!window.supabase) throw new Error('Supabase library not loaded');
                     
                     supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
                         auth: { persistSession: false }
                     });
                     
-                    // Test connection
                     const { error } = await supabaseClient
                         .from('traffic_posts')
                         .select('count', { count: 'exact', head: true });
@@ -709,7 +850,7 @@
                 }
             }
             
-            showErrorMessage('Gagal terhubung ke server setelah beberapa percobaan');
+            showErrorMessage('Gagal terhubung ke server');
             return false;
         }
         
@@ -717,7 +858,6 @@
         async function loadTrafficVideos(force = false) {
             const now = Date.now();
             
-            // Gunakan cache jika masih valid
             if (!force && cachedData && (now - lastFetchTime) < CONFIG.CACHE_DURATION) {
                 renderVideoGrid(cachedData);
                 updateLastUpdated('cache');
@@ -747,13 +887,11 @@
                 
             } catch (error) {
                 console.error('❌ Gagal memuat video:', error);
-                
-                // Jika ada cached data, tampilkan dengan warning
                 if (cachedData) {
                     renderVideoGrid(cachedData);
-                    showWarningMessage('Menampilkan data tersimpan. Koneksi ke server bermasalah.');
+                    showWarningMessage('Menampilkan data tersimpan');
                 } else {
-                    showErrorMessage('Gagal memuat data. Silakan muat ulang halaman.');
+                    showErrorMessage('Gagal memuat data');
                 }
             }
         }
@@ -770,14 +908,12 @@
             
             try {
                 for (const post of defaultPosts) {
-                    await supabaseClient
-                        .from('traffic_posts')
-                        .insert([post]);
+                    await supabaseClient.from('traffic_posts').insert([post]);
                 }
                 console.log('✅ Default traffic posts created');
                 loadTrafficVideos(true);
             } catch (error) {
-                console.error('❌ Gagal inisialisasi traffic posts:', error);
+                console.error('❌ Gagal inisialisasi:', error);
             }
         }
         
@@ -786,72 +922,139 @@
             const container = document.getElementById('videoGridContainer');
             
             if (!data || data.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">Belum ada data pos lalu lintas.</div>';
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">Belum ada data.</div>';
                 return;
             }
             
             let html = '';
             
-            data.forEach(post => {
+            data.forEach((post, index) => {
                 const updateTime = formatUpdateTime(post.updated_at);
+                const videoId = `video-${post.id}-${index}`;
+                const hasVideo = post.instagram_url && post.instagram_url.trim() !== '';
                 
                 html += `
-                    <div class="video-card">
+                    <div class="video-card" data-video-id="${post.id}">
                         <h3 class="card-title">
-                            <i class="fas fa-traffic-light" style="color: #2563eb; margin-right: 8px;"></i>
+                            <i class="fas fa-traffic-light"></i>
                             ${escapeHtml(post.nama_pos)}
                         </h3>
                         <span class="update-time-badge">
                             <i class="far fa-clock"></i> ${updateTime}
                         </span>
                         
-                        <div class="instagram-embed-container" data-url="${escapeHtml(post.instagram_url || '')}">
-                            <!-- Akan diisi oleh JavaScript -->
+                        <div class="instagram-embed-container ${hasVideo ? 'has-video' : ''}" 
+                             data-url="${escapeHtml(post.instagram_url || '')}" 
+                             id="${videoId}-container">
+                            
+                            ${hasVideo ? `
+                                <!-- OVERLAY KONTROL DI DALAM VIDEO -->
+                                <div class="video-overlay" id="${videoId}-overlay">
+                                    <!-- Top Bar -->
+                                    <div class="overlay-top">
+                                        <div class="control-group">
+                                            <button class="fullscreen-btn" data-container-id="${videoId}-container" title="Fullscreen">
+                                                <i class="fas fa-expand"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Center Play/Pause Button (Besar) -->
+                                    <div class="overlay-center">
+                                        <button class="overlay-btn play-pause-overlay play-pause-btn" data-video-id="${post.id}" data-container-id="${videoId}-container" title="Play/Pause">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Bottom Bar -->
+                                    <div class="overlay-bottom">
+                                        <!-- Progress Bar -->
+                                        <div class="progress-container" id="${videoId}-progress-container">
+                                            <div class="progress-bar" id="${videoId}-progress-bar" style="width: 0%;"></div>
+                                        </div>
+                                        
+                                        <div style="display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+                                            <!-- Time Display -->
+                                            <span class="time-display" id="${videoId}-time">0:00 / 0:00</span>
+                                            
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <!-- Volume Control + Mute -->
+                                                <div class="control-group">
+                                                    <button class="mute-btn" data-video-id="${post.id}" title="Mute">
+                                                        <i class="fas fa-volume-up"></i>
+                                                    </button>
+                                                    <input type="range" min="0" max="100" value="100" class="volume-slider" data-video-id="${post.id}" title="Volume">
+                                                </div>
+                                                
+                                                <!-- Playback Speed -->
+                                                <div class="control-group">
+                                                    <select class="speed-select" data-video-id="${post.id}" title="Kecepatan">
+                                                        <option value="0.5">0.5x</option>
+                                                        <option value="1" selected>1x</option>
+                                                        <option value="1.5">1.5x</option>
+                                                        <option value="2">2x</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="empty-video">
+                                    <i class="fab fa-instagram"></i>
+                                    <p>Belum ada video</p>
+                                    <small>Admin akan segera mengunggah</small>
+                                </div>
+                            `}
                         </div>
+                        
+                        <!-- Status di luar video (kecil) -->
+                        ${hasVideo ? `
+                            <div style="display: flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 12px; color: var(--gray-500);">
+                                <i class="fas fa-circle" id="${videoId}-status-icon" style="color: #f59e0b;"></i>
+                                <span id="${videoId}-status-text">Paused</span>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             });
             
             container.innerHTML = html;
             
-            // Initialize semua embed
-            document.querySelectorAll('.instagram-embed-container').forEach(container => {
+            // Initialize embed untuk yang punya video
+            document.querySelectorAll('.instagram-embed-container.has-video').forEach(container => {
                 const url = container.dataset.url;
                 if (url && url.trim() !== '') {
                     container.classList.add('loading');
                     createInstagramEmbed(container, url);
-                } else {
-                    container.innerHTML = `
-                        <div class="empty-video">
-                            <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
-                            <p style="font-size: 16px;">Belum ada video untuk pos ini</p>
-                            <small style="color: #999;">Admin akan segera mengunggah</small>
-                        </div>
-                    `;
                 }
             });
+            
+            // Initialize semua fitur
+            initVideoControls();
+            initFullscreen();
+            initVolumeControl();
+            initMuteButton();
+            initSpeedControl();
+            initProgressBar();
         }
         
-        // ====== CREATE INSTAGRAM EMBED (IFRAME METHOD) ======
+        // ====== CREATE INSTAGRAM EMBED ======
         function createInstagramEmbed(container, url) {
-            // Ekstrak ID dari URL Instagram
             const videoId = extractInstagramId(url);
             
             if (!videoId) {
                 container.classList.remove('loading');
                 container.innerHTML = `
                     <div class="empty-video">
-                        <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
-                        <p>URL Instagram tidak valid</p>
-                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">
-                            Buka di Instagram
-                        </a>
+                        <i class="fab fa-instagram"></i>
+                        <p>URL tidak valid</p>
+                        <a href="${escapeHtml(url)}" target="_blank">Buka di Instagram</a>
                     </div>
                 `;
                 return;
             }
             
-            // Buat iframe
             const iframe = document.createElement('iframe');
             iframe.src = `https://www.instagram.com/p/${videoId}/embed/captioned/?hidecaption=true`;
             iframe.width = '100%';
@@ -862,35 +1065,38 @@
             iframe.allowFullscreen = 'true';
             iframe.style.border = 'none';
             iframe.loading = 'lazy';
+            iframe.allow = 'autoplay; fullscreen';
             
-            // Handle iframe load
             iframe.onload = () => {
                 container.classList.remove('loading');
+                // Tambahkan event listener untuk progress
+                setupProgressTracking(iframe, container.id);
             };
             
-            // Handle iframe error
             iframe.onerror = () => {
                 container.classList.remove('loading');
                 container.innerHTML = `
                     <div class="empty-video">
-                        <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
+                        <i class="fab fa-instagram"></i>
                         <p>Gagal memuat video</p>
-                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">
-                            Buka di Instagram
-                        </a>
+                        <a href="${escapeHtml(url)}" target="_blank">Buka di Instagram</a>
                     </div>
                 `;
             };
             
+            // Hapus overlay yang sudah ada, simpan untuk ditambahkan kembali
+            const overlay = container.querySelector('.video-overlay');
             container.innerHTML = '';
             container.appendChild(iframe);
+            if (overlay) {
+                container.appendChild(overlay);
+            }
         }
         
         // ====== EXTRACT INSTAGRAM ID ======
         function extractInstagramId(url) {
             if (!url) return null;
             
-            // Regex untuk berbagai format URL Instagram
             const patterns = [
                 /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
                 /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
@@ -901,12 +1107,265 @@
             
             for (const pattern of patterns) {
                 const match = url.match(pattern);
-                if (match && match[1]) {
-                    return match[1];
-                }
+                if (match && match[1]) return match[1];
             }
             
             return null;
+        }
+        
+        // ====== VIDEO CONTROLS (PLAY/PAUSE) ======
+        function initVideoControls() {
+            document.querySelectorAll('.play-pause-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const videoId = this.dataset.videoId;
+                    const containerId = this.dataset.containerId;
+                    const container = document.getElementById(containerId);
+                    const iframe = container.querySelector('iframe');
+                    
+                    if (!iframe) return;
+                    
+                    const isPlaying = this.classList.contains('playing');
+                    
+                    if (isPlaying) {
+                        // PAUSE
+                        pauseVideo(iframe);
+                        updateVideoStatus(videoId, 'paused');
+                        currentlyPlayingVideo = null;
+                    } else {
+                        // PAUSE video lain
+                        if (currentlyPlayingVideo && currentlyPlayingVideo !== videoId) {
+                            const prevCard = document.querySelector(`[data-video-id="${currentlyPlayingVideo}"]`);
+                            if (prevCard) {
+                                const prevBtn = prevCard.querySelector('.play-pause-btn');
+                                const prevIframe = prevCard.querySelector('iframe');
+                                if (prevIframe) {
+                                    pauseVideo(prevIframe);
+                                    updateVideoStatus(currentlyPlayingVideo, 'paused');
+                                }
+                            }
+                        }
+                        
+                        // PLAY
+                        playVideo(iframe);
+                        updateVideoStatus(videoId, 'playing');
+                        currentlyPlayingVideo = videoId;
+                    }
+                });
+            });
+        }
+        
+        function playVideo(iframe) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'play' }, '*');
+                setTimeout(() => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const playButton = iframeDoc.querySelector('button[aria-label="Play"], button[aria-label="Putar"]');
+                        if (playButton) playButton.click();
+                    } catch (e) {}
+                }, 500);
+            } catch (e) {}
+        }
+        
+        function pauseVideo(iframe) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'pause' }, '*');
+                setTimeout(() => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const pauseButton = iframeDoc.querySelector('button[aria-label="Pause"], button[aria-label="Jeda"]');
+                        if (pauseButton) pauseButton.click();
+                    } catch (e) {}
+                }, 500);
+            } catch (e) {}
+        }
+        
+        function updateVideoStatus(videoId, status) {
+            const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
+            const statusIcon = document.getElementById(`${videoId}-status-icon`);
+            const statusText = document.getElementById(`${videoId}-status-text`);
+            
+            if (playPauseBtn) {
+                const icon = playPauseBtn.querySelector('i');
+                
+                if (status === 'playing') {
+                    playPauseBtn.classList.add('playing');
+                    icon.className = 'fas fa-pause';
+                    if (statusIcon) statusIcon.style.color = '#10b981';
+                    if (statusText) statusText.textContent = 'Playing';
+                } else {
+                    playPauseBtn.classList.remove('playing');
+                    icon.className = 'fas fa-play';
+                    if (statusIcon) statusIcon.style.color = '#f59e0b';
+                    if (statusText) statusText.textContent = 'Paused';
+                }
+            }
+        }
+        
+        // ====== FULLSCREEN ======
+        function initFullscreen() {
+            document.querySelectorAll('.fullscreen-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const containerId = this.dataset.containerId;
+                    const container = document.getElementById(containerId);
+                    const iframe = container.querySelector('iframe');
+                    
+                    if (iframe) {
+                        if (iframe.requestFullscreen) {
+                            iframe.requestFullscreen();
+                        } else if (iframe.webkitRequestFullscreen) {
+                            iframe.webkitRequestFullscreen();
+                        } else if (iframe.msRequestFullscreen) {
+                            iframe.msRequestFullscreen();
+                        }
+                    }
+                });
+            });
+        }
+        
+        // ====== VOLUME CONTROL ======
+        function initVolumeControl() {
+            document.querySelectorAll('.volume-slider').forEach(slider => {
+                slider.addEventListener('input', function(e) {
+                    e.stopPropagation();
+                    
+                    const videoId = this.dataset.videoId;
+                    const volume = this.value / 100;
+                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+                    const iframe = videoCard.querySelector('iframe');
+                    
+                    if (iframe) {
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'volume',
+                                volume: volume
+                            }, '*');
+                        } catch (e) {}
+                    }
+                });
+            });
+        }
+        
+        // ====== MUTE BUTTON ======
+        function initMuteButton() {
+            document.querySelectorAll('.mute-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const videoId = this.dataset.videoId;
+                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+                    const iframe = videoCard.querySelector('iframe');
+                    const icon = this.querySelector('i');
+                    
+                    if (iframe) {
+                        const isMuted = this.classList.contains('muted');
+                        
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'mute',
+                                mute: !isMuted
+                            }, '*');
+                        } catch (e) {}
+                        
+                        if (isMuted) {
+                            this.classList.remove('muted');
+                            icon.className = 'fas fa-volume-up';
+                        } else {
+                            this.classList.add('muted');
+                            icon.className = 'fas fa-volume-mute';
+                        }
+                    }
+                });
+            });
+        }
+        
+        // ====== PLAYBACK SPEED ======
+        function initSpeedControl() {
+            document.querySelectorAll('.speed-select').forEach(select => {
+                select.addEventListener('change', function(e) {
+                    e.stopPropagation();
+                    
+                    const videoId = this.dataset.videoId;
+                    const speed = parseFloat(this.value);
+                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+                    const iframe = videoCard.querySelector('iframe');
+                    
+                    if (iframe) {
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'speed',
+                                speed: speed
+                            }, '*');
+                        } catch (e) {}
+                    }
+                });
+            });
+        }
+        
+        // ====== PROGRESS BAR ======
+        function initProgressBar() {
+            document.querySelectorAll('.progress-container').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const videoId = this.id.replace('-progress-container', '');
+                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+                    const iframe = videoCard.querySelector('iframe');
+                    
+                    if (iframe) {
+                        const rect = this.getBoundingClientRect();
+                        const clickX = e.clientX - rect.left;
+                        const width = rect.width;
+                        const percentage = (clickX / width) * 100;
+                        
+                        const progressBar = document.getElementById(`${videoId}-progress-bar`);
+                        progressBar.style.width = percentage + '%';
+                        
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'seek',
+                                percentage: percentage / 100
+                            }, '*');
+                        } catch (e) {}
+                    }
+                });
+            });
+        }
+        
+        function setupProgressTracking(iframe, containerId) {
+            const videoId = containerId.replace('-container', '');
+            const progressBar = document.getElementById(`${videoId}-progress-bar`);
+            const timeDisplay = document.getElementById(`${videoId}-time`);
+            
+            if (!progressBar || !timeDisplay) return;
+            
+            let currentTime = 0;
+            let duration = 60; // Asumsi durasi 60 detik
+            
+            setInterval(() => {
+                const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
+                if (playPauseBtn && playPauseBtn.classList.contains('playing')) {
+                    currentTime += 1;
+                    if (currentTime > duration) currentTime = 0;
+                    
+                    const percentage = (currentTime / duration) * 100;
+                    progressBar.style.width = percentage + '%';
+                    
+                    const currentMin = Math.floor(currentTime / 60);
+                    const currentSec = Math.floor(currentTime % 60);
+                    const durationMin = Math.floor(duration / 60);
+                    const durationSec = Math.floor(duration % 60);
+                    
+                    timeDisplay.textContent = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
         }
         
         // ====== HELPER FUNCTIONS ======
@@ -922,7 +1381,6 @@
         
         function formatUpdateTime(timestamp) {
             if (!timestamp) return 'Belum update';
-            
             try {
                 const date = new Date(timestamp);
                 return date.toLocaleString('id-ID', { 
@@ -941,9 +1399,9 @@
         function showLoadingState() {
             const container = document.getElementById('videoGridContainer');
             container.innerHTML = `
-                <div class="loading-video" role="status">
-                    <div class="spinner" aria-label="Loading"></div>
-                    <p>Memuat video dari Instagram...</p>
+                <div class="loading-video">
+                    <div class="spinner"></div>
+                    <p>Memuat video...</p>
                 </div>
             `;
         }
@@ -951,58 +1409,37 @@
         function showErrorMessage(message) {
             const container = document.getElementById('videoGridContainer');
             container.innerHTML = `
-                <div class="error-message" role="alert">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
                     <p>${escapeHtml(message)}</p>
                     <button onclick="location.reload()" class="retry-btn">
-                        <i class="fas fa-redo"></i> Muat Ulang Halaman
+                        <i class="fas fa-redo"></i> Muat Ulang
                     </button>
                 </div>
-            `;
-            
-            const info = document.getElementById('lastUpdatedInfo');
-            info.innerHTML = `
-                <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
-                ${escapeHtml(message)}
             `;
         }
         
         function showWarningMessage(message) {
             const info = document.getElementById('lastUpdatedInfo');
-            info.innerHTML = `
-                <i class="fas fa-exclamation-circle" style="color: #f59e0b;"></i>
-                ${escapeHtml(message)}
-            `;
+            info.innerHTML = `<i class="fas fa-exclamation-circle" style="color: #f59e0b;"></i> ${escapeHtml(message)}`;
         }
         
         function updateLastUpdated(source = 'server') {
             const info = document.getElementById('lastUpdatedInfo');
             const now = new Date().toLocaleString('id-ID', { 
                 timeZone: 'Asia/Jakarta', 
-                hour12: false,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                hour12: false
             });
             
             const icon = source === 'cache' ? 'fa-database' : 'fa-check-circle';
             const color = source === 'cache' ? '#f59e0b' : '#10b981';
             const text = source === 'cache' ? 'Data tersimpan' : 'Terakhir diperbarui';
             
-            info.innerHTML = `
-                <i class="fas ${icon}" style="color: ${color};"></i>
-                ${text}: ${now}
-            `;
+            info.innerHTML = `<i class="fas ${icon}" style="color: ${color};"></i> ${text}: ${now}`;
         }
         
-        // Cleanup interval on page unload
         window.addEventListener('beforeunload', () => {
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-            }
+            if (refreshInterval) clearInterval(refreshInterval);
         });
     </script>
 </body>
