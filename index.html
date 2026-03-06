@@ -362,17 +362,18 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* ====== POP-UP CALL CENTER 110 - MIRIP GAMBAR + BORDER ====== */
+        /* ====== POP-UP CALL CENTER 110 - TOMBOL X DI BAWAH ====== */
         .popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
             z-index: 9999;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
@@ -386,16 +387,16 @@
         }
         
         .popup-card {
-            background: black;
-            border-radius: 0;
+            background: white;
+            border-radius: 24px;
             padding: 50px 40px;
             max-width: 500px;
             width: 90%;
             text-align: center;
             box-shadow: var(--shadow-deep);
             animation: popupAppear 0.4s ease;
-            position: relative;
-            border: 4px solid white;
+            border: 4px solid var(--danger-600);
+            margin-bottom: 20px;
         }
         
         @keyframes popupAppear {
@@ -409,36 +410,34 @@
             }
         }
         
-        /* TOMBOL X DI TENGAH BAWAH */
+        /* TOMBOL X DI BAWAH CARD (DI LUAR) */
         .popup-close {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 28px;
             color: white;
             cursor: pointer;
             transition: var(--transition-base);
-            width: 44px;
-            height: 44px;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: var(--danger-600);
+            border: 3px solid white;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .popup-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateX(-50%) rotate(90deg);
+            transform: scale(1.1) rotate(90deg);
+            background: var(--danger-700);
         }
         
-        /* TEKS PUTIH SEMUA - RATA TENGAH */
+        /* TEKS MERAH SEMUA */
         .popup-title {
             font-size: clamp(28px, 6vw, 36px);
             font-weight: 800;
-            color: white;
+            color: var(--danger-600);
             margin-bottom: 5px;
             letter-spacing: 1px;
             text-align: center;
@@ -448,7 +447,7 @@
         .popup-subtitle {
             font-size: clamp(22px, 5vw, 28px);
             font-weight: 700;
-            color: white;
+            color: var(--danger-600);
             margin-bottom: 15px;
             text-transform: uppercase;
             text-align: center;
@@ -457,19 +456,19 @@
         .popup-number {
             font-size: clamp(90px, 20vw, 130px);
             font-weight: 900;
-            color: white;
+            color: var(--danger-600);
             margin: 10px 0 15px;
             letter-spacing: 5px;
             line-height: 1;
             text-align: center;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
         }
         
         .popup-motto {
             font-size: clamp(16px, 4vw, 22px);
             font-weight: 600;
-            color: white;
-            margin: 15px 0 30px;
+            color: var(--danger-600);
+            margin: 15px 0 0;
             line-height: 1.5;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1072,7 +1071,7 @@
             }
             
             .popup-card {
-                padding: 60px 40px 70px;
+                padding: 60px 40px;
             }
         }
         
@@ -1105,7 +1104,13 @@
             }
             
             .popup-card {
-                padding: 40px 25px 60px;
+                padding: 40px 25px;
+            }
+            
+            .popup-close {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
             }
         }
         
@@ -1165,13 +1170,12 @@
             }
             
             .popup-card {
-                padding: 30px 20px 55px;
+                padding: 30px 20px;
             }
             
             .popup-close {
-                bottom: 12px;
-                width: 40px;
-                height: 40px;
+                width: 48px;
+                height: 48px;
                 font-size: 22px;
             }
         }
@@ -1202,7 +1206,7 @@
             }
             
             .popup-card {
-                padding: 25px 15px 50px;
+                padding: 25px 15px;
             }
             
             .footer-logo {
@@ -1223,19 +1227,18 @@
         <div class="loading-subtext">Harap tunggu sebentar</div>
     </div>
 
-    <!-- POP-UP CALL CENTER 110 - MIRIP GAMBAR ASLI + BORDER -->
+    <!-- POP-UP CALL CENTER 110 - TOMBOL X DI BAWAH -->
     <div class="popup-overlay active" id="popupCallCenter">
         <div class="popup-card">
-            <!-- TOMBOL X DI TENGAH BAWAH -->
-            <div class="popup-close" id="popupClose">
-                <i class="fas fa-times"></i>
-            </div>
-            
-            <!-- TEKS PUTIH SEMUA - RATA TENGAH -->
+            <!-- TEKS MERAH SEMUA -->
             <div class="popup-title">LAYANAN POLISI</div>
             <div class="popup-subtitle">CALL CENTER</div>
             <div class="popup-number">110</div>
             <div class="popup-motto">MELINDUNGI MENGAYOMI MELAYANI</div>
+        </div>
+        <!-- TOMBOL X DI BAWAH CARD (DI LUAR) -->
+        <div class="popup-close" id="popupClose">
+            <i class="fas fa-times"></i>
         </div>
     </div>
 
@@ -1378,7 +1381,7 @@
             await initSupabase();
         }
         
-        // ====== POP-UP CALL CENTER (MUNCUL SETIAP BUKA WEB) ======
+        // ====== POP-UP CALL CENTER ======
         function initPopup() {
             const popup = document.getElementById('popupCallCenter');
             const closeBtn = document.getElementById('popupClose');
