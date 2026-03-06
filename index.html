@@ -245,7 +245,118 @@
             text-align: center;
         }
         
-        /* ====== HEADER UTAMA ====== */
+        /* ====== POP-UP CALL CENTER 110 ====== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-card {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-deep);
+            animation: popupAppear 0.4s ease;
+            border: 4px solid var(--danger-600);
+            margin-bottom: 20px;
+        }
+        
+        @keyframes popupAppear {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .popup-close {
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition-base);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--danger-600);
+            border: 3px solid white;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .popup-close:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: var(--danger-700);
+        }
+        
+        .popup-title {
+            font-size: clamp(28px, 6vw, 36px);
+            font-weight: 800;
+            color: var(--danger-600);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .popup-subtitle {
+            font-size: clamp(22px, 5vw, 28px);
+            font-weight: 700;
+            color: var(--danger-600);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        
+        .popup-number {
+            font-size: clamp(90px, 20vw, 130px);
+            font-weight: 900;
+            color: var(--danger-600);
+            margin: 10px 0 15px;
+            letter-spacing: 5px;
+            line-height: 1;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
+        }
+        
+        .popup-motto {
+            font-size: clamp(16px, 4vw, 22px);
+            font-weight: 600;
+            color: var(--danger-600);
+            margin: 15px 0 0;
+            line-height: 1.5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        
+        /* ====== HEADER UTAMA - TATA LETAK DIRAPIKAN ====== */
         .main-header { 
             position: relative;
             color: white; 
@@ -257,7 +368,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 40px 20px 25px;
             overflow: hidden;
             isolation: isolate;
             background: transparent;
@@ -279,31 +390,31 @@
         .main-header h1 { 
             position: relative;
             z-index: 1;
-            font-size: clamp(26px, 5vw, 34px); 
+            font-size: clamp(24px, 5vw, 32px); 
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
         
         .title-sub {
             position: relative;
             z-index: 1;
-            font-size: clamp(18px, 3vw, 22px);
+            font-size: clamp(16px, 3vw, 20px);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             opacity: 0.95;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
-        /* GAMBAR LAYANAN.PNG - RATA TENGAH, UKURAN 75px */
+        /* GAMBAR LAYANAN.PNG - UKURAN 80px LEBAR, TINGGI OTOMATIS */
         .layanan-img {
             position: relative;
             z-index: 1;
-            width: 75px;
+            width: 80px;
             height: auto;
-            margin: 5px auto;
+            margin: 5px 0 10px;
             display: block;
             filter: brightness(0) invert(1);
         }
@@ -314,14 +425,14 @@
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
-            transition: var(--transition-base);
+            margin-bottom: 15px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
@@ -388,14 +499,14 @@
         /* ====== MOBILE COMPACT HEADER - ICON DIHAPUS ====== */
         .compact-header {
             background: white;
-            padding: 20px 15px;
+            padding: 20px 15px 10px;
             border-bottom: 2px solid var(--gray-200);
         }
         
         .total-locations {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 20px 15px;
+            margin-bottom: 15px;
+            padding: 15px;
             background: var(--gray-50);
             border-radius: 12px;
             border: 2px solid var(--gray-300);
@@ -412,15 +523,15 @@
         
         /* ICON DIHAPUS - HANYA ANGKA */
         .total-number {
-            font-size: clamp(36px, 10vw, 48px);
+            font-size: 42px;
             font-weight: 900;
             color: var(--primary-600);
             line-height: 1;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .total-label {
-            font-size: clamp(13px, 3vw, 14px);
+            font-size: 14px;
             color: var(--gray-600);
             font-weight: 700;
             text-transform: uppercase;
@@ -436,11 +547,11 @@
         .capacity-tab {
             flex: 1;
             background: var(--gray-50);
-            border-radius: 12px;
-            padding: 18px 10px;
+            border-radius: 10px;
+            padding: 12px 5px;
             text-align: center;
             box-shadow: var(--shadow-soft);
-            border: 2px solid var(--gray-300);
+            border: 2px solid var(--gray-200);
             transition: var(--transition-base);
             cursor: pointer;
         }
@@ -452,14 +563,14 @@
         
         /* ICON DI TAB DIHAPUS - HANYA ANGKA */
         .tab-number {
-            font-size: clamp(24px, 6vw, 32px);
+            font-size: 28px;
             font-weight: 800;
             margin-bottom: 5px;
             line-height: 1;
         }
         
         .tab-label {
-            font-size: clamp(11px, 2.5vw, 13px);
+            font-size: 12px;
             color: var(--gray-600);
             font-weight: 700;
             text-transform: uppercase;
@@ -478,26 +589,27 @@
         /* ACTIONS SECTION */
         .actions-section {
             padding: 0 15px 25px;
-            margin-top: 20px;
+            margin-top: 5px;
             text-align: center;
         }
         
         .action-btn {
-            padding: 16px 30px;
+            padding: 14px 25px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             transition: var(--transition-base);
-            min-width: 250px;
+            width: 100%;
             justify-content: center;
             background: linear-gradient(135deg, var(--success-600), var(--success-700));
             color: white;
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+            margin: 5px 0 15px;
         }
         
         .action-btn:hover {
@@ -790,6 +902,10 @@
             box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
         
+        .btn-route-primary:active {
+            transform: translateY(0);
+        }
+        
         .btn-route-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -932,23 +1048,21 @@
             }
             
             .main-header {
-                padding: 60px 40px;
+                padding: 50px 40px 30px;
             }
         }
         
         @media (max-width: 768px) {
             .main-header {
-                padding: 50px 20px;
+                padding: 40px 20px 25px;
             }
             
             .main-header h1 {
                 font-size: 22px;
-                margin-bottom: 10px;
             }
             
             .title-sub {
                 font-size: 16px;
-                margin-bottom: 15px;
             }
             
             .operation-badge {
@@ -963,16 +1077,25 @@
                 top: 15px;
                 left: 15px;
             }
+            
+            .popup-card {
+                padding: 40px 25px;
+            }
+            
+            .popup-close {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
         }
         
         @media (max-width: 640px) {
             .main-header {
-                padding: 40px 15px;
+                padding: 35px 15px 20px;
             }
             
             .main-header h1 {
                 font-size: 20px;
-                line-height: 1.3;
             }
             
             .title-sub {
@@ -1013,11 +1136,21 @@
             .btn-route-options {
                 grid-template-columns: 1fr;
             }
+            
+            .popup-card {
+                padding: 30px 20px;
+            }
+            
+            .popup-close {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
         }
         
         @media (max-width: 375px) {
             .main-header {
-                padding: 35px 12px;
+                padding: 30px 12px 15px;
             }
             
             .main-header h1 {
@@ -1039,6 +1172,18 @@
                 top: 10px;
                 left: 10px;
             }
+            
+            .popup-card {
+                padding: 25px 15px;
+            }
+            
+            .footer-logo {
+                font-size: 16px;
+            }
+            
+            .footer p, .footer-call {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -1048,6 +1193,19 @@
         <div class="loading-spinner"></div>
         <div class="loading-text">Memuat data...</div>
         <div class="loading-subtext">Harap tunggu sebentar</div>
+    </div>
+
+    <!-- POP-UP CALL CENTER 110 - AKTIF -->
+    <div class="popup-overlay active" id="popupCallCenter">
+        <div class="popup-card">
+            <div class="popup-title">LAYANAN POLISI</div>
+            <div class="popup-subtitle">CALL CENTER</div>
+            <div class="popup-number">110</div>
+            <div class="popup-motto">MELINDUNGI-MENGAYOMI-MELAYANI</div>
+        </div>
+        <div class="popup-close" id="popupClose">
+            <i class="fas fa-times"></i>
+        </div>
     </div>
 
     <!-- MENU TOGGLE BUTTON -->
@@ -1084,13 +1242,13 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA DENGAN GAMBAR LAYANAN.PNG -->
+        <!-- HEADER UTAMA - DENGAN GAMBAR LAYANAN.PNG -->
         <div class="main-header">
             <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img" onerror="this.style.display='none'">
             <h1>INFORMASI TEMPAT PARKIR</h1>
-            <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
+            <div class="title-sub">DI WILAYAH KOTA YOGYAKARTA</div>
             
-            <!-- GAMBAR LAYANAN.PNG - RATA TENGAH, UKURAN 75px -->
+            <!-- GAMBAR LAYANAN.PNG - LEBAR 80px, TINGGI OTOMATIS -->
             <img src="layanan.png" alt="Layanan Polisi" class="layanan-img" onerror="this.style.display='none'">
             
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
@@ -1107,19 +1265,19 @@
             <div class="capacity-tabs">
                 <div class="capacity-tab tab-bus">
                     <!-- ICON BUS DIHAPUS -->
-                    <div class="tab-number" id="totalBus">0</div>
+                    <div class="tab-number" id="totalBus">55</div>
                     <div class="tab-label">BUS TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-mobil">
                     <!-- ICON MOBIL DIHAPUS -->
-                    <div class="tab-number" id="totalMobil">0</div>
+                    <div class="tab-number" id="totalMobil">140</div>
                     <div class="tab-label">MOBIL TERSEDIA</div>
                 </div>
                 
                 <div class="capacity-tab tab-motor">
                     <!-- ICON MOTOR DIHAPUS -->
-                    <div class="tab-number" id="totalMotor">0</div>
+                    <div class="tab-number" id="totalMotor">208</div>
                     <div class="tab-label">MOTOR TERSEDIA</div>
                 </div>
             </div>
@@ -1191,7 +1349,40 @@
         // ====== INISIALISASI ======
         async function initApp() {
             initMenu();
+            initPopup();
             await initSupabase();
+        }
+        
+        // ====== POP-UP CALL CENTER ======
+        function initPopup() {
+            const popup = document.getElementById('popupCallCenter');
+            const closeBtn = document.getElementById('popupClose');
+            
+            // Pop-up aktif
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Tombol close
+            closeBtn.addEventListener('click', () => {
+                popup.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Klik di luar pop-up
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    popup.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && popup.classList.contains('active')) {
+                    popup.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
         }
         
         // ====== MENU ======
