@@ -10,7 +10,9 @@
     <meta name="apple-mobile-web-app-title" content="Lalu Lintas Jogja">
     <title>Informasi Lalu Lintas Yogyakarta 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase Client -->
+    <!-- Instagram Embed Script -->
+    <script async src="//www.instagram.com/embed.js"></script>
+    <!-- Supabase Client untuk publik (read only) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ====== CSS VARIABLES & RESET ====== */
@@ -26,11 +28,8 @@
             --gray-200: #e2e8f0;
             --gray-500: #64748b;
             --gray-800: #1e293b;
-            --error-500: #ef4444;
-            --warning-500: #f59e0b;
             --shadow-card: 0 6px 20px rgba(15, 27, 61, 0.1);
             --shadow-deep: 0 10px 25px rgba(15, 27, 61, 0.15);
-            --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.5);
             --transition-base: 0.25s ease;
         }
         
@@ -47,25 +46,7 @@
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Skip Link untuk Accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--primary-600);
-            color: white;
-            padding: 8px 16px;
-            z-index: 10000;
-            text-decoration: none;
-            border-radius: 0 0 8px 0;
-            font-weight: 600;
-        }
-        
-        .skip-link:focus {
-            top: 0;
-        }
-        
-        /* ====== MENU NAVIGASI ====== */
+        /* ====== MENU NAVIGASI (SIDEBAR) ====== */
         .menu-toggle {
             position: fixed;
             top: 20px;
@@ -85,13 +66,7 @@
             transition: var(--transition-base);
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
-        
         .menu-toggle:hover { transform: scale(1.05); background: var(--primary-700); }
-        .menu-toggle:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
         .menu-toggle.scrolled { background: rgba(37, 99, 235, 0.9); backdrop-filter: blur(10px); }
         
         .menu-overlay {
@@ -126,10 +101,6 @@
             font-size: 20px; cursor: pointer; transition: var(--transition-base);
         }
         .menu-close:hover { background: var(--primary-600); transform: rotate(90deg); }
-        .menu-close:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
         
         .menu-items { display: flex; flex-direction: column; gap: 10px; }
         .menu-item {
@@ -139,10 +110,6 @@
             transition: var(--transition-base); border: 2px solid transparent;
         }
         .menu-item:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(5px); }
-        .menu-item:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
         .menu-item.active {
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(16, 185, 129, 0.3));
             border-color: rgba(255, 255, 255, 0.2);
@@ -163,79 +130,60 @@
             color: rgba(255, 255, 255, 0.7); font-size: 13px; text-align: center;
         }
         
-        /* ====== HEADER UTAMA - DIPERBAIKI ====== */
+        /* ====== HEADER UTAMA - PERSIS SEPERTI AWAL ====== */
         .main-header { 
             position: relative;
             color: white; 
             text-align: center;
             border-bottom: 3px solid var(--primary-600);
             width: 100%;
-            min-height: 300px; /* Fallback jika gambar gagal */
+            aspect-ratio: 3556 / 1535; /* Rasio aspek gambar 3556x1535 */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 80px 20px;
+            padding: 60px 20px;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--navy-900), #1E3A8A); /* Fallback color */
+            isolation: isolate;
         }
         
-        /* Gambar Background - CARA PERTAMA: Simple dan pasti berfungsi */
-        .main-header-bg {
+        .ramadan-bg-img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
+            mix-blend-mode: multiply; /* membuat background putih transparan */
+            opacity: 1;
             z-index: 0;
-            opacity: 0.6; /* Agar teks tetap terbaca */
-            mix-blend-mode: overlay; /* Membuat gambar menyatu dengan background */
-        }
-        
-        /* Atau CARA KEDUA: Menggunakan background-image CSS (ALTERNATIF) */
-        .main-header.with-bg-image {
-            background-image: linear-gradient(135deg, rgba(15,27,61,0.7), rgba(30,58,138,0.7)), url('ramadhan.png');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: overlay;
-        }
-        
-        .header-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(15,27,61,0.5) 0%, rgba(30,58,138,0.3) 100%);
-            z-index: 1;
             pointer-events: none;
         }
         
-        .main-header h1, 
-        .title-sub, 
-        .operation-badge {
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-        }
-        
         .main-header h1 { 
+            position: relative;
+            z-index: 1;
             font-size: clamp(26px, 5vw, 34px); 
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: 0.5px;
             margin-bottom: 15px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
         
         .title-sub {
+            position: relative;
+            z-index: 1;
             font-size: clamp(18px, 3vw, 22px);
             font-weight: 600;
             margin-bottom: 20px;
             opacity: 0.95;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
         .operation-badge {
+            position: relative;
+            z-index: 1;
             display: inline-block;
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
@@ -247,6 +195,7 @@
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
             letter-spacing: 0.5px;
             transition: var(--transition-base);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .operation-badge:hover {
@@ -309,11 +258,6 @@
         .refresh-btn:hover {
             background: var(--primary-600);
             color: white;
-        }
-        
-        .refresh-btn:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
         }
         
         .refresh-btn i {
@@ -478,7 +422,7 @@
             grid-column: 1/-1;
             text-align: center;
             padding: 60px;
-            color: var(--error-500);
+            color: #ef4444;
             background: #FEF2F2;
             border-radius: 12px;
         }
@@ -499,19 +443,11 @@
             font-size: 16px;
             font-weight: 600;
             transition: var(--transition-base);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .retry-btn:hover {
             background: var(--primary-700);
             transform: translateY(-2px);
-        }
-        
-        .retry-btn:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
         }
         
         .warning-message {
@@ -567,11 +503,6 @@
             background: var(--primary-600);
         }
         
-        .social-link:focus-visible {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
         .social-link.instagram:hover {
             background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
         }
@@ -586,7 +517,7 @@
         
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
-            .main-header { padding: 60px 20px; min-height: 250px; }
+            .main-header { padding: 50px 20px; }
             .main-header h1 { font-size: 22px; }
             .menu-toggle { width: 44px; height: 44px; top: 15px; left: 15px; }
             .traffic-videos { padding: 40px 20px; }
@@ -594,14 +525,14 @@
         }
         
         @media (max-width: 640px) {
-            .main-header { padding: 50px 15px; min-height: 220px; }
+            .main-header { padding: 40px 15px; }
             .main-header h1 { font-size: 20px; }
             .title-sub { font-size: 15px; }
             .section-title { font-size: 28px; }
         }
         
         @media (max-width: 375px) {
-            .main-header { padding: 40px 12px; min-height: 200px; }
+            .main-header { padding: 35px 12px; }
             .main-header h1 { font-size: 18px; }
             .title-sub { font-size: 14px; }
             .operation-badge { padding: 8px 16px; font-size: 12px; }
@@ -610,46 +541,31 @@
     </style>
 </head>
 <body>
-    <!-- Skip Link untuk Accessibility -->
-    <a href="#main-content" class="skip-link">Langsung ke konten utama</a>
-
     <!-- MENU TOGGLE & SIDEBAR -->
-    <div class="menu-toggle" id="menuToggle" role="button" aria-label="Buka menu navigasi" tabindex="0">
-        <i class="fas fa-bars" aria-hidden="true"></i>
-    </div>
-    <div class="menu-overlay" id="menuOverlay" role="presentation"></div>
-    <div class="menu-sidebar" id="menuSidebar" role="navigation" aria-label="Menu navigasi utama">
+    <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-sidebar" id="menuSidebar">
         <div class="menu-header">
             <div class="menu-title">Menu Navigasi</div>
-            <div class="menu-close" id="menuClose" role="button" aria-label="Tutup menu" tabindex="0">
-                <i class="fas fa-times" aria-hidden="true"></i>
-            </div>
+            <div class="menu-close" id="menuClose"><i class="fas fa-times"></i></div>
         </div>
         <div class="menu-items">
             <a href="index.html" class="menu-item">
-                <div class="menu-item-icon"><i class="fas fa-parking" aria-hidden="true"></i></div>
+                <div class="menu-item-icon"><i class="fas fa-parking"></i></div>
                 <div class="menu-item-text">Informasi Tempat Parkir</div>
             </a>
-            <a href="lalu-lintas.html" class="menu-item active" aria-current="page">
-                <div class="menu-item-icon"><i class="fas fa-traffic-light" aria-hidden="true"></i></div>
+            <a href="lalu-lintas.html" class="menu-item active">
+                <div class="menu-item-icon"><i class="fas fa-traffic-light"></i></div>
                 <div class="menu-item-text">Informasi Lalu Lintas</div>
             </a>
         </div>
         <div class="menu-footer">© 2026 Satlantas Polresta Yogyakarta</div>
     </div>
 
-    <div class="container" id="main-content" role="main">
-        <!-- HEADER UTAMA - DIPERBAIKI -->
-        <div class="main-header" id="mainHeader" role="banner" aria-label="Header Informasi Lalu Lintas">
-            <!-- Gambar Background - Cara Simple dan Pasti Berfungsi -->
-            <img src="ramadhan.png" 
-                 alt="Background Ramadan" 
-                 class="main-header-bg"
-                 id="headerBgImage"
-                 onerror="this.style.display='none'; document.getElementById('mainHeader').classList.add('with-bg-image');">
-            
-            <!-- Overlay untuk memastikan teks terbaca -->
-            <div class="header-overlay" aria-hidden="true"></div>
+    <div class="container">
+        <!-- HEADER UTAMA - PERSIS SEPERTI AWAL YANG ANDA KIRIM -->
+        <div class="main-header">
+            <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img">
             
             <h1 class="title-main">INFORMASI LALU LINTAS</h1>
             <h2 class="title-sub">DI WILAYAH KOTA YOGYAKARTA</h2>
@@ -657,50 +573,40 @@
         </div>
         
         <!-- SECTION VIDEO -->
-        <section class="traffic-videos" id="trafficSection" aria-labelledby="traffic-title">
-            <h2 id="traffic-title" class="section-title">Pantauan Arus Lalu Lintas</h2>
+        <section class="traffic-videos" id="trafficSection">
+            <h2 class="section-title">Pantauan Arus Lalu Lintas</h2>
             <p class="section-subtitle">Update Real-Time</p>
             
             <!-- Tombol Refresh Manual -->
             <div class="refresh-controls">
-                <button id="manualRefresh" class="refresh-btn" aria-label="Perbarui data video">
-                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                <button id="manualRefresh" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
                     <span>Perbarui Data</span>
                 </button>
             </div>
             
-            <!-- Container Video Grid -->
-            <div id="videoGridContainer" class="video-grid" role="region" aria-label="Daftar video lalu lintas">
-                <div class="loading-video" role="status">
-                    <div class="spinner" aria-label="Loading"></div>
+            <div id="videoGridContainer" class="video-grid">
+                <div class="loading-video">
+                    <div class="spinner"></div>
                     <p>Memuat video dari Instagram...</p>
                 </div>
             </div>
-            
-            <!-- Info Terakhir Update -->
-            <div id="lastUpdatedInfo" class="warning-message" style="justify-content: center; margin-top: 40px;" role="status">
-                <i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>
-                <span>Memuat data...</span>
+            <div id="lastUpdatedInfo" style="text-align: center; margin-top: 40px; color: var(--gray-500); font-size: 14px;">
+                <i class="fas fa-sync-alt"></i> Memuat data...
             </div>
         </section>
         
         <!-- FOOTER -->
-        <footer class="footer" role="contentinfo">
+        <div class="footer">
             <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
             <p>Polri Untuk Masyarakat</p>
             <div class="social-links">
-                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" target="_blank" rel="noopener noreferrer" class="social-link instagram" aria-label="Instagram Satlantas Jogja">
-                    <i class="fab fa-instagram" aria-hidden="true"></i>
-                </a>
-                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" rel="noopener noreferrer" class="social-link facebook" aria-label="Facebook Satlantas Jogja">
-                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                </a>
-                <a href="https://x.com/jogjazebra" target="_blank" rel="noopener noreferrer" class="social-link twitter" aria-label="Twitter Satlantas Jogja">
-                    <i class="fab fa-twitter" aria-hidden="true"></i>
-                </a>
+                <a href="https://www.instagram.com/satlantasjogja?igsh=MXFuZTZkeDVvZWY4ZA==" target="_blank" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" class="social-link facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/jogjazebra" target="_blank" class="social-link twitter"><i class="fab fa-twitter"></i></a>
             </div>
             <p class="footer-copyright">© 2026 - Informasi Lalu Lintas Kota Yogyakarta</p>
-        </footer>
+        </div>
     </div>
 
     <script>
@@ -719,10 +625,8 @@
         let lastFetchTime = 0;
         let refreshInterval;
         
-        // ====== INITIALIZATION ======
         document.addEventListener('DOMContentLoaded', async () => {
             initMenu();
-            initHeader(); // Fungsi baru untuk header
             const success = await initSupabaseWithRetry();
             
             if (success) {
@@ -746,24 +650,6 @@
             });
         });
         
-        // ====== FUNGSI BARU: INIT HEADER ======
-        function initHeader() {
-            const headerImg = document.getElementById('headerBgImage');
-            const header = document.getElementById('mainHeader');
-            
-            // Cek apakah gambar berhasil dimuat
-            if (headerImg.complete && headerImg.naturalHeight > 0) {
-                console.log('✅ Header image loaded successfully');
-            } else {
-                // Jika gambar gagal dimuat, gunakan CSS background sebagai fallback
-                console.log('⚠️ Header image failed, using CSS fallback');
-                header.style.backgroundImage = 'linear-gradient(135deg, rgba(15,27,61,0.7), rgba(30,58,138,0.7)), url("ramadhan.png")';
-                header.style.backgroundSize = 'cover';
-                header.style.backgroundPosition = 'center';
-                header.style.backgroundBlendMode = 'overlay';
-            }
-        }
-        
         // ====== MENU SIDEBAR ======
         function initMenu() {
             const toggle = document.getElementById('menuToggle');
@@ -771,42 +657,21 @@
             const sidebar = document.getElementById('menuSidebar');
             const close = document.getElementById('menuClose');
             
-            const openMenu = () => {
+            toggle.addEventListener('click', () => {
                 sidebar.classList.add('active');
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                toggle.setAttribute('aria-expanded', 'true');
-            };
+            });
             
             const closeMenu = () => {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
-                toggle.setAttribute('aria-expanded', 'false');
             };
-            
-            toggle.addEventListener('click', openMenu);
-            toggle.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openMenu();
-                }
-            });
             
             overlay.addEventListener('click', closeMenu);
             close.addEventListener('click', closeMenu);
-            close.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    closeMenu();
-                }
-            });
-            
-            document.addEventListener('keydown', (e) => { 
-                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                    closeMenu();
-                }
-            });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
             
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 100) toggle.classList.add('scrolled');
@@ -823,17 +688,7 @@
                     }
                     
                     supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY, {
-                        auth: { persistSession: false },
-                        global: {
-                            fetch: (...args) => {
-                                return Promise.race([
-                                    fetch(...args),
-                                    new Promise((_, reject) => 
-                                        setTimeout(() => reject(new Error('Request timeout')), 10000)
-                                    )
-                                ]);
-                            }
-                        }
+                        auth: { persistSession: false }
                     });
                     
                     // Test connection
@@ -862,7 +717,7 @@
         async function loadTrafficVideos(force = false) {
             const now = Date.now();
             
-            // Gunakan cache jika masih valid dan tidak force refresh
+            // Gunakan cache jika masih valid
             if (!force && cachedData && (now - lastFetchTime) < CONFIG.CACHE_DURATION) {
                 renderVideoGrid(cachedData);
                 updateLastUpdated('cache');
@@ -931,7 +786,7 @@
             const container = document.getElementById('videoGridContainer');
             
             if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-video" style="grid-column: 1/-1;">Belum ada data pos lalu lintas.</div>';
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;">Belum ada data pos lalu lintas.</div>';
                 return;
             }
             
@@ -943,12 +798,11 @@
                 html += `
                     <div class="video-card">
                         <h3 class="card-title">
-                            <i class="fas fa-traffic-light" aria-hidden="true"></i>
+                            <i class="fas fa-traffic-light" style="color: #2563eb; margin-right: 8px;"></i>
                             ${escapeHtml(post.nama_pos)}
                         </h3>
                         <span class="update-time-badge">
-                            <i class="far fa-clock" aria-hidden="true"></i>
-                            <span>${updateTime}</span>
+                            <i class="far fa-clock"></i> ${updateTime}
                         </span>
                         
                         <div class="instagram-embed-container" data-url="${escapeHtml(post.instagram_url || '')}">
@@ -969,9 +823,9 @@
                 } else {
                     container.innerHTML = `
                         <div class="empty-video">
-                            <i class="fab fa-instagram" aria-hidden="true"></i>
-                            <p>Belum ada video untuk pos ini</p>
-                            <small>Admin akan segera mengunggah</small>
+                            <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
+                            <p style="font-size: 16px;">Belum ada video untuk pos ini</p>
+                            <small style="color: #999;">Admin akan segera mengunggah</small>
                         </div>
                     `;
                 }
@@ -987,9 +841,9 @@
                 container.classList.remove('loading');
                 container.innerHTML = `
                     <div class="empty-video">
-                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                        <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
                         <p>URL Instagram tidak valid</p>
-                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">
                             Buka di Instagram
                         </a>
                     </div>
@@ -1000,9 +854,14 @@
             // Buat iframe
             const iframe = document.createElement('iframe');
             iframe.src = `https://www.instagram.com/p/${videoId}/embed/captioned/?hidecaption=true`;
-            iframe.title = 'Instagram Video';
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.frameBorder = '0';
+            iframe.scrolling = 'no';
+            iframe.allowTransparency = 'true';
+            iframe.allowFullscreen = 'true';
+            iframe.style.border = 'none';
             iframe.loading = 'lazy';
-            iframe.allow = 'fullscreen';
             
             // Handle iframe load
             iframe.onload = () => {
@@ -1014,9 +873,9 @@
                 container.classList.remove('loading');
                 container.innerHTML = `
                     <div class="empty-video">
-                        <i class="fab fa-instagram" aria-hidden="true"></i>
+                        <i class="fab fa-instagram" style="font-size: 48px; opacity: 0.5;"></i>
                         <p>Gagal memuat video</p>
-                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+                        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">
                             Buka di Instagram
                         </a>
                     </div>
@@ -1093,17 +952,17 @@
             const container = document.getElementById('videoGridContainer');
             container.innerHTML = `
                 <div class="error-message" role="alert">
-                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
                     <p>${escapeHtml(message)}</p>
                     <button onclick="location.reload()" class="retry-btn">
-                        <i class="fas fa-redo" aria-hidden="true"></i> Muat Ulang Halaman
+                        <i class="fas fa-redo"></i> Muat Ulang Halaman
                     </button>
                 </div>
             `;
             
             const info = document.getElementById('lastUpdatedInfo');
             info.innerHTML = `
-                <i class="fas fa-exclamation-circle" style="color: var(--error-500);"></i>
+                <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
                 ${escapeHtml(message)}
             `;
         }
@@ -1111,7 +970,7 @@
         function showWarningMessage(message) {
             const info = document.getElementById('lastUpdatedInfo');
             info.innerHTML = `
-                <i class="fas fa-exclamation-circle" style="color: var(--warning-500);"></i>
+                <i class="fas fa-exclamation-circle" style="color: #f59e0b;"></i>
                 ${escapeHtml(message)}
             `;
         }
@@ -1130,7 +989,7 @@
             });
             
             const icon = source === 'cache' ? 'fa-database' : 'fa-check-circle';
-            const color = source === 'cache' ? 'var(--warning-500)' : 'var(--success-500)';
+            const color = source === 'cache' ? '#f59e0b' : '#10b981';
             const text = source === 'cache' ? 'Data tersimpan' : 'Terakhir diperbarui';
             
             info.innerHTML = `
