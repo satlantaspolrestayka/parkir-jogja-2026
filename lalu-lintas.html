@@ -304,7 +304,7 @@
             z-index: 1;
         }
         
-        /* ====== VIDEO CONTROLS OVERLAY (DI DALAM VIDEO) ====== */
+        /* ====== VIDEO CONTROLS OVERLAY ====== */
         .video-overlay {
             position: absolute;
             top: 0;
@@ -501,6 +501,23 @@
             color: #999;
         }
         
+        .video-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .status-icon {
+            color: #f59e0b;
+        }
+        
+        .status-icon.playing {
+            color: #10b981;
+        }
+        
         /* ====== LOADING & ERROR STATES ====== */
         .loading-video {
             grid-column: 1/-1;
@@ -670,7 +687,6 @@
         
         let supabaseClient;
         let cachedData = null;
-        let lastFetchTime = 0;
         let refreshInterval;
         let currentlyPlayingVideo = null;
         
@@ -765,16 +781,17 @@
             
             let html = '';
             
-            data.forEach((post, index) => {
+            data.forEach((post) => {
                 const updateTime = formatUpdateTime(post.updated_at);
-                const videoId = `video-${post.id}-${index}`;
                 const hasVideo = post.instagram_url && post.instagram_url.trim() !== '';
+                // Gunakan ID asli dari database untuk konsistensi
+                const videoId = post.id;
                 
                 html += `
-                    <div class="video-card" data-video-id="${post.id}">
+                    <div class="video-card" data-video-id="${videoId}">
                         <h3 class="card-title">
                             <i class="fas fa-traffic-light"></i>
-                            ${escapeHtml(post.nama_pos)} <!-- JUDUL DARI DATABASE (BISA DIEDIT ADMIN) -->
+                            ${escapeHtml(post.nama_pos)}
                         </h3>
                         <span class="update-time-badge">
                             <i class="far fa-clock"></i> ${updateTime}
@@ -782,15 +799,15 @@
                         
                         <div class="instagram-embed-container ${hasVideo ? 'has-video' : ''}" 
                              data-url="${escapeHtml(post.instagram_url || '')}" 
-                             id="${videoId}-container">
+                             id="container-${videoId}">
                             
                             ${hasVideo ? `
                                 <!-- OVERLAY KONTROL DI DALAM VIDEO -->
-                                <div class="video-overlay" id="${videoId}-overlay">
+                                <div class="video-overlay" id="overlay-${videoId}">
                                     <!-- Top Bar -->
                                     <div class="overlay-top">
                                         <div class="control-group">
-                                            <button class="fullscreen-btn" data-container-id="${videoId}-container" title="Fullscreen">
+                                            <button class="fullscreen-btn" data-container-id="container-${videoId}" title="Fullscreen">
                                                 <i class="fas fa-expand"></i>
                                             </button>
                                         </div>
@@ -798,7 +815,7 @@
                                     
                                     <!-- Center Play/Pause Button -->
                                     <div class="overlay-center">
-                                        <button class="overlay-btn play-pause-overlay play-pause-btn" data-video-id="${post.id}" data-container-id="${videoId}-container" title="Play/Pause">
+                                        <button class="overlay-btn play-pause-overlay play-pause-btn" data-video-id="${videoId}" data-container-id="container-${videoId}" title="Play/Pause">
                                             <i class="fas fa-play"></i>
                                         </button>
                                     </div>
@@ -806,26 +823,26 @@
                                     <!-- Bottom Bar -->
                                     <div class="overlay-bottom">
                                         <!-- Progress Bar -->
-                                        <div class="progress-container" id="${videoId}-progress-container">
-                                            <div class="progress-bar" id="${videoId}-progress-bar" style="width: 0%;"></div>
+                                        <div class="progress-container" id="progress-container-${videoId}">
+                                            <div class="progress-bar" id="progress-bar-${videoId}" style="width: 0%;"></div>
                                         </div>
                                         
                                         <div style="display: flex; align-items: center; gap: 10px; justify-content: space-between;">
                                             <!-- Time Display -->
-                                            <span class="time-display" id="${videoId}-time">0:00 / 0:00</span>
+                                            <span class="time-display" id="time-${videoId}">0:00 / 0:00</span>
                                             
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <!-- Volume Control + Mute -->
                                                 <div class="control-group">
-                                                    <button class="mute-btn" data-video-id="${post.id}" title="Mute">
+                                                    <button class="mute-btn" data-video-id="${videoId}" title="Mute">
                                                         <i class="fas fa-volume-up"></i>
                                                     </button>
-                                                    <input type="range" min="0" max="100" value="100" class="volume-slider" data-video-id="${post.id}" title="Volume">
+                                                    <input type="range" min="0" max="100" value="100" class="volume-slider" data-video-id="${videoId}" title="Volume">
                                                 </div>
                                                 
                                                 <!-- Playback Speed -->
                                                 <div class="control-group">
-                                                    <select class="speed-select" data-video-id="${post.id}" title="Kecepatan">
+                                                    <select class="speed-select" data-video-id="${videoId}" title="Kecepatan">
                                                         <option value="0.5">0.5x</option>
                                                         <option value="1" selected>1x</option>
                                                         <option value="1.5">1.5x</option>
@@ -846,9 +863,9 @@
                         </div>
                         
                         ${hasVideo ? `
-                            <div style="display: flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 12px; color: var(--gray-500);">
-                                <i class="fas fa-circle" id="${videoId}-status-icon" style="color: #f59e0b;"></i>
-                                <span id="${videoId}-status-text">Paused</span>
+                            <div class="video-status-indicator" id="status-${videoId}">
+                                <i class="fas fa-circle status-icon" id="status-icon-${videoId}"></i>
+                                <span id="status-text-${videoId}">Paused</span>
                             </div>
                         ` : ''}
                     </div>
@@ -865,13 +882,15 @@
                 }
             });
             
-            // Initialize semua fitur video
-            initVideoControls();
-            initFullscreen();
-            initVolumeControl();
-            initMuteButton();
-            initSpeedControl();
-            initProgressBar();
+            // Initialize semua fitur video - PASTIKAN INI DIPANGGIL
+            setTimeout(() => {
+                initVideoControls();
+                initFullscreen();
+                initVolumeControl();
+                initMuteButton();
+                initSpeedControl();
+                initProgressBar();
+            }, 500); // Beri waktu untuk iframe loading
         }
         
         // ====== CREATE INSTAGRAM EMBED ======
@@ -903,7 +922,10 @@
             
             iframe.onload = () => {
                 container.classList.remove('loading');
-                setupProgressTracking(iframe, container.id);
+                // Ambil ID dari container (format: container-{id})
+                const containerId = container.id;
+                const videoId = containerId.replace('container-', '');
+                setupProgressTracking(iframe, videoId);
             };
             
             // Simpan overlay yang sudah ada
@@ -935,42 +957,48 @@
         // ====== VIDEO CONTROLS ======
         function initVideoControls() {
             document.querySelectorAll('.play-pause-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const videoId = this.dataset.videoId;
-                    const containerId = this.dataset.containerId;
-                    const container = document.getElementById(containerId);
-                    const iframe = container.querySelector('iframe');
-                    
-                    if (!iframe) return;
-                    
-                    const isPlaying = this.classList.contains('playing');
-                    
-                    if (isPlaying) {
-                        pauseVideo(iframe);
-                        updateVideoStatus(videoId, 'paused');
-                        currentlyPlayingVideo = null;
-                    } else {
-                        if (currentlyPlayingVideo && currentlyPlayingVideo !== videoId) {
-                            const prevCard = document.querySelector(`[data-video-id="${currentlyPlayingVideo}"]`);
-                            if (prevCard) {
-                                const prevBtn = prevCard.querySelector('.play-pause-btn');
-                                const prevIframe = prevCard.querySelector('iframe');
-                                if (prevIframe) {
-                                    pauseVideo(prevIframe);
-                                    updateVideoStatus(currentlyPlayingVideo, 'paused');
-                                }
-                            }
-                        }
-                        
-                        playVideo(iframe);
-                        updateVideoStatus(videoId, 'playing');
-                        currentlyPlayingVideo = videoId;
-                    }
-                });
+                // Hapus event listener lama
+                btn.removeEventListener('click', handlePlayPause);
+                // Tambah event listener baru
+                btn.addEventListener('click', handlePlayPause);
             });
+        }
+        
+        function handlePlayPause(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const videoId = this.dataset.videoId;
+            const containerId = this.dataset.containerId;
+            const container = document.getElementById(containerId);
+            const iframe = container.querySelector('iframe');
+            
+            if (!iframe) return;
+            
+            const isPlaying = this.classList.contains('playing');
+            
+            if (isPlaying) {
+                pauseVideo(iframe);
+                updateVideoStatus(videoId, 'paused');
+                currentlyPlayingVideo = null;
+            } else {
+                // PAUSE video lain yang sedang diputar
+                if (currentlyPlayingVideo && currentlyPlayingVideo !== videoId) {
+                    const prevCard = document.querySelector(`[data-video-id="${currentlyPlayingVideo}"]`);
+                    if (prevCard) {
+                        const prevBtn = prevCard.querySelector('.play-pause-btn');
+                        const prevIframe = prevCard.querySelector('iframe');
+                        if (prevIframe) {
+                            pauseVideo(prevIframe);
+                            updateVideoStatus(currentlyPlayingVideo, 'paused');
+                        }
+                    }
+                }
+                
+                playVideo(iframe);
+                updateVideoStatus(videoId, 'playing');
+                currentlyPlayingVideo = videoId;
+            }
         }
         
         function playVideo(iframe) {
@@ -1001,8 +1029,8 @@
         
         function updateVideoStatus(videoId, status) {
             const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
-            const statusIcon = document.getElementById(`video-${videoId}-status-icon`);
-            const statusText = document.getElementById(`video-${videoId}-status-text`);
+            const statusIcon = document.getElementById(`status-icon-${videoId}`);
+            const statusText = document.getElementById(`status-text-${videoId}`);
             
             if (playPauseBtn) {
                 const icon = playPauseBtn.querySelector('i');
@@ -1010,12 +1038,16 @@
                 if (status === 'playing') {
                     playPauseBtn.classList.add('playing');
                     icon.className = 'fas fa-pause';
-                    if (statusIcon) statusIcon.style.color = '#10b981';
+                    if (statusIcon) {
+                        statusIcon.className = 'fas fa-circle status-icon playing';
+                    }
                     if (statusText) statusText.textContent = 'Playing';
                 } else {
                     playPauseBtn.classList.remove('playing');
                     icon.className = 'fas fa-play';
-                    if (statusIcon) statusIcon.style.color = '#f59e0b';
+                    if (statusIcon) {
+                        statusIcon.className = 'fas fa-circle status-icon';
+                    }
                     if (statusText) statusText.textContent = 'Paused';
                 }
             }
@@ -1024,146 +1056,163 @@
         // ====== FULLSCREEN ======
         function initFullscreen() {
             document.querySelectorAll('.fullscreen-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const containerId = this.dataset.containerId;
-                    const container = document.getElementById(containerId);
-                    const iframe = container.querySelector('iframe');
-                    
-                    if (iframe) {
-                        if (iframe.requestFullscreen) {
-                            iframe.requestFullscreen();
-                        } else if (iframe.webkitRequestFullscreen) {
-                            iframe.webkitRequestFullscreen();
-                        } else if (iframe.msRequestFullscreen) {
-                            iframe.msRequestFullscreen();
-                        }
-                    }
-                });
+                btn.removeEventListener('click', handleFullscreen);
+                btn.addEventListener('click', handleFullscreen);
             });
+        }
+        
+        function handleFullscreen(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const containerId = this.dataset.containerId;
+            const container = document.getElementById(containerId);
+            const iframe = container.querySelector('iframe');
+            
+            if (iframe) {
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.webkitRequestFullscreen) {
+                    iframe.webkitRequestFullscreen();
+                } else if (iframe.msRequestFullscreen) {
+                    iframe.msRequestFullscreen();
+                }
+            }
         }
         
         // ====== VOLUME CONTROL ======
         function initVolumeControl() {
             document.querySelectorAll('.volume-slider').forEach(slider => {
-                slider.addEventListener('input', function(e) {
-                    e.stopPropagation();
-                    
-                    const videoId = this.dataset.videoId;
-                    const volume = this.value / 100;
-                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
-                    const iframe = videoCard.querySelector('iframe');
-                    
-                    if (iframe) {
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'volume',
-                                volume: volume
-                            }, '*');
-                        } catch (e) {}
-                    }
-                });
+                slider.removeEventListener('input', handleVolumeChange);
+                slider.addEventListener('input', handleVolumeChange);
             });
+        }
+        
+        function handleVolumeChange(e) {
+            e.stopPropagation();
+            
+            const videoId = this.dataset.videoId;
+            const volume = this.value / 100;
+            const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+            const iframe = videoCard.querySelector('iframe');
+            
+            if (iframe) {
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'volume',
+                        volume: volume
+                    }, '*');
+                } catch (e) {}
+            }
         }
         
         // ====== MUTE BUTTON ======
         function initMuteButton() {
             document.querySelectorAll('.mute-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const videoId = this.dataset.videoId;
-                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
-                    const iframe = videoCard.querySelector('iframe');
-                    const icon = this.querySelector('i');
-                    
-                    if (iframe) {
-                        const isMuted = this.classList.contains('muted');
-                        
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'mute',
-                                mute: !isMuted
-                            }, '*');
-                        } catch (e) {}
-                        
-                        if (isMuted) {
-                            this.classList.remove('muted');
-                            icon.className = 'fas fa-volume-up';
-                        } else {
-                            this.classList.add('muted');
-                            icon.className = 'fas fa-volume-mute';
-                        }
-                    }
-                });
+                btn.removeEventListener('click', handleMute);
+                btn.addEventListener('click', handleMute);
             });
+        }
+        
+        function handleMute(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const videoId = this.dataset.videoId;
+            const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+            const iframe = videoCard.querySelector('iframe');
+            const icon = this.querySelector('i');
+            
+            if (iframe) {
+                const isMuted = this.classList.contains('muted');
+                
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'mute',
+                        mute: !isMuted
+                    }, '*');
+                } catch (e) {}
+                
+                if (isMuted) {
+                    this.classList.remove('muted');
+                    icon.className = 'fas fa-volume-up';
+                } else {
+                    this.classList.add('muted');
+                    icon.className = 'fas fa-volume-mute';
+                }
+            }
         }
         
         // ====== PLAYBACK SPEED ======
         function initSpeedControl() {
             document.querySelectorAll('.speed-select').forEach(select => {
-                select.addEventListener('change', function(e) {
-                    e.stopPropagation();
-                    
-                    const videoId = this.dataset.videoId;
-                    const speed = parseFloat(this.value);
-                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
-                    const iframe = videoCard.querySelector('iframe');
-                    
-                    if (iframe) {
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'speed',
-                                speed: speed
-                            }, '*');
-                        } catch (e) {}
-                    }
-                });
+                select.removeEventListener('change', handleSpeedChange);
+                select.addEventListener('change', handleSpeedChange);
             });
+        }
+        
+        function handleSpeedChange(e) {
+            e.stopPropagation();
+            
+            const videoId = this.dataset.videoId;
+            const speed = parseFloat(this.value);
+            const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+            const iframe = videoCard.querySelector('iframe');
+            
+            if (iframe) {
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'speed',
+                        speed: speed
+                    }, '*');
+                } catch (e) {}
+            }
         }
         
         // ====== PROGRESS BAR ======
         function initProgressBar() {
             document.querySelectorAll('.progress-container').forEach(container => {
-                container.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    const videoId = this.id.replace('-progress-container', '').replace('video-', '');
-                    const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
-                    const iframe = videoCard.querySelector('iframe');
-                    
-                    if (iframe) {
-                        const rect = this.getBoundingClientRect();
-                        const clickX = e.clientX - rect.left;
-                        const width = rect.width;
-                        const percentage = (clickX / width) * 100;
-                        
-                        const progressBar = document.getElementById(`${this.id.replace('-container', '')}-progress-bar`);
-                        if (progressBar) progressBar.style.width = percentage + '%';
-                        
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'seek',
-                                percentage: percentage / 100
-                            }, '*');
-                        } catch (e) {}
-                    }
-                });
+                container.removeEventListener('click', handleProgressClick);
+                container.addEventListener('click', handleProgressClick);
             });
         }
         
-        function setupProgressTracking(iframe, containerId) {
-            const videoId = containerId.replace('-container', '').replace('video-', '');
-            const progressBar = document.getElementById(`video-${videoId}-progress-bar`);
-            const timeDisplay = document.getElementById(`video-${videoId}-time`);
+        function handleProgressClick(e) {
+            e.stopPropagation();
+            
+            // ID format: progress-container-{videoId}
+            const idParts = this.id.split('-');
+            const videoId = idParts[idParts.length - 1];
+            
+            const videoCard = document.querySelector(`[data-video-id="${videoId}"]`);
+            const iframe = videoCard.querySelector('iframe');
+            
+            if (iframe) {
+                const rect = this.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const width = rect.width;
+                const percentage = (clickX / width) * 100;
+                
+                const progressBar = document.getElementById(`progress-bar-${videoId}`);
+                if (progressBar) progressBar.style.width = percentage + '%';
+                
+                try {
+                    iframe.contentWindow.postMessage({
+                        type: 'seek',
+                        percentage: percentage / 100
+                    }, '*');
+                } catch (e) {}
+            }
+        }
+        
+        function setupProgressTracking(iframe, videoId) {
+            const progressBar = document.getElementById(`progress-bar-${videoId}`);
+            const timeDisplay = document.getElementById(`time-${videoId}`);
             
             if (!progressBar || !timeDisplay) return;
             
             let currentTime = 0;
-            let duration = 60;
+            let duration = 60; // Asumsi durasi 60 detik
             
             setInterval(() => {
                 const playPauseBtn = document.querySelector(`[data-video-id="${videoId}"] .play-pause-btn`);
