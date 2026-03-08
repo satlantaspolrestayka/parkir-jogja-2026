@@ -302,7 +302,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 15px 15px;  /* PADDING DIPERKECIL */
+            padding: 20px 15px 15px;
             overflow: hidden;
             isolation: isolate;
             background: transparent;
@@ -323,7 +323,6 @@
             pointer-events: none;
         }
         
-        /* SEMUA JARAK DIPERKECIL AGAR HEADER TIDAK TINGGI */
         .main-header h1 { 
             position: relative;
             z-index: 1;
@@ -344,7 +343,6 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
         
-        /* SERVICE ROW - LAYANAN POLISI & CALL CENTER */
         .service-row {
             position: relative;
             z-index: 1;
@@ -372,7 +370,6 @@
             background: rgba(37, 99, 235, 0.3);
         }
         
-        /* 3 KOTAK ANGKA 110 */
         .number-boxes {
             position: relative;
             z-index: 1;
@@ -397,7 +394,6 @@
             text-shadow: 0 2px 0 #991b1b;
         }
         
-        /* MOTTO */
         .motto {
             position: relative;
             z-index: 1;
@@ -409,7 +405,6 @@
             text-transform: uppercase;
         }
         
-        /* BADGE SATLANTAS */
         .operation-badge {
             position: relative;
             z-index: 1;
@@ -608,6 +603,11 @@
             overflow: hidden;
         }
         
+        .lokasi-item.closest {
+            border-color: var(--success-600);
+            background: #f0fdf4;
+        }
+        
         .lokasi-header {
             display: flex;
             align-items: center;
@@ -627,6 +627,7 @@
             justify-content: center;
             font-weight: 800;
             font-size: 15px;
+            flex-shrink: 0;
         }
         
         .lokasi-info {
@@ -638,16 +639,166 @@
             font-weight: 700;
             color: var(--gray-900);
             margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .closest-badge {
+            background: var(--success-600);
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
         }
         
         .lokasi-alamat {
             font-size: 12px;
             color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .lokasi-arrow {
             color: var(--gray-400);
             font-size: 16px;
+            transition: var(--transition-base);
+            flex-shrink: 0;
+        }
+        
+        .lokasi-item.expanded .lokasi-arrow {
+            transform: rotate(180deg);
+            color: var(--primary-600);
+        }
+        
+        /* INFO JARAK */
+        .lokasi-jarak {
+            margin: 10px 15px;
+            padding: 10px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            color: #0369a1;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #0284c7;
+        }
+        
+        /* DETAIL KAPASITAS */
+        .kapasitas-detail {
+            padding: 0 15px 15px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .kapasitas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .kapasitas-item {
+            text-align: center;
+        }
+        
+        .kapasitas-number {
+            font-weight: 800;
+        }
+        
+        .kapasitas-number.bus { color: #dc2626; }
+        .kapasitas-number.mobil { color: #2563eb; }
+        .kapasitas-number.motor { color: #059669; }
+        
+        .kapasitas-label {
+            font-size: 11px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 2px;
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-dot.high { background: #10b981; }
+        .status-dot.medium { background: #f59e0b; }
+        .status-dot.low { background: #ef4444; }
+        .status-dot.full { background: #6b7280; }
+        
+        /* TOMBOL RUTE */
+        .btn-route-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .btn-route-primary {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: var(--transition-base);
+        }
+        
+        .btn-route-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-route-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        
+        .btn-route-option {
+            padding: 8px;
+            border: 2px solid var(--gray-200);
+            border-radius: 6px;
+            background: white;
+            color: var(--gray-700);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            transition: var(--transition-base);
+        }
+        
+        .btn-route-option:hover {
+            background: var(--gray-50);
+            border-color: var(--primary-500);
+            color: var(--primary-700);
         }
         
         /* ====== FOOTER ====== */
@@ -754,6 +905,10 @@
             .stat-label {
                 font-size: 9px;
             }
+            
+            .btn-route-options {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -811,34 +966,30 @@
     </div>
 
     <div class="container">
-        <!-- HEADER UTAMA - RAMPING DENGAN BACKGROUND COVER -->
+        <!-- HEADER UTAMA -->
         <div class="main-header">
-            <!-- RAMADHAN.PNG - COVER + ZOOM (MEMENUHI HEADER) -->
             <img src="ramadhan.png" alt="Ramadan" class="ramadan-bg-img" onerror="this.style.display='none'">
             
             <h1>INFORMASI TEMPAT PARKIR</h1>
             <div class="title-sub">DI WILAYAH KOTA YOGYAKARTA</div>
             
-            <!-- LAYANAN POLISI & CALL CENTER -->
             <div class="service-row">
                 <span class="service-item">LAYANAN POLISI</span>
                 <span class="service-item">CALL CENTER</span>
             </div>
             
-            <!-- 3 KOTAK ANGKA 110 -->
             <div class="number-boxes">
                 <div class="red-box">1</div>
                 <div class="red-box">1</div>
                 <div class="red-box">0</div>
             </div>
             
-            <!-- MOTTO -->
             <div class="motto">MELINDUNGI - MENGAYOMI - MELAYANI</div>
             
             <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
         </div>
         
-        <!-- STATISTIK 3 KOLOM -->
+        <!-- STATISTIK -->
         <div class="compact-header">
             <div class="total-locations">
                 <div class="total-number" id="totalLocations">16</div>
@@ -1025,42 +1176,134 @@
             }
         }
         
-        // ====== RENDER LIST ======
+        // ====== FUNGSI FORMAT JARAK ======
+        function formatDistance(km) {
+            if (km < 1) {
+                return `${Math.round(km * 1000)} meter`;
+            } else {
+                return `${km.toFixed(1)} km`;
+            }
+        }
+        
+        // ====== FUNGSI STATUS ======
+        function getStatus(available, max) {
+            if (max === 0) return 'full';
+            const percentage = (available / max) * 100;
+            if (percentage >= 70) return 'high';
+            if (percentage >= 30) return 'medium';
+            if (percentage > 0) return 'low';
+            return 'full';
+        }
+        
+        function getStatusText(status) {
+            const texts = {
+                'high': 'Tersedia',
+                'medium': 'Tersedia',
+                'low': 'Tersedia',
+                'full': 'Penuh'
+            };
+            return texts[status] || 'Penuh';
+        }
+        
+        // ====== RENDER LIST DENGAN SEMUA FITUR ======
         function renderList() {
             const container = document.getElementById('lokasiList');
-            if (!container || !appState.data.length) return;
+            if (!container) return;
+            
+            if (!appState.data.length) {
+                container.innerHTML = '<div class="lokasi-item"><div class="lokasi-header"><div class="lokasi-info">Tidak ada data</div></div></div>';
+                return;
+            }
             
             let html = '';
             appState.data.forEach((item, index) => {
+                const distance = appState.distances.get(item.id);
                 const isExpanded = appState.expandedId === item.id;
+                const isClosest = appState.isSortedByDistance && index === 0;
                 const cardId = appState.isSortedByDistance ? index + 1 : item.id;
                 
                 const busAvailable = Math.max(0, item.max_bus - item.bus);
                 const mobilAvailable = Math.max(0, item.max_mobil - item.mobil);
                 const motorAvailable = Math.max(0, item.max_motor - item.motor);
                 
-                const busStatus = busAvailable === 0 ? 'Penuh' : 'Tersedia';
-                const mobilStatus = mobilAvailable === 0 ? 'Penuh' : 'Tersedia';
-                const motorStatus = motorAvailable === 0 ? 'Penuh' : 'Tersedia';
+                const busStatus = getStatus(busAvailable, item.max_bus);
+                const mobilStatus = getStatus(mobilAvailable, item.max_mobil);
+                const motorStatus = getStatus(motorAvailable, item.max_motor);
+                
+                const distanceText = distance ? formatDistance(distance) : null;
+                const safeNama = item.nama.replace(/'/g, "\\'");
                 
                 html += `
-                    <div class="lokasi-item ${isExpanded ? 'expanded' : ''}" data-id="${item.id}">
+                    <div class="lokasi-item ${isExpanded ? 'expanded' : ''} ${isClosest ? 'closest' : ''}" data-id="${item.id}">
                         <div class="lokasi-header" onclick="toggleDetail(${item.id})">
                             <div class="lokasi-nomor">${cardId}</div>
                             <div class="lokasi-info">
-                                <div class="lokasi-nama">${item.nama}</div>
-                                <div class="lokasi-alamat">${item.alamat}</div>
+                                <div class="lokasi-nama">
+                                    ${item.nama}
+                                    ${isClosest ? '<span class="closest-badge"><i class="fas fa-location-dot"></i> TERDEKAT</span>' : ''}
+                                </div>
+                                <div class="lokasi-alamat">
+                                    <i class="fas fa-map-pin"></i> ${item.alamat}
+                                </div>
                             </div>
                             <div class="lokasi-arrow">
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
+                        
+                        <!-- INFO JARAK -->
+                        ${distanceText ? `
+                            <div class="lokasi-jarak">
+                                <i class="fas fa-route"></i> ${distanceText} dari lokasi Anda
+                            </div>
+                        ` : ''}
+                        
                         ${isExpanded ? `
-                        <div style="padding: 0 15px 15px 15px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
-                            <div style="display: grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:10px;">
-                                <div style="text-align:center"><span style="color:#dc2626;font-weight:800">${busAvailable}</span><br><span style="font-size:11px">BUS</span><br><span style="font-size:10px;color:#64748b">${busStatus}</span></div>
-                                <div style="text-align:center"><span style="color:#2563eb;font-weight:800">${mobilAvailable}</span><br><span style="font-size:11px">MOBIL</span><br><span style="font-size:10px;color:#64748b">${mobilStatus}</span></div>
-                                <div style="text-align:center"><span style="color:#059669;font-weight:800">${motorAvailable}</span><br><span style="font-size:11px">MOTOR</span><br><span style="font-size:10px;color:#64748b">${motorStatus}</span></div>
+                        <div class="kapasitas-detail">
+                            <!-- DETAIL KAPASITAS DENGAN STATUS WARNA -->
+                            <div class="kapasitas-grid">
+                                <div class="kapasitas-item">
+                                    <div class="kapasitas-number bus">${busAvailable}</div>
+                                    <div class="kapasitas-label">BUS</div>
+                                    <div class="status-indicator">
+                                        <span class="status-dot ${busStatus}"></span>
+                                        ${getStatusText(busStatus)}
+                                    </div>
+                                </div>
+                                <div class="kapasitas-item">
+                                    <div class="kapasitas-number mobil">${mobilAvailable}</div>
+                                    <div class="kapasitas-label">MOBIL</div>
+                                    <div class="status-indicator">
+                                        <span class="status-dot ${mobilStatus}"></span>
+                                        ${getStatusText(mobilStatus)}
+                                    </div>
+                                </div>
+                                <div class="kapasitas-item">
+                                    <div class="kapasitas-number motor">${motorAvailable}</div>
+                                    <div class="kapasitas-label">MOTOR</div>
+                                    <div class="status-indicator">
+                                        <span class="status-dot ${motorStatus}"></span>
+                                        ${getStatusText(motorStatus)}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- TOMBOL RUTE 3 PILIHAN -->
+                            <div class="btn-route-container">
+                                <button class="btn-route-primary" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${safeNama}', 'auto')">
+                                    <i class="fas fa-directions"></i> RUTE KE SINI
+                                </button>
+                                <div class="btn-route-options">
+                                    <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${safeNama}', 'google')">
+                                        <i class="fab fa-google"></i> Google
+                                    </button>
+                                    <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${safeNama}', 'waze')">
+                                        <i class="fas fa-location-dot"></i> Waze
+                                    </button>
+                                    <button class="btn-route-option" onclick="event.stopPropagation(); bukaRute('${item.koordinat}', '${safeNama}', 'apple')">
+                                        <i class="fas fa-map"></i> Apple
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         ` : ''}
@@ -1072,8 +1315,104 @@
         }
         
         window.toggleDetail = function(id) {
-            appState.expandedId = appState.expandedId === id ? null : id;
+            if (appState.expandedId === id) {
+                appState.expandedId = null;
+            } else {
+                appState.expandedId = id;
+            }
             renderList();
+        };
+        
+        // ====== FUNGSI RUTE ======
+        window.bukaRute = function(koordinat, nama, pilihan) {
+            if (window.event) {
+                window.event.stopPropagation();
+            }
+            
+            if (!koordinat || koordinat === '' || koordinat === 'undefined' || koordinat === 'null') {
+                showNotification('❌ Koordinat tidak tersedia');
+                return;
+            }
+            
+            koordinat = koordinat.trim();
+            showNotification('🗺️ Membuka peta...');
+            
+            const bukaUrl = (url) => {
+                try {
+                    window.open(url, '_blank');
+                } catch (e) {
+                    const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(koordinat)}`;
+                    window.open(fallbackUrl, '_blank');
+                }
+            };
+            
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            let url = '';
+            
+            if (pilihan === 'google') {
+                if (appState.userPosition) {
+                    url = `https://www.google.com/maps/dir/?api=1&origin=${appState.userPosition.lat},${appState.userPosition.lng}&destination=${koordinat}&travelmode=driving`;
+                } else {
+                    url = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                }
+                bukaUrl(url);
+            } else if (pilihan === 'waze') {
+                if (appState.userPosition) {
+                    url = `https://www.waze.com/ul?ll=${koordinat}&navigate=yes&from=${appState.userPosition.lat},${appState.userPosition.lng}`;
+                } else {
+                    url = `https://www.waze.com/ul?q=${koordinat}&navigate=yes`;
+                }
+                bukaUrl(url);
+            } else if (pilihan === 'apple') {
+                if (appState.userPosition) {
+                    url = `maps://?saddr=${appState.userPosition.lat},${appState.userPosition.lng}&daddr=${koordinat}`;
+                } else {
+                    url = `maps://?q=${koordinat}`;
+                }
+                
+                try {
+                    window.location.href = url;
+                    setTimeout(() => {
+                        if (document.hasFocus()) {
+                            const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                            window.open(fallbackUrl, '_blank');
+                        }
+                    }, 1500);
+                } catch (e) {
+                    const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                    window.open(fallbackUrl, '_blank');
+                }
+                return;
+            } else {
+                if (isIOS) {
+                    if (appState.userPosition) {
+                        url = `maps://?saddr=${appState.userPosition.lat},${appState.userPosition.lng}&daddr=${koordinat}`;
+                    } else {
+                        url = `maps://?q=${koordinat}`;
+                    }
+                    
+                    try {
+                        window.location.href = url;
+                        setTimeout(() => {
+                            if (document.hasFocus()) {
+                                const googleUrl = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                                window.open(googleUrl, '_blank');
+                            }
+                        }, 1500);
+                    } catch (e) {
+                        const googleUrl = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                        window.open(googleUrl, '_blank');
+                    }
+                    return;
+                } else {
+                    if (appState.userPosition) {
+                        url = `https://www.google.com/maps/dir/?api=1&origin=${appState.userPosition.lat},${appState.userPosition.lng}&destination=${koordinat}&travelmode=driving`;
+                    } else {
+                        url = `https://www.google.com/maps/search/?api=1&query=${koordinat}`;
+                    }
+                    bukaUrl(url);
+                }
+            }
         };
         
         // ====== UPDATE COUNTERS ======
@@ -1111,13 +1450,19 @@
                     const newDistances = new Map();
                     appState.data.forEach(item => {
                         if (item.koordinat) {
-                            const [lat, lng] = item.koordinat.split(',').map(Number);
-                            const jarak = hitungJarak(
-                                appState.userPosition.lat, 
-                                appState.userPosition.lng, 
-                                lat, lng
-                            );
-                            newDistances.set(item.id, jarak);
+                            try {
+                                const [lat, lng] = item.koordinat.split(',').map(Number);
+                                if (!isNaN(lat) && !isNaN(lng)) {
+                                    const jarak = hitungJarak(
+                                        appState.userPosition.lat, 
+                                        appState.userPosition.lng, 
+                                        lat, lng
+                                    );
+                                    newDistances.set(item.id, jarak);
+                                }
+                            } catch (e) {
+                                console.error('Error calculating distance');
+                            }
                         }
                     });
                     
@@ -1171,10 +1516,15 @@
                 z-index: 9999;
                 font-size: 14px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
             `;
             notif.textContent = msg;
             document.body.appendChild(notif);
-            setTimeout(() => notif.remove(), 3000);
+            
+            setTimeout(() => {
+                notif.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
         }
         
         document.addEventListener('DOMContentLoaded', initApp);
