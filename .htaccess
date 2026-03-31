@@ -1,0 +1,31 @@
+# File: .htaccess
+RewriteEngine On
+RewriteBase /
+
+# ====== HAPUS INDEX.HTML ======
+RewriteCond %{THE_REQUEST} /index\.html [NC]
+RewriteRule ^(.*)index\.html$ /$1 [R=301,L]
+
+# ====== HAPUS .HTML ======
+RewriteCond %{THE_REQUEST} \.html [NC]
+RewriteRule ^(.*)\.html$ /$1 [R=301,L]
+
+# ====== TAMPILKAN .HTML TANPA EKSTENSI ======
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# ====== DEFAULT INDEX ======
+DirectoryIndex index.html index.php
+
+# ====== ERROR PAGES (OPSIONAL) ======
+ErrorDocument 404 /404.html
+
+# ====== CACHE ======
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+    Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# ====== KOMPRESI ======
+AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json

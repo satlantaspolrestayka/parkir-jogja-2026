@@ -1,0 +1,13 @@
+{
+  "name": "parkir-jogja-2026",
+  "version": "1.0.0",
+  "description": "Sistem Informasi Parkir Real-Time Yogyakarta",
+  "scripts": {
+    "build": "echo 'No build required for static site'",
+    "test": "echo 'No tests'"
+  },
+  "keywords": ["parkir", "yogyakarta", "real-time"],
+  "author": "Satlantas Polresta Yogyakarta",
+  "license": "MIT",
+  "dependencies": {}
+}

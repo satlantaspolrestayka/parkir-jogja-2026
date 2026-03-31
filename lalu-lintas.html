@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="Sistem Informasi Lalu Lintas Kota Yogyakarta - Dikelola oleh Satlantas Polresta Yogyakarta">
+    <meta name="theme-color" content="#0f1b3d">
+    
+    <title>Informasi Lalu Lintas Yogyakarta 2026</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* ====== CSS VARIABLES & RESET ====== */
+        :root {
+            --primary-500: #2563eb;
+            --primary-600: #1d4ed8;
+            --primary-700: #1e40af;
+            --success-500: #10b981;
+            --success-600: #059669;
+            --success-700: #047857;
+            --danger-500: #ef4444;
+            --danger-600: #dc2626;
+            --danger-700: #b91c1c;
+            --navy-900: #0f1b3d;
+            --navy-800: #1e293b;
+            
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            
+            --shadow-soft: 0 2px 8px rgba(15, 27, 61, 0.08);
+            --shadow-medium: 0 4px 12px rgba(15, 27, 61, 0.12);
+            --shadow-card: 0 6px 20px rgba(15, 27, 61, 0.1);
+            --shadow-deep: 0 10px 25px rgba(15, 27, 61, 0.15);
+            
+            --transition-base: 0.25s ease;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            min-height: 100vh;
+            background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 0;
+            margin: 0;
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+        
+        /* ====== LOADING OVERLAY ====== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* ====== NAVBAR 1 BARIS OPTIMAL ====== */
+        .main-navbar {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--navy-900);
+            border-bottom: 3px solid var(--primary-600);
+            box-shadow: var(--shadow-deep);
+            position: relative;
+            z-index: 1000;
+            transition: transform 0.3s ease, max-width 0.3s ease;
+        }
+        
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px clamp(5px, 2vw, 20px);
+            width: 100%;
+            gap: clamp(3px, 1vw, 8px);
+        }
+        
+        .nav-left, .nav-right {
+            width: clamp(32px, 8vw, 40px);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-menu {
+            width: clamp(28px, 6vw, 36px);
+            height: clamp(28px, 6vw, 36px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-600);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: clamp(14px, 4vw, 18px);
+            color: white;
+            box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+            transition: all 0.2s ease;
+        }
+        
+        .nav-menu:active {
+            transform: scale(0.95);
+            background: var(--primary-700);
+        }
+        
+        .nav-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            font-size: clamp(12px, 3.8vw, 22px);
+            letter-spacing: clamp(0.1px, 0.2vw, 0.5px);
+            padding: 0 clamp(3px, 2vw, 10px);
+        }
+        
+        /* Scroll hide untuk mobile */
+        @media (max-width: 1024px) {
+            .main-navbar {
+                position: sticky;
+                top: 0;
+                left: 0;
+                transition: top 0.3s ease, transform 0.3s ease;
+                max-width: 100%;
+            }
+            
+            .main-navbar.hide {
+                top: -70px;
+            }
+        }
+        
+        /* ====== MENU OVERLAY & SIDEBAR ====== */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 27, 61, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1001;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .menu-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            z-index: 1002;
+            padding: 30px 20px;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+        
+        .menu-sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .menu-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .menu-close:active {
+            transform: scale(0.95);
+            background: var(--primary-600);
+        }
+        
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .menu-item:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(16, 185, 129, 0.3));
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .menu-item-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+        
+        .menu-item-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .menu-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        /* ====== FIX SIDEBAR - KONTEN BERGESER ====== */
+        .main-navbar.sidebar-active,
+        .container.sidebar-active {
+            transform: translateX(280px);
+            max-width: calc(1200px - 280px);
+            margin-left: 0;
+            margin-right: auto;
+            transition: transform 0.3s ease, max-width 0.3s ease;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-navbar.sidebar-active,
+            .container.sidebar-active {
+                max-width: calc(100% - 280px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-navbar.sidebar-active,
+            .container.sidebar-active {
+                transform: translateX(280px);
+                max-width: calc(100% - 280px);
+            }
+        }
+        
+        /* ====== POP-UP CALL CENTER ====== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            transform: none !important;
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sidebar-active .popup-overlay {
+            transform: none !important;
+            left: 0 !important;
+        }
+        
+        .popup-card {
+            background: white;
+            border-radius: 24px;
+            padding: 35px 25px 30px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-deep);
+            animation: popupAppear 0.4s ease;
+            border: 4px solid var(--danger-600);
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        @keyframes popupAppear {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* JUDUL SELAMAT DATANG */
+        .popup-welcome {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            padding: 15px 15px;
+            border-radius: 50px;
+            margin-top: -55px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            line-height: 1.3;
+        }
+        
+        .popup-welcome i {
+            font-size: 22px;
+            color: #ffd700;
+            animation: wave 2s infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+        
+        .popup-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--danger-600);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .popup-subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--danger-600);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .popup-number {
+            font-size: 70px;
+            font-weight: 900;
+            color: var(--danger-600);
+            margin: 5px 0 10px;
+            letter-spacing: 8px;
+            line-height: 1;
+            text-shadow: 3px 3px 0 rgba(220,38,38,0.2);
+        }
+        
+        .popup-motto {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--danger-600);
+            margin: 10px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            word-spacing: 3px;
+        }
+        
+        .popup-tagline {
+            margin-top: 15px;
+            padding: 15px 15px;
+            border-top: 2px dashed var(--danger-300);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--danger-700);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            background: rgba(220, 38, 38, 0.05);
+            border-radius: 40px;
+            line-height: 1.4;
+        }
+        
+        .popup-tagline br {
+            display: block;
+            margin: 3px 0;
+        }
+        
+        .popup-close {
+            font-size: 22px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--danger-600);
+            border: 3px solid white;
+            margin: 20px auto 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .popup-close:active {
+            transform: scale(0.95) rotate(90deg);
+            background: var(--danger-700);
+        }
+        
+        @media (max-width: 480px) {
+            .popup-card {
+                padding: 30px 20px 25px;
+                width: 92%;
+            }
+            
+            .popup-welcome {
+                font-size: 18px;
+                padding: 12px 12px;
+                margin-top: -45px;
+                margin-bottom: 20px;
+                gap: 8px;
+            }
+            
+            .popup-welcome i {
+                font-size: 18px;
+            }
+            
+            .popup-title {
+                font-size: 22px;
+            }
+            
+            .popup-subtitle {
+                font-size: 16px;
+            }
+            
+            .popup-number {
+                font-size: 60px;
+                letter-spacing: 5px;
+            }
+            
+            .popup-motto {
+                font-size: 12px;
+            }
+            
+            .popup-tagline {
+                font-size: 16px;
+                padding: 12px 12px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .popup-card {
+                padding: 25px 15px 20px;
+            }
+            
+            .popup-welcome {
+                font-size: 16px;
+                padding: 10px 10px;
+                margin-top: -40px;
+                flex-wrap: wrap;
+            }
+            
+            .popup-welcome i {
+                font-size: 16px;
+            }
+            
+            .popup-number {
+                font-size: 50px;
+            }
+            
+            .popup-tagline {
+                font-size: 14px;
+            }
+        }
+        
+        /* ====== CONTAINER ====== */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            box-shadow: var(--shadow-deep);
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease, max-width 0.3s ease;
+        }
+        
+        /* ====== HEADER DENGAN BACKGROUND GAMBAR RAMADHAN ====== */
+        .main-header { 
+            position: relative;
+            color: white; 
+            text-align: center;
+            border-bottom: 3px solid var(--primary-600);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px 12px;
+            overflow: hidden;
+            isolation: isolate;
+            /* Fallback gradient */
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            /* Gambar Ramadhan dengan multiple background */
+            background: url('ramadhan-desktop.png') no-repeat center center, 
+                        linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            background-size: cover, auto;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .main-header > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .main-header {
+                background: url('ramadhan-tablet.png') no-repeat center center, 
+                            linear-gradient(135deg, var(--navy-900), var(--navy-800));
+                background-size: cover, auto;
+                padding: 12px 15px 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                background: url('ramadhan-mobile.png') no-repeat center center, 
+                            linear-gradient(135deg, var(--navy-900), var(--navy-800));
+                background-size: cover, auto;
+                padding: 10px 12px 8px;
+            }
+        }
+        
+        /* ====== LOGO DI TENGAH ====== */
+        .logo-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 8px;
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .logo-item {
+            flex: 0 1 auto;
+            min-width: 50px;
+        }
+        
+        .header-logo {
+            width: auto;
+            max-width: 100%;
+            height: 70px;
+            object-fit: contain;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .logo-item[style*="display: none"] {
+            display: none !important;
+        }
+        
+        @media (max-width: 1024px) {
+            .header-logo { height: 65px; }
+            .logo-center { gap: 25px; }
+        }
+        
+        @media (max-width: 768px) {
+            .header-logo { height: 60px; }
+            .logo-center { gap: 20px; }
+        }
+        
+        @media (max-width: 480px) {
+            .header-logo { height: 55px; }
+            .logo-center { gap: 15px; }
+        }
+        
+        /* ====== BADGE ====== */
+        .badge-container {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 8px;
+            padding: 0 5px;
+        }
+        
+        .operation-badge {
+            color: white;
+            font-size: clamp(14px, 4vw, 24px);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            line-height: 1.3;
+        }
+        
+        /* ====== SERVICE ROW ====== */
+        .service-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .service-item {
+            font-size: clamp(12px, 3vw, 16px);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            letter-spacing: 0.5px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+        }
+        
+        .service-item:first-child::after {
+            content: "•";
+            margin-left: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* ====== KOTAK 110 ====== */
+        .number-boxes {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 5px 0 8px;
+        }
+        
+        .red-box {
+            background: #dc2626;
+            width: clamp(45px, 10vw, 50px);
+            height: clamp(50px, 12vw, 60px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #991b1b, 0 5px 12px rgba(0, 0, 0, 0.4);
+            font-size: clamp(22px, 6vw, 30px);
+            font-weight: 900;
+            color: white;
+        }
+        
+        /* ====== MOTTO ====== */
+        .motto {
+            font-size: clamp(11px, 3vw, 14px);
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        /* ====== SEKSI VIDEO LALU LINTAS ====== */
+        .traffic-section {
+            padding: 20px 15px;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin: 0 0 15px 0;
+            padding: 10px 0 8px;
+            border-bottom: 3px solid var(--primary-600);
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .video-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: var(--shadow-card);
+            border: 2px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-400);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy-900);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .card-title i {
+            color: var(--primary-500);
+            font-size: 18px;
+        }
+        
+        .update-time {
+            font-size: 11px;
+            color: var(--gray-500);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            max-width: 100%;
+            margin: 8px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            border: 2px solid var(--gray-200);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .empty-video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: var(--gray-100);
+            border-radius: 12px;
+            color: var(--gray-500);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px dashed var(--gray-300);
+        }
+        
+        .empty-video i {
+            font-size: 36px;
+            color: var(--gray-400);
+        }
+        
+        .empty-video p {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .empty-video small {
+            font-size: 10px;
+            color: var(--gray-400);
+        }
+        
+        .loading-video {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-500);
+        }
+        
+        .spinner {
+            border: 3px solid var(--gray-200);
+            border-top: 3px solid var(--primary-500);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        .error-message {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 30px;
+            color: var(--danger-600);
+            background: #fee2e2;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .last-updated {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        /* ====== ERROR CONTAINER ====== */
+        .error-container {
+            margin: 0 20px 15px;
+        }
+        
+        .retry-btn {
+            background: var(--danger-600);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .retry-btn:active {
+            transform: scale(0.95);
+            background: var(--danger-700);
+        }
+        
+        /* ====== FOOTER ====== */
+        .footer { 
+            text-align: center; 
+            padding: 25px 15px 15px; 
+            color: white; 
+            background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+            border-top: 3px solid var(--primary-600);
+        }
+        
+        .footer-logo {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .footer p {
+            font-size: 13px;
+            margin: 0 0 8px 0;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+        
+        .footer-call {
+            font-size: 13px;
+            margin: 0 0 8px 0;
+            opacity: 0.95;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 8px 0;
+        }
+        
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: var(--primary-600);
+        }
+        
+        .sponsor-section {
+            margin: 8px 0;
+            text-align: center;
+        }
+        
+        .sponsor-img {
+            max-width: 100%;
+            max-height: 45px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+        
+        .footer-copyright {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+        
+        /* ====== NOTIFICATION ====== */
+        .realtime-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-600), var(--success-600));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            z-index: 9999;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+            max-width: 90%;
+            font-weight: 500;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .realtime-notification.hiding {
+            animation: slideOut 0.3s ease forwards;
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(100%); opacity: 1; }
+            to { transform: translateX(0); opacity: 0; }
+        }
+        
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                padding: 20px 12px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat video...</div>
+    </div>
+
+    <!-- POP-UP CALL CENTER -->
+    <div class="popup-overlay" id="popupCallCenter">
+        <div class="popup-card">
+            <!-- JUDUL SELAMAT DATANG -->
+            <div class="popup-welcome">
+                <i class="fas fa-hands-clapping"></i> 
+                SELAMAT DATANG DI SIPARJO
+                <i class="fas fa-hands-clapping"></i>
+            </div>
+            
+            <div class="popup-title">LAYANAN POLISI</div>
+            <div class="popup-subtitle">CALL CENTER</div>
+            <div class="popup-number">110</div>
+            <div class="popup-motto">MELINDUNGI - MENGAYOMI - MELAYANI</div>
+            
+            <!-- TAGLINE MUDIK -->
+            <div class="popup-tagline">
+                MUDIK AMAN, KELUARGA<br>BAHAGIA
+            </div>
+            
+            <div class="popup-close" id="popupClose">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="main-navbar" id="mainNavbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="nav-menu" id="navbarMenu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+            <div class="nav-title">INFORMASI LALU LINTAS</div>
+            <div class="nav-right"></div>
+        </div>
+    </div>
+
+    <!-- MENU OVERLAY & SIDEBAR -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-sidebar" id="menuSidebar">
+        <div class="menu-header">
+            <div class="menu-title">Menu</div>
+            <div class="menu-close" id="menuClose">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="menu-items">
+            <a href="index.html" class="menu-item">
+                <div class="menu-item-icon"><i class="fas fa-parking"></i></div>
+                <div class="menu-item-text">Siparjo</div>
+            </a>
+            <a href="lalu-lintas.html" class="menu-item active">
+                <div class="menu-item-icon"><i class="fas fa-traffic-light"></i></div>
+                <div class="menu-item-text">Lalu Lintas</div>
+            </a>
+        </div>
+        <div class="menu-footer">
+            © 2026 Satlantas
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <!-- HEADER -->
+        <div class="main-header">
+            <!-- LOGO DI TENGAH -->
+            <div class="logo-center">
+                <div class="logo-item">
+                    <img src="logo-satlantas.png" alt="Satlantas" class="header-logo" onerror="this.style.display='none'; this.parentElement.style.display='none'">
+                </div>
+                <div class="logo-item">
+                    <img src="logo-dishub.png" alt="Dishub" class="header-logo" onerror="this.style.display='none'; this.parentElement.style.display='none'">
+                </div>
+            </div>
+            
+            <!-- BADGE -->
+            <div class="badge-container">
+                <div class="operation-badge">Satlantas Polresta Yogyakarta</div>
+            </div>
+            
+            <!-- SERVICE ROW -->
+            <div class="service-row">
+                <span class="service-item">LAYANAN POLISI</span>
+                <span class="service-item">CALL CENTER</span>
+            </div>
+            
+            <!-- KOTAK 110 -->
+            <div class="number-boxes">
+                <div class="red-box">1</div>
+                <div class="red-box">1</div>
+                <div class="red-box">0</div>
+            </div>
+            
+            <!-- MOTTO -->
+            <div class="motto">MELINDUNGI - MENGAYOMI - MELAYANI</div>
+        </div>
+        
+        <!-- SECTION VIDEO LALU LINTAS -->
+        <section class="traffic-section">
+            <div class="section-title">VIDEO CCTV LALU LINTAS</div>
+            
+            <div id="videoGridContainer" class="video-grid">
+                <div class="loading-video">
+                    <div class="spinner"></div>
+                    <p>Memuat video...</p>
+                </div>
+            </div>
+            
+            <div id="lastUpdatedInfo" class="last-updated">
+                <i class="fas fa-sync-alt"></i> Memuat data...
+            </div>
+        </section>
+        
+        <!-- ERROR CONTAINER -->
+        <div class="error-container" id="errorContainer"></div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-logo">Satlantas Polresta Yogyakarta</div>
+            <p>Polri Untuk Masyarakat</p>
+            <div class="footer-call">Call Center - 110</div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/satlantasjogja" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/satlantasjogjacom" target="_blank" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/jogjazebra" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>
+            </div>
+            <!-- SPONSOR SECTION -->
+            <div class="sponsor-section">
+                <img src="sponsor.png" alt="Sponsor" class="sponsor-img" onerror="this.style.display='none'">
+            </div>
+            <p class="footer-copyright">© 2026 - Informasi Lalu Lintas Yogyakarta</p>
+        </div>
+    </div>
+
+    <script>
+        // ====== KONFIGURASI SUPABASE ======
+        const SUPABASE_URL = 'https://ocjzmoyxcehxwbghbecx.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9janptb3l4Y2VoeHdiZ2hiZWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MDQ5MjAsImV4cCI6MjA4NjI4MDkyMH0.5I3WhOHKcKOijje1bGqTihmcOr51myjLazz3d--IaIA';
+        
+        let supabaseClient = null;
+        let trafficData = [];
+        let realtimeChannel = null;
+        let popupShown = false;
+        
+        // ====== FUNGSI NOTIFIKASI ======
+        function showNotification(msg) {
+            const notif = document.createElement('div');
+            notif.className = 'realtime-notification';
+            notif.textContent = msg;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.classList.add('hiding');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+        
+        // ====== INISIALISASI ======
+        document.addEventListener('DOMContentLoaded', async () => {
+            initMenu();
+            initPopup();
+            initNavbar();
+            await initSupabase();
+            await loadTrafficVideos();
+            setInterval(loadTrafficVideos, 60000);
+        });
+        
+        // ====== CLEANUP ======
+        window.addEventListener('beforeunload', () => {
+            if (realtimeChannel) {
+                supabaseClient.removeChannel(realtimeChannel);
+            }
+        });
+        
+        // ====== NAVBAR SCROLL HANDLER ======
+        function initNavbar() {
+            const navbar = document.getElementById('mainNavbar');
+            let lastScrollTop = 0;
+            let scrollTimeout;
+            
+            function handleScroll() {
+                if (window.innerWidth > 1024) return;
+                
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 30 && scrollTop > lastScrollTop) {
+                    navbar.classList.add('hide');
+                } else {
+                    navbar.classList.remove('hide');
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }
+            
+            window.addEventListener('scroll', function() {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(handleScroll, 10);
+            }, { passive: true });
+        }
+        
+        // ====== POP-UP CALL CENTER ======
+        function initPopup() {
+            const popup = document.getElementById('popupCallCenter');
+            const closeBtn = document.getElementById('popupClose');
+            
+            // Tampilkan hanya sekali
+            setTimeout(() => {
+                if (!popupShown) {
+                    popup.classList.add('active');
+                    popupShown = true;
+                }
+            }, 2000);
+            
+            closeBtn.addEventListener('click', () => {
+                popup.classList.remove('active');
+            });
+            
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    popup.classList.remove('active');
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && popup.classList.contains('active')) {
+                    popup.classList.remove('active');
+                }
+            });
+        }
+        
+        // ====== MENU SIDEBAR DENGAN GESER KONTEN ======
+        function initMenu() {
+            const navbarMenu = document.getElementById('navbarMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuSidebar = document.getElementById('menuSidebar');
+            const menuClose = document.getElementById('menuClose');
+            const container = document.getElementById('mainContainer');
+            const navbar = document.getElementById('mainNavbar');
+            
+            if (navbarMenu) {
+                navbarMenu.addEventListener('click', () => openMenu(container, navbar));
+            }
+            
+            function openMenu(container, navbar) {
+                menuSidebar.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                if (container) container.classList.add('sidebar-active');
+                if (navbar) navbar.classList.add('sidebar-active');
+            }
+            
+            function closeMenu() {
+                menuSidebar.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                if (container) container.classList.remove('sidebar-active');
+                if (navbar) navbar.classList.remove('sidebar-active');
+            }
+            
+            menuOverlay.addEventListener('click', closeMenu);
+            if (menuClose) menuClose.addEventListener('click', closeMenu);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        }
+        
+        // ====== SUPABASE ======
+        async function initSupabase() {
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } catch (error) {
+                console.error('Supabase error:', error);
+                showErrorMessage('Gagal terhubung ke server');
+                showNotification('❌ Gagal terhubung ke server');
+            }
+        }
+        
+        // ====== LOAD TRAFFIC VIDEOS ======
+        async function loadTrafficVideos() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('active');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('traffic_posts')
+                    .select('*')
+                    .order('id', { ascending: true });
+                
+                if (error) throw error;
+                
+                trafficData = data || [];
+                
+                if (trafficData.length === 0) {
+                    await initializeTrafficPosts();
+                    return;
+                }
+                
+                renderVideoGrid();
+                updateLastUpdated();
+                
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                showErrorMessage('Gagal memuat video');
+                showNotification('❌ Gagal memuat video');
+            } finally {
+                overlay.classList.remove('active');
+            }
+        }
+        
+        // ====== INITIALIZE TRAFFIC POSTS ======
+        async function initializeTrafficPosts() {
+            const defaultPosts = [
+                { id: 1, nama_pos: 'Pospam Tugu', instagram_url: null },
+                { id: 2, nama_pos: 'Pospam Stasiun Tugu', instagram_url: null },
+                { id: 3, nama_pos: 'Pospam Terpadu Teteg Malioboro', instagram_url: null },
+                { id: 4, nama_pos: 'Pospam Titik Nol KM', instagram_url: null },
+                { id: 5, nama_pos: 'Pospam Bonbin', instagram_url: null },
+                { id: 6, nama_pos: 'Pospam Kamseltibcar Lantas', instagram_url: null }
+            ];
+            
+            try {
+                for (const post of defaultPosts) {
+                    await supabaseClient
+                        .from('traffic_posts')
+                        .insert([post]);
+                }
+                loadTrafficVideos();
+            } catch (error) {
+                console.error('Failed to initialize posts:', error);
+            }
+        }
+        
+        // ====== EKSTRAK ID INSTAGRAM ======
+        function extractInstagramId(url) {
+            if (!url) return null;
+            
+            const patterns = [
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([a-zA-Z0-9_-]+)/,
+                /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            
+            return null;
+        }
+        
+        // ====== RENDER VIDEO GRID ======
+        function renderVideoGrid() {
+            const container = document.getElementById('videoGridContainer');
+            
+            if (!trafficData.length) {
+                container.innerHTML = '<div class="error-message">Belum ada data pos lalu lintas</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            trafficData.forEach(post => {
+                const hasUrl = post.instagram_url && post.instagram_url.trim() !== '';
+                const videoId = hasUrl ? extractInstagramId(post.instagram_url) : null;
+                const updateTime = formatUpdateTime(post.updated_at);
+                
+                html += `
+                    <div class="video-card">
+                        <div class="card-title">
+                            <i class="fas fa-traffic-light"></i>
+                            ${escapeHtml(post.nama_pos)}
+                        </div>
+                        <div class="update-time">
+                            <i class="far fa-clock"></i> ${updateTime}
+                        </div>
+                        
+                        ${hasUrl && videoId ? `
+                            <div class="video-container">
+                                <iframe 
+                                    src="https://www.instagram.com/p/${videoId}/embed/?hidecaption=true"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    allowtransparency="true"
+                                    allowfullscreen="true"
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        ` : `
+                            <div class="empty-video">
+                                <i class="fab fa-instagram"></i>
+                                <p>Belum ada video</p>
+                                <small>Admin akan segera mengunggah</small>
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // ====== FORMAT UPDATE TIME ======
+        function formatUpdateTime(timestamp) {
+            if (!timestamp) return 'Belum update';
+            
+            try {
+                const date = new Date(timestamp);
+                return date.toLocaleString('id-ID', { 
+                    timeZone: 'Asia/Jakarta',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return 'Belum update';
+            }
+        }
+        
+        // ====== UPDATE LAST UPDATED ======
+        function updateLastUpdated() {
+            const info = document.getElementById('lastUpdatedInfo');
+            const now = new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Jakarta',
+                hour12: false
+            });
+            info.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Terakhir diperbarui: ${now}`;
+        }
+        
+        // ====== ESCAPE HTML ======
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // ====== SHOW ERROR MESSAGE ======
+        function showErrorMessage(message) {
+            const container = document.getElementById('videoGridContainer');
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        function showError(message) {
+            const container = document.getElementById('errorContainer');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    ${message}
+                    <button class="retry-btn" onclick="location.reload()">
+                        <i class="fas fa-redo"></i> Coba Lagi
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

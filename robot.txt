@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://satlantasjogja.info/sitemap.xml
+
+# Disallow folder tertentu (opsional)
+Disallow: /admin/
+Disallow: /private/
